@@ -1788,7 +1788,7 @@ class AdminController extends BaseAdminController
     public function actionLogo()
     {
 
-        if (!isset(Yii::app()->params['letter_logo_upload']) || !Yii::app()->params['letter_logo_upload']) {
+        if (isset(Yii::app()->params['letter_logo_upload']) && Yii::app()->params['letter_logo_upload'] === false) {
             throw new CHttpException(404);
         }
 

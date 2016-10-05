@@ -33,10 +33,10 @@ class LogoHelper
      */
     protected function getLogo()
     {
-        if(isset(Yii::app()->params['letter_logo_upload']) && Yii::app()->params['letter_logo_upload']){
-            return $this->getUploadedLogo();
-        } else {
+        if(isset(Yii::app()->params['letter_logo_upload']) && Yii::app()->params['letter_logo_upload'] === false){
             return $this->getVersionedLogo();
+        } else {
+            return $this->getUploadedLogo();
         }
     }
 
