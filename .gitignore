@@ -41,6 +41,8 @@ node_modules
 /bin/webunit
 /docs/public
 /protected/assets/img/fieldImages/*
+/protected/assets/img/_print/letterhead_Moorfields_NHS.jpg
+/protected/assets/img/_print/letterhead_seal.jpg
 /assets/
 
 # Include core modules
