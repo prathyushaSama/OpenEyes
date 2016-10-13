@@ -152,6 +152,7 @@ class OEScapeDataController extends \BaseController
         $data = $this->queryDataVA($id, $side);
 
         $output = array();
+       
         foreach($data as $row){
             $key = strtotime($row["event_date"]) * 1000;
             if($currentBest = $this->isVAinArray($key, $output)){
@@ -194,13 +195,17 @@ class OEScapeDataController extends \BaseController
         $patient = \Patient::model()->findByPk($id);
 
         $medications = array_merge($patient->get_previous_medications(), $patient->get_medications());
+
+        usort($medications, function ($a, $b){ 
+            return strtotime($a['start_date']) - strtotime($b['start_date']); 
+        });
+        
         //$medications = $this->sortMedications($medications);
         $output = array();
-
+        
         foreach($medications as $medication){
             $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($medication->end_date)*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
         }
-
         echo json_encode($output);
     }
 

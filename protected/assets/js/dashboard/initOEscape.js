@@ -30,7 +30,7 @@ $(document).ready(function() {
         chart:{
             renderTo: 'medchart',
             marginLeft: 50,
-            spacingLeft: 30
+            spacingLeft: 30   
         },
         tooltip: {
             shared:true,
@@ -208,7 +208,7 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
             data.forEach(AddMedication, MedChart);
-            redrawCharts();
+            //redrawCharts();
         },
         cache: false
     });
@@ -403,18 +403,20 @@ $(document).ready(function() {
         syncronizeCrossHairs(chart);
     });
 
+
     addSeries(VAchart, 1, "VA", "DataSetVA", "#4d9900", 'solid', 0);
     addSeries(VAchart, 2, "VA", "DataSetVA", "#c653c6", 'solid', 0);
 
     addSeries(VAchart, 1, 'MD', 'DataSetMD', "#4d9900", 'shortdot', 1);
     addSeries(VAchart, 2, 'MD', 'DataSetMD', "#c653c6", 'shortdot', 1);
+    
     //$('#regression_chart').hide();
 });
 
 function redrawCharts(){
     for(var i=0; i<Highcharts.charts.length; i++){
         Highcharts.charts[i].reflow();
-    }
+    } 
 }
 
 function addRegressionChart(){
@@ -610,7 +612,7 @@ function AddMedication(item, index){
         color = '#ff3333';
     }
     this.addSeries({
-        type: 'arearange',
+        type: 'columnrange',
         data: [[item[0],currentMedY,currentMedY-5],[toValue,currentMedY,currentMedY-5]],
         color: color,
         id: 'medication-'+index,
@@ -622,15 +624,15 @@ function AddMedication(item, index){
                 return item[3];
             },
             inside: true,
-            align: 'left',
+            align: 'center',
             padding: 0,
             style: {"color": "contrast", "fontSize": "11px", "fontWeight": "normal", "textShadow": "0 0 6px contrast, 0 0 3px contrast" }
         },
         label: {
             text: item[3],
             enabled: true
-        }
-
+        },
+        
     });
     currentMedY = currentMedY-5;
 }
@@ -762,6 +764,7 @@ function loadAllOCTImages(mediaType){
 }
 
 function changeVFImages(xCoord, imageWidth){
+    
     var allImagesNr = Object.keys(VFImages).length;
     var currentIndex = Math.round(xCoord/(imageWidth/allImagesNr));
 
@@ -779,6 +782,7 @@ function changeVFImages(xCoord, imageWidth){
         }
         i++;
     });
+    
     //console.log(xCoord+' imgNr: '+allImagesNr+' width: '+imageWidth+' index: '+currentIndex+' last indx:'+lastIndex);
 }
 
@@ -805,7 +809,7 @@ function syncronizeCrossHairs(chart) {
     var container = $(chart.container),
         offset = container.offset(),
         x, y, isInside, report;
-
+        
     container.mousemove(function(evt) {
 
         x = evt.clientX - chart.plotLeft - offset.left;
@@ -1075,4 +1079,8 @@ function HSVtoRGB(color) {
             break;
     }
     return [r,g,b];
+}
+
+function isInteger(n) {
+    return parseInt(n) === n
 }
