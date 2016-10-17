@@ -19,90 +19,12 @@
 var VFImages, OCTImages;
 var MedChart, IOPchart, VAchart;
 var lastIndex = 0;
-var currentMedY = 20;
+var currentMedY = 30;
 var currentIndexDate = new Date().getTime();
 var fixedPoint = {point: undefined, side: undefined, color: undefined};
 var defaultTickInterval = 5;
 
 $(document).ready(function() {
-    // Create the medication Chart
-    MedChart = new Highcharts.StockChart({
-        chart:{
-            renderTo: 'medchart',
-            marginLeft: 50,
-            spacingLeft: 30   
-        },
-        tooltip: {
-            shared:true,
-            xDateFormat: '<b>%d/%m/%Y</b>',
-        },
-        plotOptions: {
-            series: {
-                states: {
-                    hover: {
-                        enabled: true,
-                        lineWidthPlus: 0,
-                    }
-                },
-                marker:{
-                    enabled: true,
-                    radius: 4
-                }
-            }
-        },
-
-        rangeSelector : {
-            enabled: 0,
-            inputEnabled: false,
-            selected: 5
-        },
-
-        legend: {
-            enabled: 1,
-            floating: true,
-            align: 'right',
-            verticalAlign: 'top',
-            borderColor: '#dddddd',
-            borderWidth: 1,
-            layout: 'vertical',
-            shadow: true,
-            y: 24
-        },
-
-        title : {
-            text : 'Medications'
-        },
-        xAxis:{
-            labels:
-            {
-                enabled: false
-            }
-        },
-        yAxis: {
-            min: 0,
-            max: 20,
-            opposite:false,
-            isDirty: true,
-            labels:
-            {
-                align: 'left',
-                x: -20,
-                y: -2
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        navigator: {
-            enabled: false
-        },
-        scrollbar : {
-            enabled : false
-        }
-    },function(chart) {
-        syncronizeCrossHairs(chart);
-    });
-
 
     // Create the IOP chart
     IOPchart = new Highcharts.StockChart({
@@ -121,6 +43,7 @@ $(document).ready(function() {
             shared:true,
             xDateFormat: '<b>%d/%m/%Y</b>',
         },
+       
         plotOptions: {
             series: {
                 states: {
@@ -135,13 +58,11 @@ $(document).ready(function() {
                 }
             }
         },
-
         rangeSelector : {
             enabled: false,
             inputEnabled: false,
             selected: 5
         },
-
         legend: {
             enabled: 1,
             floating: true,
@@ -153,21 +74,20 @@ $(document).ready(function() {
             shadow: true,
             y: 24
         },
-
         title : {
             text : 'IOP'
         },
         xAxis:{
             labels:
             {
-                enabled: false
+                enabled: true
             }
         },
         yAxis: {
             min: 0,
             max: 60,
             opposite:false,
-            isDirty: true,
+            //isDirty: true,
             labels:
             {
                 align: 'left',
@@ -185,11 +105,8 @@ $(document).ready(function() {
             enabled : false
         }
     },function(chart) {
-        syncronizeCrossHairs(chart);
+        syncronizeCrossHairs(chart , 'IOPchart');
     });
-
-    addSeries(IOPchart, 1, "IOP", "DataSet", "#4d9900", 'solid', 0);
-    addSeries(IOPchart, 2, "IOP", "DataSet", "#c653c6", 'solid', 0);
 
     $.ajax({
         url: '/OphCiExamination/OEScapeData/GetOperations/'+patientId,
@@ -201,22 +118,145 @@ $(document).ready(function() {
         cache: false
     });
 
-
+    
     $.ajax({
         url: '/OphCiExamination/OEScapeData/GetMedications/'+patientId,
         type: "GET",
         dataType: "json",
         success: function(data) {
-            data.forEach(AddMedication, MedChart);
-            //redrawCharts();
+           
+           //data.forEach(AddMedication, MedChart);
+          
+            var seriesObj = [];
+            
+            for(var i = 0; i< data.length; i++){
+                
+             
+                if(data[i][2] == 1){
+                    color = '#ccff99';
+                }else{
+                    color = '#ff3333';
+                }
+                
+                seriesObj.push({ 
+                    
+                    name: data[i][3],
+                    color: color,
+                    data: [{ 
+                        x : i,
+                        y: data[i][1],
+                        low:data[i][0],
+                        high:data[i][1],
+                        data: [ data[i][0], data[i][1] ],
+                    }],
+                    dataLabels:{
+                        formatter: function(){
+                            return this.series.name;
+                        }
+                    }  
+                });
+            }
+          
+            MedChart = new Highcharts.chart({
+
+                chart: {
+                    renderTo: 'medchart',
+                    type: 'columnrange',
+                    inverted: true,
+                    marginTop: 50,
+                    marginLeft: 50,
+                    spacingLeft: 30
+                   // zoomType: 'xy',
+                   // panning: true,
+                   // panKey: 'shift'
+                },        
+                title: {
+                    text: 'Medications'
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    
+                    type: 'datetime',
+                    labels: {
+                        enabled: true
+                    },
+                    title:{
+                        text: '',
+                    },
+                },
+                tooltip: {
+                    shared:true,
+                    xDateFormat: '<b>%d/%m/%Y</b>',
+                    useHtml:true,
+                    crosshairs: [false, true],
+                    formatter: function() {
+                        var div = '';
+                        var ret = '';
+
+                        $.each(this.points, function(i , e){
+                          
+                            var startDate = Highcharts.dateFormat('%d/%m/%Y',new Date(e.point.options.low));
+                            var endDate = Highcharts.dateFormat('%d/%m/%Y',new Date(e.point.options.high));
+                            var name = e.series.name;
+                            div = '<div>'+
+                                name+'<br />'+
+                                startDate+' - '+endDate+'<br /><br />'+
+                           '</div>';
+
+                           ret += div;
+                        });
+
+                        return ret;
+                    }
+
+                },
+                plotOptions: {
+                    columnrange: {
+                        stacking: 'normal',
+                        showInLegend: true,
+                        enableMouseTracking: true,
+                        //groupPadding: 0.1,
+                        grouping: false,
+                        showInLegend: true,
+                        dataLabels: {
+                            enabled: true,
+                            inside: true,
+                            align:'center',
+                            showInLegend: true,
+                        },
+                       
+                    }, 
+                },
+
+                legend: {
+                    enabled: false
+                },
+                series: seriesObj,
+                credits: {
+                    enabled: false
+                }
+
+            },function(chart) {
+                syncronizeCrossHairs(chart , 'MedChart');
+            });
+            MedChart.setSize($('#medchart').width() , (i * 50) + 100);
+            
+            addSeries(IOPchart, 1, "IOP", "DataSet", "#4d9900", 'solid', 0);
+            addSeries(IOPchart, 2, "IOP", "DataSet", "#c653c6", 'solid', 0);
+            
         },
-        cache: false
+        cache: false,
     });
+    
 
 
-    loadAllImages(Highcharts.dateFormat('%Y-%m-%d', new Date().getTime()));
-    loadAllVFImages('vfgreyscale');
-    loadAllOCTImages('oct');
+    //loadAllImages(Highcharts.dateFormat('%Y-%m-%d', new Date().getTime()));
+    //loadAllVFImages('vfgreyscale');
+    //loadAllOCTImages('oct');
 
     $('#vfgreyscale_left, #vfgreyscale_right').mousemove(function(e){
         changeVFImages(e.pageX - this.offsetLeft, $(this).width());
@@ -281,7 +321,6 @@ $(document).ready(function() {
             marginLeft: 50,
             spacingLeft: 30
         },
-
         tooltip: {
             shared:true,
             xDateFormat: '<b>%d/%m/%Y</b>',
@@ -330,31 +369,6 @@ $(document).ready(function() {
             {
                 enabled: false
             },
-            events:{
-                afterSetExtremes:function(event){
-                    if (!this.chart.options.chart.isZoomed)
-                    {
-                        var xMin = this.chart.xAxis[0].min;
-                        var xMax = this.chart.xAxis[0].max;
-
-                        var zmRange = computeTickInterval(xMin, xMax);
-                        MedChart.xAxis[0].options.tickInterval =zmRange;
-                        MedChart.xAxis[0].isDirty = true;
-                        IOPchart.xAxis[0].options.tickInterval = zmRange;
-                        IOPchart.xAxis[0].isDirty = true;
-                        VAchart.xAxis[0].options.tickInterval = zmRange;
-                        VAchart.xAxis[0].isDirty = true;
-
-                        MedChart.options.chart.isZoomed = true;
-                        IOPchart.options.chart.isZoomed = true;
-                        MedChart.xAxis[0].setExtremes(xMin, xMax, true);
-
-                        IOPchart.xAxis[0].setExtremes(xMin, xMax, true);
-                        IOPchart.options.chart.isZoomed = false;
-                        MedChart.options.chart.isZoomed = false;
-                    }
-                }
-            }
         },
         yAxis: [{
             reversed: true,
@@ -377,6 +391,7 @@ $(document).ready(function() {
             opposite:false,
             labels:
             {
+                enabled:false,
                 align: 'right',
                 x: 20,
                 y: -2
@@ -400,7 +415,7 @@ $(document).ready(function() {
             }
         }
     },function(chart) {
-        syncronizeCrossHairs(chart);
+        syncronizeCrossHairs(chart, 'VAchart');
     });
 
 
@@ -409,8 +424,36 @@ $(document).ready(function() {
 
     addSeries(VAchart, 1, 'MD', 'DataSetMD', "#4d9900", 'shortdot', 1);
     addSeries(VAchart, 2, 'MD', 'DataSetMD', "#c653c6", 'shortdot', 1);
-    
+
     //$('#regression_chart').hide();
+});
+
+$(document).ajaxStop(function() {
+   
+    Highcharts.addEvent(VAchart.xAxis[0], 'afterSetExtremes', function (e) {
+       
+        if (!this.chart.options.chart.isZoomed)
+        {
+            var xMin = this.chart.xAxis[0].min;
+            var xMax = this.chart.xAxis[0].max;
+
+            var zmRange = computeTickInterval(xMin, xMax);
+            MedChart.yAxis[0].options.tickInterval = zmRange;
+            MedChart.yAxis[0].isDirty = true;
+            IOPchart.xAxis[0].options.tickInterval = zmRange;
+            IOPchart.xAxis[0].isDirty = true;
+            VAchart.xAxis[0].options.tickInterval = zmRange;
+            VAchart.xAxis[0].isDirty = true;
+
+            MedChart.options.chart.isZoomed = true;
+            IOPchart.options.chart.isZoomed = true;
+            MedChart.yAxis[0].setExtremes(xMin, xMax, true);
+
+            IOPchart.xAxis[0].setExtremes(xMin, xMax, true);
+            IOPchart.options.chart.isZoomed = false;
+            MedChart.options.chart.isZoomed = false;
+        }
+    });
 });
 
 function redrawCharts(){
@@ -600,41 +643,50 @@ function AddOperation(item, index){
 }
 
 function AddMedication(item, index){
+    
+    
     var toValue, color;
     if(item[1] == 0 || item[1] > this.xAxis[0].max){
         toValue = this.xAxis[0].max;
     }else{
         toValue = item[1];
     }
+    
+    toValue = item[1];
+    
     if(item[2] == 1){
         color = '#ccff99';
     }else{
         color = '#ff3333';
     }
+    
     this.addSeries({
-        type: 'columnrange',
-        data: [[item[0],currentMedY,currentMedY-5],[toValue,currentMedY,currentMedY-5]],
+        name: item[3],
+        //customData : ['sas'],
+        //data: [[item[0],currentMedY,currentMedY-2],[toValue,currentMedY,currentMedY-2]],
         color: color,
         id: 'medication-'+index,
         showInLegend: false,
-        enableMouseTracking: false,
+        enableMouseTracking: true,
         dataLabels:{
             enabled: true,
+            inside:true,
+            align: 'left',
             formatter: function(){
-                return item[3];
+               return item[3];
+            },            
+            style: {
+                "color": "contrast", 
+                "fontSize": "11px", 
+                "fontWeight": "normal", 
+                "textShadow": "0 0 6px contrast, 0 0 3px contrast",
+                "padding": "0"
             },
-            inside: true,
-            align: 'center',
-            padding: 0,
-            style: {"color": "contrast", "fontSize": "11px", "fontWeight": "normal", "textShadow": "0 0 6px contrast, 0 0 3px contrast" }
-        },
-        label: {
-            text: item[3],
-            enabled: true
-        },
-        
+        }
     });
-    currentMedY = currentMedY-5;
+   
+    currentMedY = currentMedY-2;
+    
 }
 
 function getPlotData(plotNr, side, dateIndex){
@@ -805,49 +857,97 @@ function changeOCTImages(xCoord, imageWidth){
 
 //catch mousemove event and have all 3 charts' crosshairs move along indicated values on x axis
 
-function syncronizeCrossHairs(chart) {
+function syncronizeCrossHairs(chart , type) {
+
     var container = $(chart.container),
         offset = container.offset(),
         x, y, isInside, report;
-        
-    container.mousemove(function(evt) {
 
+    container.mousemove(function(evt) {
+          
+          
         x = evt.clientX - chart.plotLeft - offset.left;
         y = evt.clientY - chart.plotTop - offset.top;
+        
         var xAxis = chart.xAxis[0];
+
         //remove old plot line and draw new plot line (crosshair) for this chart
-        var xAxis1 = MedChart.xAxis[0];
+        var xAxis1 = MedChart.yAxis[0];
         xAxis1.removePlotLine("myPlotLineId");
-        xAxis1.addPlotLine({
-            value: chart.xAxis[0].translate(x, true),
-            width: 1,
-            color: 'grey',
-            //dashStyle: 'dash',
-            id: "myPlotLineId"
-        });
-        //remove old crosshair and draw new crosshair on chart2
-        var xAxis2 = IOPchart.xAxis[0];
-        xAxis2.removePlotLine("myPlotLineId");
-        xAxis2.addPlotLine({
-            value: chart.xAxis[0].translate(x, true),
-            width: 1,
-            color: 'grey',
-            //dashStyle: 'dash',
-            id: "myPlotLineId"
-        });
+        
+        //if we are on the medication chart
+        if( type == 'MedChart'){
+            
+            xAxis1.addPlotLine({
+                value: MedChart.yAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
+            
+            var xAxis2 = IOPchart.xAxis[0];
+            xAxis2.removePlotLine("myPlotLineId");
+            xAxis2.addPlotLine({
+                value: MedChart.yAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
 
-        var xAxis3 = VAchart.xAxis[0];
-        xAxis3.removePlotLine("myPlotLineId");
-        xAxis3.addPlotLine({
-            value: chart.xAxis[0].translate(x, true),
-            width: 1,
-            color: 'grey',
-            //dashStyle: 'dash',
-            id: "myPlotLineId"
-        });
+            var xAxis3 = VAchart.xAxis[0]; 
+            xAxis3.removePlotLine("myPlotLineId");
 
+            xAxis3.addPlotLine({
+                value: MedChart.yAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
+             
+             
+             
+        } else {
+            
+           // var xAxis3 = VAchart.xAxis[0]; 
+            xAxis1.addPlotLine({
+                value: VAchart.xAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
+             
+              //remove old crosshair and draw new crosshair on chart2
+            var xAxis2 = IOPchart.xAxis[0];
+            xAxis2.removePlotLine("myPlotLineId");
+            xAxis2.addPlotLine({
+                value: IOPchart.xAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
+
+            var xAxis3 = VAchart.xAxis[0]; 
+            xAxis3.removePlotLine("myPlotLineId");
+
+            xAxis3.addPlotLine({
+                value: VAchart.xAxis[0].translate(x, true),
+                width: 1,
+                color: 'grey',
+                //dashStyle: 'dash',
+                id: "myPlotLineId"
+            });
+        }
+ 
+       
+        
         //if you have other charts that need to be syncronized - update their crosshair (plot line) in the same way in this function.
     });
+  
 }
 
 //compute a reasonable tick interval given the zoom range -
