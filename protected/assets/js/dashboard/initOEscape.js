@@ -129,6 +129,7 @@ $(document).ready(function() {
            
            //data.forEach(AddMedication, MedChart);
             var seriesObj = [];
+            var lineHeight = 0.9;
             
             for(var i = 0; i< data.length; i++){
 
@@ -142,18 +143,27 @@ $(document).ready(function() {
                     name: data[i][3],
                     color: color,
                     data: [{ 
-                        x : i,
+                        x : lineHeight,
                         y: data[i][1],
                         low:data[i][0],
                         high:data[i][1],
                         data: [ data[i][0], data[i][1] ],
                     }],
                     dataLabels:{
+                        color:'#000',
                         formatter: function(){
                             return this.series.name;
+                        },
+                        style: {
+                            "color": "contrast", 
+                            "fontSize": "11px", 
+                            "fontWeight": "normal", 
+                            "textShadow": "none" 
                         }
                     }  
                 });
+                
+                var lineHeight = lineHeight + 0.9;
             }
             
             /*
@@ -163,8 +173,8 @@ $(document).ready(function() {
             var minValueOfY = Math.min.apply(null, yMinVals);
             */
            
-            var maxValueOfMedChart = i;
-            var heightOfMedChart = i * 40;
+            var maxValueOfMedChart = Math.round(lineHeight);
+            var heightOfMedChart = maxValueOfMedChart * 30;
            
             // create the Medication chart
             MedChart = new Highcharts.chart({
@@ -180,12 +190,12 @@ $(document).ready(function() {
                     //zoomType: 'xy',
                     //panning: true,
                     //panKey: 'shift'
-                },        
+                },   
                 title: {
                     text: 'Medications'
                 },
                 xAxis: {
-                    min: -1,
+                    min: 0,
                     max: maxValueOfMedChart,
                     tickInterval: 1,
                     tickColor: '#fff',
@@ -196,6 +206,7 @@ $(document).ready(function() {
                 yAxis: {
                    // min: minValueOfY,
                     startOnTick:true,
+                   // endOnTick: false,
                     type: 'datetime',
                     labels: {
                         enabled: false
@@ -236,10 +247,13 @@ $(document).ready(function() {
                         }, 
                     }, 
                     series: {
-                        //pointRange: 24 * 3600 * 1000,
-                        //pointPadding: 0,
-                        pointWidth: 25
-                        //maxPointWidth: 50
+                        pointRange: 1,
+                        pointWidth: 15,
+                        pointInterval: 1,
+                        pointPadding: 0,
+                        groupPadding: 0,
+                        borderWidth: 0,
+                        shadow: false
                     }
                 },
                 legend: {
@@ -698,7 +712,7 @@ function AddMedication(item, index){
                 "color": "contrast", 
                 "fontSize": "11px", 
                 "fontWeight": "normal", 
-                "textShadow": "0 0 6px contrast, 0 0 3px contrast",
+                //"textShadow": "0 0 6px contrast, 0 0 3px contrast",
                 "padding": "0"
             },
         }
