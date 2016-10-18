@@ -67,7 +67,24 @@ class OEScapeDataController extends \BaseController
             ->andWhere('ovr.side = :side', array('side'=> $side-1))
             ->andWhere('ev.deleted <> 1')
             ->order('event_date');
-
+ 
+        return $command->queryAll();
+    }
+    
+    protected function queryDataVALastDate($patient, $side )
+    {
+       $command = Yii::app()->db->createCommand()->select('event_date, ovauv.value as value')
+            ->from('ophciexamination_visualacuity_reading ovr')
+            ->join('et_ophciexamination_visualacuity eov', 'eov.id=ovr.element_id')
+            ->join('event ev', 'ev.id=eov.event_id')
+            ->join('episode ep', 'ev.episode_id=ep.id')
+            ->join('ophciexamination_visual_acuity_unit_value ovauv', 'ovauv.unit_id=10 and ovr.value=ovauv.base_value')
+            ->where('patient_id = :patient', array('patient' => $patient))
+            ->andWhere('ovr.side = :side', array('side'=> $side-1))
+            ->andWhere('ev.deleted <> 1')
+            ->order('event_date DESC')
+            ->limit(1);
+               
         return $command->queryAll();
     }
 
@@ -144,13 +161,11 @@ class OEScapeDataController extends \BaseController
         foreach($data as $row){
             $output[] = array(strtotime($row["event_date"])*1000, (int) $row["value"]);
         }
-
         echo json_encode($output);
     }
 
     public function actionDataSetVA($id, $side){
         $data = $this->queryDataVA($id, $side);
-
         $output = array();
        
         foreach($data as $row){
@@ -163,7 +178,6 @@ class OEScapeDataController extends \BaseController
                 $output[] = array($key, (float)$row["value"]);
             }
         }
-
         echo json_encode($output);
 
     }
@@ -175,7 +189,6 @@ class OEScapeDataController extends \BaseController
         foreach($data as $row){
             $output[] = array(strtotime($row["event_date"])*1000, (float) $row["mean_deviation"]);
         }
-
         echo json_encode($output);
 
     }
@@ -193,7 +206,9 @@ class OEScapeDataController extends \BaseController
 
     public function actionGetMedications($id){
         $patient = \Patient::model()->findByPk($id);
-
+        
+        $lastVAdate = $this->queryDataVALastDate( $id , 1 );
+       
         $medications = array_merge($patient->get_previous_medications(), $patient->get_medications());
 
         usort($medications, function ($a, $b){ 
@@ -202,9 +217,12 @@ class OEScapeDataController extends \BaseController
         
         //$medications = $this->sortMedications($medications);
         $output = array();
-        
         foreach($medications as $medication){
-            $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($medication->end_date)*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+            if($medication->end_date == NULL){
+                $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($lastVAdate[0]['event_date'])*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+            } else {
+                $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($medication->end_date)*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+            }
         }
         echo json_encode($output);
     }
