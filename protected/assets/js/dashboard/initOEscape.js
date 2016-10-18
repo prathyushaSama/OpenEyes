@@ -126,12 +126,10 @@ $(document).ready(function() {
         success: function(data) {
            
            //data.forEach(AddMedication, MedChart);
-          
             var seriesObj = [];
             
             for(var i = 0; i< data.length; i++){
-                
-             
+
                 if(data[i][2] == 1){
                     color = '#ccff99';
                 }else{
@@ -139,7 +137,6 @@ $(document).ready(function() {
                 }
                 
                 seriesObj.push({ 
-                    
                     name: data[i][3],
                     color: color,
                     data: [{ 
@@ -156,9 +153,9 @@ $(document).ready(function() {
                     }  
                 });
             }
-          
+             
+            // create the Medication chart
             MedChart = new Highcharts.chart({
-
                 chart: {
                     renderTo: 'medchart',
                     type: 'columnrange',
@@ -179,7 +176,6 @@ $(document).ready(function() {
                     }
                 },
                 yAxis: {
-                    
                     type: 'datetime',
                     labels: {
                         enabled: true
@@ -198,7 +194,6 @@ $(document).ready(function() {
                         var ret = '';
 
                         $.each(this.points, function(i , e){
-                          
                             var startDate = Highcharts.dateFormat('%d/%m/%Y',new Date(e.point.options.low));
                             var endDate = Highcharts.dateFormat('%d/%m/%Y',new Date(e.point.options.high));
                             var name = e.series.name;
@@ -209,7 +204,6 @@ $(document).ready(function() {
 
                            ret += div;
                         });
-
                         return ret;
                     }
 
@@ -227,11 +221,9 @@ $(document).ready(function() {
                             inside: true,
                             align:'center',
                             showInLegend: true,
-                        },
-                       
+                        }, 
                     }, 
                 },
-
                 legend: {
                     enabled: false
                 },
@@ -254,9 +246,9 @@ $(document).ready(function() {
     
 
 
-    //loadAllImages(Highcharts.dateFormat('%Y-%m-%d', new Date().getTime()));
-    //loadAllVFImages('vfgreyscale');
-    //loadAllOCTImages('oct');
+    loadAllImages(Highcharts.dateFormat('%Y-%m-%d', new Date().getTime()));
+    loadAllVFImages('vfgreyscale');
+    loadAllOCTImages('oct');
 
     $('#vfgreyscale_left, #vfgreyscale_right').mousemove(function(e){
         changeVFImages(e.pageX - this.offsetLeft, $(this).width());
@@ -662,8 +654,7 @@ function AddMedication(item, index){
     
     this.addSeries({
         name: item[3],
-        //customData : ['sas'],
-        //data: [[item[0],currentMedY,currentMedY-2],[toValue,currentMedY,currentMedY-2]],
+        data: [[item[0],currentMedY,currentMedY-2],[toValue,currentMedY,currentMedY-2]],
         color: color,
         id: 'medication-'+index,
         showInLegend: false,
@@ -782,8 +773,12 @@ function loadAllVFImages(mediaType){
         success: function(data) {
             VFImages = data;
             $.each( VFImages, function(index, data){
-                $('#vfgreyscale_left_cache').append('<img id="vfg_left_'+index+'" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/'+data[1][0]+'">');
-                $('#vfgreyscale_right_cache').append('<img id="vfg_right_'+index+'" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/'+data[2][0]+'">');
+                if(data[1][0] != '' && data[1][0] !== undefined) {
+                    $('#vfgreyscale_left_cache').append('<img id="vfg_left_' + index + '" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/' + data[1][0] + '">');
+                }
+                if(data[2][0] != '' && data[2][0] !== undefined) {
+                    $('#vfgreyscale_right_cache').append('<img id="vfg_right_' + index + '" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/' + data[2][0] + '">');
+                }
             });
             setPlotColours(1,new Date().getTime());
             setPlotColours(2,new Date().getTime());
@@ -805,11 +800,15 @@ function loadAllOCTImages(mediaType){
             OCTImages = data;
             var lastIndex, lastImageId;
             $.each( OCTImages, function(index, data){
-                $('#oct_images_cache').append('<img id="oct_'+index+'" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/'+data[3][0]+'">');
-                lastIndex = index;
-                lastImageId = data[3][0];
+                if(data[3][0] != '' && data[3][0] !== undefined) {
+                    $('#oct_images_cache').append('<img id="oct_' + index + '" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/' + data[3][0] + '">');
+                    lastIndex = index;
+                    lastImageId = data[3][0];
+                }
             });
-            $('#oct_images').append('<img id="oct_'+lastIndex+'" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/'+lastImageId+'">');
+            if(lastImageId != '' && lastImageId !== undefined) {
+                $('#oct_images').append('<img id="oct_' + lastIndex + '" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/' + lastImageId + '">');
+            }
         },
         cache: false
     });
@@ -1179,8 +1178,4 @@ function HSVtoRGB(color) {
             break;
     }
     return [r,g,b];
-}
-
-function isInteger(n) {
-    return parseInt(n) === n
 }

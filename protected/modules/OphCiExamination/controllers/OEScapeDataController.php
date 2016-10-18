@@ -236,6 +236,7 @@ class OEScapeDataController extends \BaseController
 
         $allData = $command->queryAll();
 
+        $output = array();
         foreach($allData as $row){
             $output[strtotime($row["event_date"])][$row["eye_id"]] = array($row["fileid"], $row["plot_values"]);
         }
