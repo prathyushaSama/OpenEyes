@@ -37,7 +37,9 @@ $(document).ready(function() {
                 }
             },
             marginLeft: 50,
-            spacingLeft: 30
+            spacingLeft: 30,
+            marginRight: 50,
+            spacingRight: 30
         },
         tooltip: {
             shared:true,
@@ -153,36 +155,54 @@ $(document).ready(function() {
                     }  
                 });
             }
-             
+            
+            /*
+            var yMinVals = data.map(function(obj) {
+                return obj[0];
+            });
+            var minValueOfY = Math.min.apply(null, yMinVals);
+            */
+           
+            var maxValueOfMedChart = i;
+            var heightOfMedChart = i * 40;
+           
             // create the Medication chart
             MedChart = new Highcharts.chart({
                 chart: {
                     renderTo: 'medchart',
                     type: 'columnrange',
                     inverted: true,
-                    marginTop: 50,
+                    height: heightOfMedChart,
                     marginLeft: 50,
-                    spacingLeft: 30
-                   // zoomType: 'xy',
-                   // panning: true,
-                   // panKey: 'shift'
+                    marginRight: 50,
+                    spacingRight: 30,
+                    spacingLeft: 30,
+                    //zoomType: 'xy',
+                    //panning: true,
+                    //panKey: 'shift'
                 },        
                 title: {
                     text: 'Medications'
                 },
                 xAxis: {
+                    min: -1,
+                    max: maxValueOfMedChart,
+                    tickInterval: 1,
+                    tickColor: '#fff',
                     labels: {
                         enabled: false
                     }
                 },
                 yAxis: {
+                   // min: minValueOfY,
+                    startOnTick:true,
                     type: 'datetime',
                     labels: {
-                        enabled: true
+                        enabled: false
                     },
                     title:{
                         text: '',
-                    },
+                    }, 
                 },
                 tooltip: {
                     shared:true,
@@ -206,23 +226,21 @@ $(document).ready(function() {
                         });
                         return ret;
                     }
-
                 },
                 plotOptions: {
                     columnrange: {
-                        stacking: 'normal',
-                        showInLegend: true,
-                        enableMouseTracking: true,
-                        //groupPadding: 0.1,
-                        grouping: false,
-                        showInLegend: true,
                         dataLabels: {
                             enabled: true,
                             inside: true,
                             align:'center',
-                            showInLegend: true,
                         }, 
                     }, 
+                    series: {
+                        //pointRange: 24 * 3600 * 1000,
+                        //pointPadding: 0,
+                        pointWidth: 25
+                        //maxPointWidth: 50
+                    }
                 },
                 legend: {
                     enabled: false
@@ -235,7 +253,6 @@ $(document).ready(function() {
             },function(chart) {
                 syncronizeCrossHairs(chart , 'MedChart');
             });
-            MedChart.setSize($('#medchart').width() , (i * 50) + 100);
             
             addSeries(IOPchart, 1, "IOP", "DataSet", "#4d9900", 'solid', 0);
             addSeries(IOPchart, 2, "IOP", "DataSet", "#c653c6", 'solid', 0);
@@ -311,7 +328,9 @@ $(document).ready(function() {
         chart:{
             renderTo: 'vachart',
             marginLeft: 50,
-            spacingLeft: 30
+            spacingLeft: 30,
+            marginRight: 50,
+            spacingRight: 30
         },
         tooltip: {
             shared:true,
@@ -428,7 +447,7 @@ $(document).ajaxStop(function() {
         {
             var xMin = this.chart.xAxis[0].min;
             var xMax = this.chart.xAxis[0].max;
-
+            
             var zmRange = computeTickInterval(xMin, xMax);
             MedChart.yAxis[0].options.tickInterval = zmRange;
             MedChart.yAxis[0].isDirty = true;
@@ -446,6 +465,15 @@ $(document).ajaxStop(function() {
             MedChart.options.chart.isZoomed = false;
         }
     });
+    
+    /* update MedChart intervall */
+    MedChart.yAxis[0].update({
+         min: VAchart.xAxis[0].min
+    }); 
+    MedChart.yAxis[0].update({
+         max: VAchart.xAxis[0].max
+    }); 
+
 });
 
 function redrawCharts(){
@@ -773,12 +801,8 @@ function loadAllVFImages(mediaType){
         success: function(data) {
             VFImages = data;
             $.each( VFImages, function(index, data){
-                if(data[1][0] != '' && data[1][0] !== undefined) {
-                    $('#vfgreyscale_left_cache').append('<img id="vfg_left_' + index + '" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/' + data[1][0] + '">');
-                }
-                if(data[2][0] != '' && data[2][0] !== undefined) {
-                    $('#vfgreyscale_right_cache').append('<img id="vfg_right_' + index + '" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/' + data[2][0] + '">');
-                }
+                $('#vfgreyscale_left_cache').append('<img id="vfg_left_'+index+'" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/'+data[1][0]+'">');
+                $('#vfgreyscale_right_cache').append('<img id="vfg_right_'+index+'" class="vfthumbnail" src="/OphCiExamination/OEScapeData/GetImage/'+data[2][0]+'">');
             });
             setPlotColours(1,new Date().getTime());
             setPlotColours(2,new Date().getTime());
@@ -800,15 +824,11 @@ function loadAllOCTImages(mediaType){
             OCTImages = data;
             var lastIndex, lastImageId;
             $.each( OCTImages, function(index, data){
-                if(data[3][0] != '' && data[3][0] !== undefined) {
-                    $('#oct_images_cache').append('<img id="oct_' + index + '" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/' + data[3][0] + '">');
-                    lastIndex = index;
-                    lastImageId = data[3][0];
-                }
+                $('#oct_images_cache').append('<img id="oct_'+index+'" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/'+data[3][0]+'">');
+                lastIndex = index;
+                lastImageId = data[3][0];
             });
-            if(lastImageId != '' && lastImageId !== undefined) {
-                $('#oct_images').append('<img id="oct_' + lastIndex + '" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/' + lastImageId + '">');
-            }
+            $('#oct_images').append('<img id="oct_'+lastIndex+'" class="octimage" src="/OphCiExamination/OEScapeData/GetImage/'+lastImageId+'">');
         },
         cache: false
     });
@@ -880,9 +900,10 @@ function syncronizeCrossHairs(chart , type) {
             xAxis1.addPlotLine({
                 value: MedChart.yAxis[0].translate(x, true),
                 width: 1,
-                color: 'grey',
+                color: 'grey', 
+                zIndex: 50,
                 //dashStyle: 'dash',
-                id: "myPlotLineId"
+                id: "myPlotLineId",
             });
             
             var xAxis2 = IOPchart.xAxis[0];
@@ -891,6 +912,7 @@ function syncronizeCrossHairs(chart , type) {
                 value: MedChart.yAxis[0].translate(x, true),
                 width: 1,
                 color: 'grey',
+                zIndex: 50,
                 //dashStyle: 'dash',
                 id: "myPlotLineId"
             });
@@ -902,6 +924,7 @@ function syncronizeCrossHairs(chart , type) {
                 value: MedChart.yAxis[0].translate(x, true),
                 width: 1,
                 color: 'grey',
+                zIndex: 50,
                 //dashStyle: 'dash',
                 id: "myPlotLineId"
             });
@@ -915,6 +938,7 @@ function syncronizeCrossHairs(chart , type) {
                 value: VAchart.xAxis[0].translate(x, true),
                 width: 1,
                 color: 'grey',
+                zIndex: 50,
                 //dashStyle: 'dash',
                 id: "myPlotLineId"
             });
@@ -926,6 +950,7 @@ function syncronizeCrossHairs(chart , type) {
                 value: IOPchart.xAxis[0].translate(x, true),
                 width: 1,
                 color: 'grey',
+                zIndex: 50,
                 //dashStyle: 'dash',
                 id: "myPlotLineId"
             });
@@ -937,6 +962,7 @@ function syncronizeCrossHairs(chart , type) {
                 value: VAchart.xAxis[0].translate(x, true),
                 width: 1,
                 color: 'grey',
+                zIndex: 50,
                 //dashStyle: 'dash',
                 id: "myPlotLineId"
             });
