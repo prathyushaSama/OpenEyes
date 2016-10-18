@@ -33,7 +33,7 @@
         <script src="<?= Yii::app()->assetManager->createUrl('components/jquery-ui/ui/jquery.ui.datepicker.js')?>"></script>
         <script src="<?= Yii::app()->assetManager->createUrl('components/material-design-lite/material.min.js')?>"></script>
         <?php
-        if(Yii::app()->controller->action->id == 'oescape'){ ?>
+        if(strtolower(Yii::app()->controller->action->id) == 'oescape'){ ?>
             <script src="<?= Yii::app()->assetManager->createUrl('components/highcharts/highstock.js')?>"></script>
 
             <?php
