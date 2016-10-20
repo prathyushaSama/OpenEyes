@@ -25,7 +25,6 @@ var fixedPoint = {point: undefined, side: undefined, color: undefined};
 var defaultTickInterval = 5;
 
 $(document).ready(function() {
- 
     // Create the IOP chart
     IOPchart = new Highcharts.StockChart({
         chart:{
@@ -376,7 +375,7 @@ $(document).ready(function() {
 
     addRegressionChart();
 
-    // create the Visual Acuity chart
+    // create the Visual Acuity chartxc
     VAchart = new Highcharts.StockChart({
         chart:{
             renderTo: 'vachart',
@@ -1044,81 +1043,114 @@ function syncronizeCrossHairs(chart , type) {
         xAxis1.removePlotLine("myPlotLineId");
         
         //if we are on the medication chart
-        if( type == 'MedChart'){
-            
-            xAxis1.addPlotLine({
-                value: MedChart.yAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey', 
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId",
-            });
-            
-            var xAxis2 = IOPchart.xAxis[0];
-            xAxis2.removePlotLine("myPlotLineId");
-            xAxis2.addPlotLine({
-                value: MedChart.yAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey',
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId"
-            });
-
-            var xAxis3 = VAchart.xAxis[0]; 
-            xAxis3.removePlotLine("myPlotLineId");
-
-            xAxis3.addPlotLine({
-                value: MedChart.yAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey',
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId"
-            });
-             
-             
-             
-        } else {
-            
-           // var xAxis3 = VAchart.xAxis[0]; 
-            xAxis1.addPlotLine({
-                value: VAchart.xAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey',
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId"
-            });
-             
-              //remove old crosshair and draw new crosshair on chart2
-            var xAxis2 = IOPchart.xAxis[0];
-            xAxis2.removePlotLine("myPlotLineId");
-            xAxis2.addPlotLine({
-                value: IOPchart.xAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey',
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId"
-            });
-
-            var xAxis3 = VAchart.xAxis[0]; 
-            xAxis3.removePlotLine("myPlotLineId");
-
-            xAxis3.addPlotLine({
-                value: VAchart.xAxis[0].translate(x, true),
-                width: 1,
-                color: 'grey',
-                zIndex: 50,
-                //dashStyle: 'dash',
-                id: "myPlotLineId"
-            });
-        }
- 
-       
         
+        switch(type){
+            case 'MedChart':
+                xAxis1.addPlotLine({
+                    value: MedChart.yAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey', 
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId",
+                });
+            
+                var xAxis2 = IOPchart.xAxis[0];
+                xAxis2.removePlotLine("myPlotLineId");
+                xAxis2.addPlotLine({
+                    value: MedChart.yAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+
+                var xAxis3 = VAchart.xAxis[0]; 
+                xAxis3.removePlotLine("myPlotLineId");
+
+                xAxis3.addPlotLine({
+                    value: MedChart.yAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+            break;
+            case 'VAchart':
+                //var xAxis3 = VAchart.xAxis[0]; 
+                xAxis1.addPlotLine({
+                    value: VAchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+             
+                //remove old crosshair and draw new crosshair on chart2
+                var xAxis2 = IOPchart.xAxis[0];
+                xAxis2.removePlotLine("myPlotLineId");
+                xAxis2.addPlotLine({
+                    value: VAchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+
+                var xAxis3 = VAchart.xAxis[0]; 
+                xAxis3.removePlotLine("myPlotLineId");
+
+                xAxis3.addPlotLine({
+                    value: VAchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+            break;
+            case 'IOPchart':
+               // var xAxis3 = VAchart.xAxis[0]; 
+                
+                xAxis1.addPlotLine({
+                    value: IOPchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+                
+                //remove old crosshair and draw new crosshair on chart2
+                var xAxis2 = IOPchart.xAxis[0];
+                xAxis2.removePlotLine("myPlotLineId");
+                xAxis2.addPlotLine({
+                    value: IOPchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+
+                var xAxis3 = VAchart.xAxis[0]; 
+                xAxis3.removePlotLine("myPlotLineId");
+
+                xAxis3.addPlotLine({
+                    value: IOPchart.xAxis[0].translate(x, true),
+                    width: 1,
+                    color: 'grey',
+                    zIndex: 50,
+                    //dashStyle: 'dash',
+                    id: "myPlotLineId"
+                });
+            break;
+        }
+       
         //if you have other charts that need to be syncronized - update their crosshair (plot line) in the same way in this function.
     });
   
