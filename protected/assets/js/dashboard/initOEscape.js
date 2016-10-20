@@ -25,7 +25,7 @@ var fixedPoint = {point: undefined, side: undefined, color: undefined};
 var defaultTickInterval = 5;
 
 $(document).ready(function() {
-
+ 
     // Create the IOP chart
     IOPchart = new Highcharts.StockChart({
         chart:{
@@ -57,7 +57,45 @@ $(document).ready(function() {
                 marker:{
                     enabled: true,
                     radius: 4
-                }
+                }         
+            },
+            line: {
+                events: {
+                    legendItemClick: function ( event ) {
+                        var eyeSide = event.target.userOptions.side;
+                     
+                        if(typeof VAchart !== 'undefined'){
+                            for(var i = 0; i < VAchart.series.length; i++){
+                               
+                                if((typeof VAchart.series[i].userOptions.side !== "undefined") 
+                                 && (VAchart.series[i].userOptions.side == eyeSide))
+                                {
+                                    if(VAchart.series[i].visible){
+                                        VAchart.series[i].setVisible(false);
+                                    } else {
+                                        VAchart.series[i].setVisible(true);
+                                    }  
+                                }
+                                
+                            }  
+                        } 
+                        
+                        if(typeof MedChart !== 'undefined'){
+                            for(var i = 0; i < MedChart.series.length; i++){
+                                if((typeof MedChart.series[i].userOptions.side !== "undefined") 
+                                 && (MedChart.series[i].userOptions.side == eyeSide))
+                                {
+                                    if(MedChart.series[i].visible){
+                                        MedChart.series[i].setVisible(false);
+                                    } else {
+                                        MedChart.series[i].setVisible(true);
+                                    }  
+                                } 
+                            } 
+                        }
+                    }
+                },
+                showInLegend: true
             }
         },
         rangeSelector : {
@@ -66,15 +104,16 @@ $(document).ready(function() {
             selected: 5
         },
         legend: {
-            enabled: 1,
-            floating: true,
+            enabled: true,
+            //floating: true,
             align: 'right',
             verticalAlign: 'top',
             borderColor: '#dddddd',
             borderWidth: 1,
             layout: 'vertical',
             shadow: true,
-            y: 24
+            y: 24,
+            useHTML: true,
         },
         title : {
             text : 'IOP'
@@ -142,6 +181,7 @@ $(document).ready(function() {
                 seriesObj.push({ 
                     name: data[i][3],
                     color: color,
+                    side: data[i][2],
                     data: [{ 
                         x : lineHeight,
                         y: data[i][1],
@@ -174,8 +214,7 @@ $(document).ready(function() {
             */
            
             var maxValueOfMedChart = Math.round(lineHeight);
-            var heightOfMedChart = maxValueOfMedChart * 30;
-           
+            var heightOfMedChart = maxValueOfMedChart * currentMedY;
             // create the Medication chart
             MedChart = new Highcharts.chart({
                 chart: {
@@ -268,8 +307,8 @@ $(document).ready(function() {
                 syncronizeCrossHairs(chart , 'MedChart');
             });
             
-            addSeries(IOPchart, 1, "IOP", "DataSet", "#4d9900", 'solid', 0);
             addSeries(IOPchart, 2, "IOP", "DataSet", "#c653c6", 'solid', 0);
+            addSeries(IOPchart, 1, "IOP", "DataSet", "#4d9900", 'solid', 0);
             
         },
         cache: false,
@@ -369,12 +408,86 @@ $(document).ready(function() {
                     enabled: true,
                     radius: 4
                 }
+            },
+            line: {
+                events: {
+                    legendItemClick: function ( event ) {
+                        
+                        var thisChart = this.chart;
+                        var eyeSide = event.target.userOptions.side;
+                        
+                        /*
+                         * legend item on/off in the VA chart
+                         */
+                        var sideArr = [];
+                        for(var i = 0; i < thisChart.series.length; i++){
+                            if(thisChart.series[i].userOptions.side == eyeSide){
+                                
+                                if(event.target.index != thisChart.series[i].index){
+                                    sideArr.push({
+                                        index: thisChart.series[i].index,
+                                        visible: thisChart.series[i].visible
+                                     });
+                                }
+                            }
+                        }
+                        
+                        /*
+                         * 
+                         * @type Array 
+                         * The navigator has own series in hidden, so the sideArr array never will empty
+                         */
+                        $.grep(sideArr, function(e){ 
+                            if(e.visible){
+                                thisChart.series[e.index].setVisible(false);
+                            } else {
+                                thisChart.series[e.index].setVisible(true);
+                            }
+                        });
+                      
+                        /*
+                         * legend item on/off in the IOP cahrt
+                         */
+                        if(typeof IOPchart !== 'undefined'){
+                            for(var i = 0; i < IOPchart.series.length; i++){
+                                if((typeof IOPchart.series[i].userOptions.side !== "undefined") 
+                                 && (IOPchart.series[i].userOptions.side == eyeSide))
+                                {
+                                    if(IOPchart.series[i].visible){
+                                        IOPchart.series[i].setVisible(false);
+                                    } else {
+                                        IOPchart.series[i].setVisible(true);
+                                    }  
+                                }  
+                            } 
+                        } 
+                        
+                        /*
+                         * legend item on/off in the Medications cahrt
+                         */
+                        
+                        if(typeof MedChart !== 'undefined'){
+                            for(var i = 0; i < MedChart.series.length; i++){
+                                
+                                if (MedChart.series[i].userOptions.side == eyeSide){
+                                    if(MedChart.series[i].visible){
+                                        MedChart.series[i].setVisible(false);
+                                    } else {
+                                        MedChart.series[i].setVisible(true);
+                                    } 
+                                }
+                            } 
+                        } 
+                    }
+                },
+                showInLegend: true
             }
         },
 
         legend: {
-            enabled: 1,
-            floating: true,
+            enabled: true,
+            floating: false,
+            useHTML: true,
             align: 'right',
             verticalAlign: 'top',
             borderColor: '#dddddd',
@@ -444,11 +557,11 @@ $(document).ready(function() {
     });
 
 
-    addSeries(VAchart, 1, "VA", "DataSetVA", "#4d9900", 'solid', 0);
     addSeries(VAchart, 2, "VA", "DataSetVA", "#c653c6", 'solid', 0);
+    addSeries(VAchart, 1, "VA", "DataSetVA", "#4d9900", 'solid', 0);
 
-    addSeries(VAchart, 1, 'MD', 'DataSetMD', "#4d9900", 'shortdot', 1);
     addSeries(VAchart, 2, 'MD', 'DataSetMD', "#c653c6", 'shortdot', 1);
+    addSeries(VAchart, 1, 'MD', 'DataSetMD', "#4d9900", 'shortdot', 1);
 
     //$('#regression_chart').hide();
 });
@@ -482,14 +595,35 @@ $(document).ajaxStop(function() {
     
     /* update MedChart intervall */
     MedChart.yAxis[0].update({
-         min: VAchart.xAxis[0].min
+        min: VAchart.xAxis[0].min,
+        max: VAchart.xAxis[0].max
     }); 
-    MedChart.yAxis[0].update({
-         max: VAchart.xAxis[0].max
-    }); 
-
 });
 
+/*
+function calculateMedChartHeight(){
+    visibleRow = 0;
+    lineHeight = 0.9;
+    newHeight = 0;
+    lastVisible= [];
+    for(var i = 0; i < MedChart.series.length; i++){
+        if(MedChart.series[i].visible){
+            lastVisible.push(i); 
+        } 
+    } 
+    visibleRow = (lastVisible[lastVisible.length - 1]) + 2;
+    
+    if(visibleRow > 0){
+        
+        newHeight = (Math.round(visibleRow * lineHeight)) * currentMedY;
+        console.log(visibleRow * lineHeight);
+        console.log(Math.round(visibleRow * lineHeight));
+        console.log(newHeight);
+        MedChart.setSize( $('#medchart').width(), newHeight );
+    }
+
+}
+*/
 function redrawCharts(){
     for(var i=0; i<Highcharts.charts.length; i++){
         Highcharts.charts[i].reflow();
@@ -602,7 +736,8 @@ function addSeries(chart, side, title, dataurl, seriescol, dashstyle, yaxis){
                 legendIndex: legindex,
                 zIndex: side,
                 dashStyle: dashstyle,
-                yAxis: yaxis
+                yAxis: yaxis,
+                side: side
             });
         },
         cache: false
