@@ -159,7 +159,7 @@ class OEScapeDataController extends \BaseController
 
         $output = array();
         foreach($data as $row){
-            $output[] = array(strtotime($row["event_date"])*1000, (int) $row["value"]);
+            $output[] = array(strtotime($row["event_date"]. ' UTC')*1000, (int) $row["value"]);
         }
         echo json_encode($output);
     }
@@ -169,7 +169,7 @@ class OEScapeDataController extends \BaseController
         $output = array();
        
         foreach($data as $row){
-            $key = strtotime($row["event_date"]) * 1000;
+            $key = strtotime($row["event_date"]. ' UTC') * 1000;
             if($currentBest = $this->isVAinArray($key, $output)){
                 if( $row["value"] < $currentBest){
                     $output[$currentBest] = array($key, (float)$row["value"]);
@@ -187,7 +187,7 @@ class OEScapeDataController extends \BaseController
 
         $output = array();
         foreach($data as $row){
-            $output[] = array(strtotime($row["event_date"])*1000, (float) $row["mean_deviation"]);
+            $output[] = array(strtotime($row["event_date"]. ' UTC')*1000, (float) $row["mean_deviation"]);
         }
         echo json_encode($output);
 
