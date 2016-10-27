@@ -84,8 +84,26 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         ));
     }
 
-    /* Return all previous versions ordered by most recent */
+    /* Return all previous modifier users by versions ordered by most recent */
+    public function getPreviousUsersByVersions()
+    {
+        $condition = 'v.id = :id';
+        $params = array(':id' => $this->id);
 
+        if ($this->version_id) {
+            $condition .= ' and v.version_id = :version_id';
+            $params[':version_id'] = $this->version_id;
+        }
+
+        return Yii::app()->db->createCommand()
+            ->select('first_name, last_name')
+            ->from($this->tableName().'_version v')
+            ->join('user u', 'u.id=v.last_modified_user_id')
+            ->where($condition,$params)
+            ->order('v.version_id DESC')->queryAll();
+    }
+
+    /* Return all previous versions ordered by most recent */
     public function getPreviousVersions()
     {
         $condition = 'id = :id';

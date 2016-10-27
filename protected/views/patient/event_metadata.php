@@ -17,10 +17,26 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
+
 <?php
-$event = $this->event;
-$event_type = $event->eventType->name;
+    $event = $this->event;
+    $event_type = $event->eventType->name;
+
+    $modifiers = '';
+    $versions = $event -> getPreviousUsersByVersions();
+    
+    if(is_array($versions) && !empty($versions)){
+        foreach($versions as $oneVersion){
+            $and = ( count($versions) > 1 && $oneVersion === end($versions)) ? ' and ' : ', ';
+            $modifiers .= $and.$oneVersion['first_name'].' '.$oneVersion['last_name'];
+        }
+        $modifiers = trim($modifiers,',');
+    } else {
+        $modifiers = 'nobody';
+    }
+
 ?>
+
 <div class="metadata">
 	<?php if (!@$hide_created) { ?>
 		<span class="info">
@@ -34,6 +50,9 @@ $event_type = $event->eventType->name;
 			<?php echo $event_type ?> last modified by <span class="user"><?php echo $event->usermodified->fullname ?></span>
 			on <?php echo $event->NHSDate('last_modified_date') ?>
 			at <?php echo date('H:i', strtotime($event->last_modified_date)) ?>
+		</span>
+		<span class="info">
+	        <?php echo $event_type ?> has been modified by <span class="user"><?php echo $modifiers ?></span>
 		</span>
 	<?php } ?>
 </div>
