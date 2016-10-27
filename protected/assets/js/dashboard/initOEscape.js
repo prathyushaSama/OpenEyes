@@ -23,6 +23,7 @@ var currentMedY = 30;
 var currentIndexDate = new Date().getTime();
 var fixedPoint = {point: undefined, side: undefined, color: undefined};
 var defaultTickInterval = 5;
+var addHdnSeries = false;
 
 $(document).ready(function() {
     // Create the IOP chart
@@ -121,7 +122,8 @@ $(document).ready(function() {
             labels:
             {
                 enabled: true
-            }
+            },
+            type: 'datetime',
         },
         yAxis: {
             min: 0,
@@ -213,7 +215,8 @@ $(document).ready(function() {
             */
            
             var maxValueOfMedChart = Math.round(lineHeight);
-            var heightOfMedChart = maxValueOfMedChart * currentMedY;
+            var heightOfMedChart = (maxValueOfMedChart + 0.9 ) * currentMedY ;
+            
             // create the Medication chart
             MedChart = new Highcharts.chart({
                 chart: {
@@ -222,12 +225,9 @@ $(document).ready(function() {
                     inverted: true,
                     height: heightOfMedChart,
                     marginLeft: 50,
-                    marginRight: 50,
-                    spacingRight: 30,
                     spacingLeft: 30,
-                    //zoomType: 'xy',
-                    //panning: true,
-                    //panKey: 'shift'
+                    marginRight: 50,
+                    spacingRight: 30
                 },   
                 title: {
                     text: 'Medications'
@@ -243,8 +243,8 @@ $(document).ready(function() {
                 },
                 yAxis: {
                    // min: minValueOfY,
-                    startOnTick:true,
-                   // endOnTick: false,
+                    startOnTick:false,
+                    endOnTick: false,
                     type: 'datetime',
                     labels: {
                         enabled: false
@@ -406,7 +406,7 @@ $(document).ready(function() {
                 marker:{
                     enabled: true,
                     radius: 4
-                }
+                },
             },
             line: {
                 events: {
@@ -445,7 +445,7 @@ $(document).ready(function() {
                         });
                       
                         /*
-                         * legend item on/off in the IOP cahrt
+                         * legend item on/off in the IOP chart
                          */
                         if(typeof IOPchart !== 'undefined'){
                             for(var i = 0; i < IOPchart.series.length; i++){
@@ -462,7 +462,7 @@ $(document).ready(function() {
                         } 
                         
                         /*
-                         * legend item on/off in the Medications cahrt
+                         * legend item on/off in the Medications chart
                          */
                         
                         if(typeof MedChart !== 'undefined'){
@@ -506,6 +506,7 @@ $(document).ready(function() {
             {
                 enabled: false
             },
+            type: 'datetime',
         },
         yAxis: [{
             reversed: true,
@@ -561,7 +562,7 @@ $(document).ready(function() {
 
     addSeries(VAchart, 2, 'MD', 'DataSetMD', "#c653c6", 'shortdot', 1);
     addSeries(VAchart, 1, 'MD', 'DataSetMD', "#4d9900", 'shortdot', 1);
-
+    
     //$('#regression_chart').hide();
 });
 
@@ -592,37 +593,79 @@ $(document).ajaxStop(function() {
         }
     });
     
-    /* update MedChart intervall */
-    MedChart.yAxis[0].update({
-        min: VAchart.xAxis[0].min,
-        max: VAchart.xAxis[0].max
-    }); 
-});
-
-/*
-function calculateMedChartHeight(){
-    visibleRow = 0;
-    lineHeight = 0.9;
-    newHeight = 0;
-    lastVisible= [];
-    for(var i = 0; i < MedChart.series.length; i++){
-        if(MedChart.series[i].visible){
-            lastVisible.push(i); 
-        } 
-    } 
-    visibleRow = (lastVisible[lastVisible.length - 1]) + 2;
-    
-    if(visibleRow > 0){
-        
-        newHeight = (Math.round(visibleRow * lineHeight)) * currentMedY;
-        console.log(visibleRow * lineHeight);
-        console.log(Math.round(visibleRow * lineHeight));
-        console.log(newHeight);
-        MedChart.setSize( $('#medchart').width(), newHeight );
+   
+    if(addHdnSeries == false){
+        addHdnSeries = addHiddenSeries();
     }
 
+});
+
+function addHiddenSeries(){
+    
+    var minX = IOPchart.xAxis[0].min;
+    var maxX = IOPchart.xAxis[0].max;
+    var chartsBreakpoint = incrementTimestamp( minX , maxX );
+
+    IOPchart.addSeries({
+        data: chartsBreakpoint,
+        enableMouseTracking: false,
+        lineWidth: 0,
+        showInLegend: false,  
+        marker: {
+            enabled: false
+        },
+    });
+    
+    VAchart.addSeries({
+        data: chartsBreakpoint,
+        enableMouseTracking: false,
+        lineWidth: 0,
+        showInLegend: false,  
+        marker: {
+            enabled: false
+        },
+    });
+   
+    
+    var maxXlineHeight = MedChart.series.length * 0.9;
+    MedChart.addSeries({
+        name: 'breakpoint',
+        side: '3',
+        enableMouseTracking: false,
+        data: [{ 
+            x : maxXlineHeight,
+            y: maxX,
+            //low:minX,
+            high:maxX,
+            data: [ minX, maxX ],
+            color: null,
+        }],
+       
+    });
+
+    MedChart.yAxis[0].update({
+        min: minX,
+        max: maxX
+    }); 
+    
+    return true;
 }
-*/
+
+function incrementTimestamp( startDate , endDate ){
+    var result = [];
+    var oneDay = 24 * 60 * 60 * 1000;
+    var incrementDay = startDate + oneDay;
+    
+    result.push([ startDate, 0]);
+    while (incrementDay <= endDate) {
+        result.push([ incrementDay, 0]);
+        incrementDay = incrementDay + oneDay;
+    }
+    result.push([ endDate, 0]);
+    
+    return result;
+}
+
 function redrawCharts(){
     for(var i=0; i<Highcharts.charts.length; i++){
         Highcharts.charts[i].reflow();
