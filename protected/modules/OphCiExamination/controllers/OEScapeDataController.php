@@ -198,7 +198,7 @@ class OEScapeDataController extends \BaseController
 
         $output = array();
         foreach($data as $row){
-            $output[] = array(strtotime($row["event_date"])*1000, $row["term"], (int) $row["eye_id"]);
+            $output[] = array(strtotime($row["event_date"]. ' UTC')*1000, $row["term"], (int) $row["eye_id"]);
         }
 
         echo json_encode($output);
@@ -219,9 +219,9 @@ class OEScapeDataController extends \BaseController
         $output = array();
         foreach($medications as $medication){
             if($medication->end_date == NULL){
-                $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($lastVAdate[0]['event_date'])*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+                $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($lastVAdate[0]['event_date']. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
             } else {
-                $output[] = array((int)strtotime($medication->start_date)*1000, (int)strtotime($medication->end_date)*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+                $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($medication->end_date. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
             }
         }
         echo json_encode($output);
