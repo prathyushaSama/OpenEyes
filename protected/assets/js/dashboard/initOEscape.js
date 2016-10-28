@@ -601,9 +601,22 @@ $(document).ajaxStop(function() {
 });
 
 function addHiddenSeries(){
+     
+    var minXArr = [IOPchart.xAxis[0].dataMin , VAchart.xAxis[0].dataMin, MedChart.yAxis[0].dataMin];
+    var maxXArr = [IOPchart.xAxis[0].dataMax , VAchart.xAxis[0].dataMax, MedChart.yAxis[0].dataMax];
+
+    var xMinVals = minXArr.map(function(obj) {
+        return obj;
+    });
+    var xMaxVals = maxXArr.map(function(obj) {
+        return obj;
+    });
     
-    var minX = IOPchart.xAxis[0].min;
-    var maxX = IOPchart.xAxis[0].max;
+    var minX = Math.min.apply(null, xMinVals);
+    var maxX = Math.min.apply(null, xMaxVals);
+    
+   // var minX = IOPchart.xAxis[0].min;
+    //var maxX = IOPchart.xAxis[0].max;
     var chartsBreakpoint = incrementTimestamp( minX , maxX );
 
     IOPchart.addSeries({
@@ -627,22 +640,28 @@ function addHiddenSeries(){
     });
    
     
-    var maxXlineHeight = MedChart.series.length * 0.9;
+    var maxXlineHeight = MedChart.series.length * 0.9 + 0.9;
+   
     MedChart.addSeries({
         name: 'breakpoint',
         side: '3',
         enableMouseTracking: false,
+        pointRange: 0,
+        pointWidth: 0,
+        pointInterval: 0,
         data: [{ 
             x : maxXlineHeight,
             y: maxX,
-            //low:minX,
+            low:minX,
             high:maxX,
             data: [ minX, maxX ],
-            color: null,
         }],
+        dataLabels:{
+            enabled:false,
+        }  
        
     });
-
+    
     MedChart.yAxis[0].update({
         min: minX,
         max: maxX
