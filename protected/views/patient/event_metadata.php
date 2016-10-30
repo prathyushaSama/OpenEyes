@@ -21,13 +21,13 @@
 <?php
     $event = $this->event;
     $event_type = $event->eventType->name;
-
+    
     $modifiers = '';
     $versions = $event -> getPreviousUsersByVersions();
     
     if(is_array($versions) && !empty($versions)){
-        foreach($versions as $oneVersion){
-            $and = ( count($versions) > 1 && $oneVersion === end($versions)) ? ' and ' : ', ';
+        foreach($versions as $key => $oneVersion){
+            $and = ( count($versions) > 1 && ((count($versions)-1)==$key) ) ? ' and ' : ', ';
             $modifiers .= $and.$oneVersion['first_name'].' '.$oneVersion['last_name'];
         }
         $modifiers = trim($modifiers,',');

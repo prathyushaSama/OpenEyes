@@ -17,6 +17,27 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
+
+<?php
+
+    $eventId = $element -> getEventDataFromElement()[0]->event_id;
+    $versions = $element -> getPreviousUsersFromEventIdByVersions($eventId);
+    $modifiers = '';
+
+    if(is_array($versions) && !empty($versions)){
+        foreach($versions as $key => $oneVersion){
+            $modifiers .= 
+                $oneVersion['first_name'].' '.
+                $oneVersion['last_name'].' '. 
+                Helper::convertMySQL2NHS($oneVersion['last_modified_date']).
+                ' at '.date('H:i', strtotime($oneVersion['last_modified_date'])).
+                '<br>';
+        }
+    } else {
+        $modifiers = 'nobody';
+    }
+?>
+
 <section
 	class="<?php if (@$child) {?>sub-<?php }?>element <?php echo CHtml::modelName($element->elementType->class_name)?>"
 	data-element-type-id="<?php echo $element->elementType->id?>"
@@ -25,8 +46,15 @@
 	data-element-display-order="<?php echo $element->elementType->display_order?>">
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
-			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
+    		<div class="metadata" style="margin: 0px; padding-top: 2px; float: right;">
+        		<span class="info">
+        	       <span class="user"><?php echo $modifiers ?></span>
+        		</span>
+    	    </div>
+
+			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3> 
 		</header>
+
 	<?php } ?>
 	<?php echo $content;?>
 	<div class="sub-elements">

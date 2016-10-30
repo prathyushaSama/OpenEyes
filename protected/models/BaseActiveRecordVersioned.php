@@ -84,11 +84,34 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         ));
     }
 
+    public function getEventDataFromElement()
+    {
+        $condition = 'id = :id';
+        $params = array(':id' => $this->id);
+        return $this->model()->findAll(array(
+            'condition' => $condition,
+            'params' => $params
+        ));
+    }
+
+    public function getPreviousUsersFromEventIdByVersions($event_id = null)
+    {
+        $condition = 'v.event_id = :id';
+        $params[':id'] = $event_id;
+
+        return Yii::app()->db->createCommand()
+            ->select('u.first_name, u.last_name, v.last_modified_date')
+            ->from($this->tableName().'_version v')
+            ->join('user u', 'u.id=v.last_modified_user_id')
+            ->where($condition,$params)
+            ->order('v.version_id DESC')->queryAll();
+    }
+
     /* Return all previous modifier users by versions ordered by most recent */
     public function getPreviousUsersByVersions()
     {
         $condition = 'v.id = :id';
-        $params = array(':id' => $this->id);
+        $params[':id'] = $this->id;
 
         if ($this->version_id) {
             $condition .= ' and v.version_id = :version_id';
@@ -96,7 +119,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         }
 
         return Yii::app()->db->createCommand()
-            ->select('first_name, last_name')
+            ->select('u.first_name, u.last_name, v.last_modified_date')
             ->from($this->tableName().'_version v')
             ->join('user u', 'u.id=v.last_modified_user_id')
             ->where($condition,$params)
