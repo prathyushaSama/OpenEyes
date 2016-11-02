@@ -73,6 +73,7 @@ class BaseEventTypeController extends BaseModuleController
         'viewPreviousElements' => self::ACTION_TYPE_FORM,
         'print' => self::ACTION_TYPE_PRINT,
         'PDFprint' => self::ACTION_TYPE_PRINT,
+        'displayPreviousModifications' => self::ACTION_TYPE_VIEW,
         'saveCanvasImages' => self::ACTION_TYPE_PRINT,
         'update' => self::ACTION_TYPE_EDIT,
         'delete' => self::ACTION_TYPE_DELETE,
@@ -1984,4 +1985,20 @@ class BaseEventTypeController extends BaseModuleController
             $pcrRisk->persist($side, $this->patient, $sideData);
         }
     }
+    
+    public function actionDisplayPreviousModifications(){
+        //if ($this->assetPath && !Yii::app()->getRequest()->getIsAjaxRequest()) {}
+        
+        print_r($_GET);
+        if (!empty($_GET)) {
+            
+            $className = $_GET['element_type_class'];
+            $elementTypeId = $_GET['element_type_id'];
+            $eventId = $_GET['event_id'];
+            
+            /*
+            $this->renderPartial($view);
+            */            
+        }
+    }    
 }

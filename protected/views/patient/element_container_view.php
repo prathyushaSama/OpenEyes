@@ -20,7 +20,7 @@
 
 <?php
 
-    $eventId = $element -> getEventDataFromElement()[0]->event_id;
+    $eventId = $element -> event -> id;
     $versions = $element -> getPreviousUsersFromEventIdByVersions($eventId);
     $modifiers = '';
 
@@ -43,18 +43,20 @@
 	data-element-type-id="<?php echo $element->elementType->id?>"
 	data-element-type-class="<?php echo $element->elementType->class_name?>"
 	data-element-type-name="<?php echo $element->elementType->name?>"
+	data-event-id="<?php echo $element -> event -> id?>"
 	data-element-display-order="<?php echo $element->elementType->display_order?>">
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
-    		<div class="metadata" style="margin: 0px; padding-top: 2px; float: right;">
-        		<span class="info">
-        	       <span class="user"><?php echo $modifiers ?></span>
-        		</span>
-    	    </div>
-
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3> 
+			<?php if (count($versions) > 0 ) { ?>
+			    <button 
+			        type="button"
+			        id="show-previous-modifications"
+			        class="button tiny right secondary active displayPreviousModifications enabled"
+			        title="Show previous modifications"
+			    >History of modified data (<?php echo count($versions) ?>)</button>
+         <?php } ?>			    
 		</header>
-
 	<?php } ?>
 	<?php echo $content;?>
 	<div class="sub-elements">

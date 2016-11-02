@@ -46,9 +46,35 @@ $(document).ready(function(){
 		});
 	}());
 
+
 	if (window.location.href.match(/#addEvent$/)) {
 		$('button.addEvent[data-attr-subspecialty-id="'+OE_subspecialty_id+'"]').click();
 	}
+
+    $('button.displayPreviousModifications.enabled').click(function(e) {
+    	e.preventDefault();
+    	var btn = $('button.displayPreviousModifications');
+    	var section = btn.closest( "section" );
+    	
+		var options = {
+			id: 'previous-modifications-dialog',
+			title: 'Previous modifications'
+		}    	
+		
+		
+    	new OpenEyes.UI.Dialog($.extend({}, options, {
+    		url: baseUrl + '../DisplayPreviousModifications',
+    		data: {
+    			returnUrl: window.location.href,
+    			element_type_id: section.data('element-type-id'),
+    			element_type_class: section.data('element-type-class'),
+    			event_id: section.data('event-id')
+    		}
+    	})).open();
+    	
+    });
+		
+   
 
 	$('button.add-episode').click(function(e) {
 		$.ajax({
