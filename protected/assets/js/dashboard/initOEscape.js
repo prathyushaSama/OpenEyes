@@ -43,9 +43,27 @@ $(document).ready(function() {
         },
         tooltip: {
             shared:true,
+            followTouchMove: false,
             xDateFormat: '<b>%d/%m/%Y</b>',
+            
+            positioner: function (labelWidth, labelHeight, point) {
+              
+                var tooltipX, tooltipY;
+                if (point.plotX + labelWidth > this.chart.plotWidth) {
+                    tooltipX = point.plotX + this.chart.plotLeft - labelWidth - 20;
+                } else {
+                    tooltipX = point.plotX + this.chart.plotLeft + 20;
+                }
+              
+                tooltipY = this.chart.plotHeight - labelHeight - this.chart.plotTop;
+              
+                return {
+                    x: tooltipX,
+                    y: tooltipY
+                };
+            }
+            
         },
-       
         plotOptions: {
             series: {
                 states: {
@@ -119,8 +137,11 @@ $(document).ready(function() {
             text : 'IOP'
         },
         xAxis:{
-            labels:
-            {
+            labels:{
+                enabled: true
+            },
+            crosshair: {
+                snap: false,
                 enabled: true
             },
             type: 'datetime',
@@ -130,8 +151,7 @@ $(document).ready(function() {
             max: 60,
             opposite:false,
             //isDirty: true,
-            labels:
-            {
+            labels:{
                 align: 'left',
                 x: -20,
                 y: -2
@@ -387,6 +407,22 @@ $(document).ready(function() {
         tooltip: {
             shared:true,
             xDateFormat: '<b>%d/%m/%Y</b>',
+            positioner: function (labelWidth, labelHeight, point) {
+              
+                var tooltipX, tooltipY;
+                if (point.plotX + labelWidth > this.chart.plotWidth) {
+                    tooltipX = point.plotX + this.chart.plotLeft - labelWidth - 20;
+                } else {
+                    tooltipX = point.plotX + this.chart.plotLeft + 20;
+                }
+              
+                tooltipY = this.chart.plotHeight - labelHeight - this.chart.plotTop;
+              
+                return {
+                    x: tooltipX,
+                    y: tooltipY
+                };
+            }
         },
 
         rangeSelector : {
@@ -507,6 +543,9 @@ $(document).ready(function() {
                 enabled: false
             },
             type: 'datetime',
+            crosshair: {
+                snap: false
+            }
         },
         yAxis: [{
             reversed: true,
@@ -798,7 +837,7 @@ function addSeries(chart, side, title, dataurl, seriescol, dashstyle, yaxis){
                 zIndex: side,
                 dashStyle: dashstyle,
                 yAxis: yaxis,
-                side: side
+                side: side,
             });
         },
         cache: false
