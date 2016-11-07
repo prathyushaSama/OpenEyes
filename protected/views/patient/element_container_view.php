@@ -47,15 +47,15 @@
 	data-element-display-order="<?php echo $element->elementType->display_order?>">
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
-			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3> 
+			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
 			<?php if (count($versions) > 0 ) { ?>
 			    <button 
 			        type="button"
 			        id="show-previous-modifications"
 			        class="button tiny right secondary active displayPreviousModifications enabled"
 			        title="Show previous modifications"
-			    >History of modified data (<?php echo count($versions) ?>)</button>
-         <?php } ?>			    
+			    >History (<?php echo count($versions) ?>)</button>
+         <?php } ?>
 		</header>
 	<?php } ?>
 	<?php echo $content;?>

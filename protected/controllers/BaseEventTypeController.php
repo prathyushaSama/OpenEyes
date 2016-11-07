@@ -1989,13 +1989,18 @@ class BaseEventTypeController extends BaseModuleController
     public function actionDisplayPreviousModifications(){
         //if ($this->assetPath && !Yii::app()->getRequest()->getIsAjaxRequest()) {}
         
-        print_r($_GET);
         if (!empty($_GET)) {
             
-            $className = $_GET['element_type_class'];
-            $elementTypeId = $_GET['element_type_id'];
-            $eventId = $_GET['event_id'];
-            
+            //$className = $_GET['element_type_class'];
+            $element_type_id = $_GET['element_type_id'];
+            $event_id = $_GET['event_id'];
+
+            $element_type = ElementType::model()->findByPk($element_type_id);
+            $model_name = $element_type->class_name;
+
+            $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
+
+            $this->renderElement($element, 'view', null, null);
             /*
             $this->renderPartial($view);
             */            
