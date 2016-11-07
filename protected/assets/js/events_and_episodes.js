@@ -63,6 +63,7 @@ $(document).ready(function(){
 		
     	new OpenEyes.UI.Dialog($.extend({}, options, {
     		url: baseUrl + '../displayPreviousModificationsTabs',  //'../DisplayPreviousModifications',
+    		width:800,
     		data: {
     			returnUrl: window.location.href,
     			element_type_id: section.data('element-type-id'),

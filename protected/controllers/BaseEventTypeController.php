@@ -1990,7 +1990,19 @@ class BaseEventTypeController extends BaseModuleController
     
     public function actionDisplayPreviousModificationsTabs(){
         $request = Yii::app()->getRequest();
+
+        $element_type_id = $request->getQuery('element_type_id');
+        $event_id = $request->getQuery('event_id');
+        
+        //print_r($_GET); die;
+            
+        $element_type = ElementType::model()->findByPk($element_type_id);
+        $model_name = $element_type->class_name;
+        
+        $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));        
+        
         $data = array(
+            'element' => $element,
             'element_type_id' => $request->getQuery('element_type_id'),
             'event_id' => $request->getQuery('event_id'),
         );
@@ -1999,21 +2011,22 @@ class BaseEventTypeController extends BaseModuleController
     }
     
     public function actionDisplayPreviousModifications(){
+      
         if ( $this->assetPath && Yii::app()->getRequest()->getIsAjaxRequest() && !empty($_GET)) {
+            
             $request = Yii::app()->getRequest();
             
             $element_type_id = $request->getQuery('element_type_id');
             $event_id = $request->getQuery('event_id');
             
-            
+
             $element_type = ElementType::model()->findByPk($element_type_id);
             $model_name = $element_type->class_name;
             
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
             $this->renderElement($element,'view',null,array(), array('ondemand' => true), false);
             
-            
-            
         }
+        
     }    
 }

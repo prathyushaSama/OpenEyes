@@ -100,11 +100,11 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         $params[':id'] = $event_id;
 
         return Yii::app()->db->createCommand()
-            ->select('u.first_name, u.last_name, v.last_modified_date')
+            ->select('u.first_name, u.last_name, TIME(v.last_modified_date) as last_modified_date, v.version_id')
             ->from($this->tableName().'_version v')
             ->join('user u', 'u.id=v.last_modified_user_id')
             ->where($condition,$params)
-            ->order('v.version_id DESC')->queryAll();
+            ->order('v.last_modified_date DESC')->queryAll();
     }
 
     /* Return all previous modifier users by versions ordered by most recent */
