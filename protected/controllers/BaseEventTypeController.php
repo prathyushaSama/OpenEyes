@@ -74,6 +74,7 @@ class BaseEventTypeController extends BaseModuleController
         'print' => self::ACTION_TYPE_PRINT,
         'PDFprint' => self::ACTION_TYPE_PRINT,
         'displayPreviousModifications' => self::ACTION_TYPE_VIEW,
+        'displayPreviousModificationsTabs' => self::ACTION_TYPE_VIEW,
         'saveCanvasImages' => self::ACTION_TYPE_PRINT,
         'update' => self::ACTION_TYPE_EDIT,
         'delete' => self::ACTION_TYPE_DELETE,
@@ -1986,24 +1987,33 @@ class BaseEventTypeController extends BaseModuleController
         }
     }
     
-    public function actionDisplayPreviousModifications(){
-        //if ($this->assetPath && !Yii::app()->getRequest()->getIsAjaxRequest()) {}
+    
+    public function actionDisplayPreviousModificationsTabs(){
+        $request = Yii::app()->getRequest();
+        $data = array(
+            'element_type_id' => $request->getQuery('element_type_id'),
+            'event_id' => $request->getQuery('event_id'),
+        );
         
-        if (!empty($_GET)) {
+        $this->renderPartial('//patient/element_history_tab', $data, false, true);
+    }
+    
+    public function actionDisplayPreviousModifications(){
+        if ( $this->assetPath && Yii::app()->getRequest()->getIsAjaxRequest() && !empty($_GET)) {
+            $request = Yii::app()->getRequest();
             
-            //$className = $_GET['element_type_class'];
-            $element_type_id = $_GET['element_type_id'];
-            $event_id = $_GET['event_id'];
-
+            $element_type_id = $request->getQuery('element_type_id');
+            $event_id = $request->getQuery('event_id');
+            
+            
             $element_type = ElementType::model()->findByPk($element_type_id);
             $model_name = $element_type->class_name;
-
+            
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
-
-            $this->renderElement($element, 'view', null, null);
-            /*
-            $this->renderPartial($view);
-            */            
+            $this->renderElement($element,'view',null,array(), array('ondemand' => true), false);
+            
+            
+            
         }
     }    
 }

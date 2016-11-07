@@ -53,7 +53,7 @@ $(document).ready(function(){
 
     $('button.displayPreviousModifications.enabled').click(function(e) {
     	e.preventDefault();
-    	var btn = $('button.displayPreviousModifications');
+    	var btn = $(e.target);
     	var section = btn.closest( "section" );
     	
 		var options = {
@@ -61,13 +61,11 @@ $(document).ready(function(){
 			title: 'Previous modifications'
 		}    	
 		
-		
     	new OpenEyes.UI.Dialog($.extend({}, options, {
-    		url: baseUrl + '../DisplayPreviousModifications',
+    		url: baseUrl + '../displayPreviousModificationsTabs',  //'../DisplayPreviousModifications',
     		data: {
     			returnUrl: window.location.href,
     			element_type_id: section.data('element-type-id'),
-    			element_type_class: section.data('element-type-class'),
     			event_id: section.data('event-id')
     		}
     	})).open();
