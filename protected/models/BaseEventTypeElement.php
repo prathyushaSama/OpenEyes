@@ -29,7 +29,7 @@ class BaseEventTypeElement extends BaseElement
     public $userId;
     public $patientId;
     public $useContainerView = true;
-
+    
     protected $_element_type;
     protected $_children;
     protected $frontEndErrors = array();
@@ -46,6 +46,7 @@ class BaseEventTypeElement extends BaseElement
     );
 
     private $settings = array();
+
 
     /**
      * Get the ElementType for this element.

@@ -36,9 +36,12 @@
         <li><a href="#tabs-<?php echo $oneVersion['version_id']; ?>"><?php echo $oneVersion['first_name'].' '.$oneVersion['last_name'].' '.$oneVersion['last_modified_date']  ?></a></li>
     <?php } ?>
   </ul>
-  <?php foreach($versions as $key => $oneVersion) { ?>
+  <?php foreach($versions as $key => $oneVersion) { 
+    $element -> event -> fromVersion();
+    //$element -> event -> getPreviousVersions();
+  ?>
       <div id="tabs-<?php echo $oneVersion['version_id']; ?>">
-        
+            
             <script>
                 loadTabsContents("<?php echo $oneVersion['version_id']; ?>");
             </script>

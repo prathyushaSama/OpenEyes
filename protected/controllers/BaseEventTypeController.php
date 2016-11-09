@@ -98,6 +98,7 @@ class BaseEventTypeController extends BaseModuleController
     public $editable = true;
     public $editing;
     private $title;
+    
     public $episode;
     public $moduleStateCssClass = '';
     public $event_tabs = array();
@@ -118,6 +119,7 @@ class BaseEventTypeController extends BaseModuleController
     public $pdf_print_documents = 1;
     public $pdf_print_html = null;
 
+  
     public function behaviors()
     {
         return array(
@@ -2018,13 +2020,17 @@ class BaseEventTypeController extends BaseModuleController
             
             $element_type_id = $request->getQuery('element_type_id');
             $event_id = $request->getQuery('event_id');
-            
 
             $element_type = ElementType::model()->findByPk($element_type_id);
             $model_name = $element_type->class_name;
-            
+                  
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
-            $this->renderElement($element,'view',null,array(), array('ondemand' => true), false);
+
+            $version_id = $request->getQuery('version_id');
+            $element -> setVersionID($version_id);     
+            
+            $this->renderElement($element,'view',null,null);
+            
             
         }
         

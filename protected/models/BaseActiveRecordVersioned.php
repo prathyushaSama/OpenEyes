@@ -20,19 +20,32 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
 {
     private $enable_version = true;
     private $fetch_from_version = false;
-    public $version_id = null;
+    private $version_id = null;
+
+
+    public function setVersionID($versionID){
+        $this -> version_id = $versionID;
+    }
+    
+    /**
+     * Get the versionID for this element.
+     *
+     * @return ElementType
+     */
+    public function getVersionID(){
+        return $this -> version_id;
+    }
 
     /* Disable archiving on save() */
-
+    
     public function noVersion()
     {
         $this->enable_version = false;
-
         return $this;
     }
 
     /* Re-enable archiving on save() */
-
+    
     public function withVersion()
     {
         $this->enable_version = true;
