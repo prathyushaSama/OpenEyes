@@ -118,7 +118,6 @@ class BaseEventTypeController extends BaseModuleController
     public $pdf_print_suffix = null;
     public $pdf_print_documents = 1;
     public $pdf_print_html = null;
-
   
     public function behaviors()
     {
@@ -2005,6 +2004,7 @@ class BaseEventTypeController extends BaseModuleController
         
         $data = array(
             'element' => $element,
+            'button' => false,
             'element_type_id' => $request->getQuery('element_type_id'),
             'event_id' => $request->getQuery('event_id'),
         );
@@ -2017,6 +2017,7 @@ class BaseEventTypeController extends BaseModuleController
         if ( $this->assetPath && Yii::app()->getRequest()->getIsAjaxRequest() && !empty($_GET)) {
             
             $request = Yii::app()->getRequest();
+            $version_id = $request->getQuery('version_id');
             
             $element_type_id = $request->getQuery('element_type_id');
             $event_id = $request->getQuery('event_id');
@@ -2025,13 +2026,11 @@ class BaseEventTypeController extends BaseModuleController
             $model_name = $element_type->class_name;
                   
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
+            $element -> setVersionID($version_id);
 
-            $version_id = $request->getQuery('version_id');
-            $element -> setVersionID($version_id);     
-            
-            $this->renderElement($element,'view',null,null);
-            
-            
+            $prevVersionElement = $element -> getPreviousVersion();
+            $data = array('displayHistoryEnabled' => false);
+            $this->renderElement($prevVersionElement,'view',null,$data);
         }
         
     }    

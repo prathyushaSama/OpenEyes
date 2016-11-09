@@ -18,23 +18,28 @@
  */
 ?>
 
+
 <?php
 
-    $eventId = $element -> event -> id;
-    $versions = $element -> getPreviousUsersFromEventIdByVersions($eventId);
-    $modifiers = '';
-
-    if(is_array($versions) && !empty($versions)){
-        foreach($versions as $key => $oneVersion){
-            $modifiers .= 
-                $oneVersion['first_name'].' '.
-                $oneVersion['last_name'].' '. 
-                Helper::convertMySQL2NHS($oneVersion['last_modified_date']).
-                ' at '.date('H:i', strtotime($oneVersion['last_modified_date'])).
-                '<br>';
+//../img/ajax-loader.gif
+    $versions = array();
+    if( $data['displayHistoryEnabled'] !== false ){
+        $eventId = $element -> event -> id;
+        $versions = $element -> getPreviousUsersFromEventIdByVersions($eventId);
+        $modifiers = '';
+    
+        if(is_array($versions) && !empty($versions)){
+            foreach($versions as $key => $oneVersion){
+                $modifiers .= 
+                    $oneVersion['first_name'].' '.
+                    $oneVersion['last_name'].' '. 
+                    Helper::convertMySQL2NHS($oneVersion['last_modified_date']).
+                    ' at '.date('H:i', strtotime($oneVersion['last_modified_date'])).
+                    '<br>';
+            }
+        } else {
+            $modifiers = 'nobody';
         }
-    } else {
-        $modifiers = 'nobody';
     }
 ?>
 
@@ -48,13 +53,15 @@
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
-			<?php if (count($versions) > 0 ) { ?>
+			<?php if ( count($versions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
+
 			    <button 
 			        type="button"
 			        id="show-previous-modifications"
 			        class="button tiny right secondary active displayPreviousModifications enabled"
 			        title="Show previous modifications"
 			    >History (<?php echo count($versions) ?>)</button>
+
          <?php } ?>
 		</header>
 	<?php } ?>

@@ -22,6 +22,9 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     private $fetch_from_version = false;
     private $version_id = null;
 
+    public function getFromVersion(){
+        return $this->fetch_from_version;
+    }
 
     public function setVersionID($versionID){
         $this -> version_id = $versionID;
@@ -86,7 +89,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         $params = array(':id' => $this->id);
 
         if ($this->version_id) {
-            $condition .= ' and version_id < :version_id';
+            $condition .= ' and version_id = :version_id';
             $params[':version_id'] = $this->version_id;
         }
 
@@ -144,12 +147,12 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     {
         $condition = 'id = :id';
         $params = array(':id' => $this->id);
-
+  
         if ($this->version_id) {
             $condition .= ' and version_id = :version_id';
-            $params[':version_id'] = $this->version_id;
+            $params[':version_id'] < $this->version_id;
         }
-
+       
         return $this->model()->fromVersion()->findAll(array(
             'condition' => $condition,
             'params' => $params,
