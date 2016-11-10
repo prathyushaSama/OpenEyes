@@ -678,7 +678,7 @@ $(document).ajaxStop(function() {
     
    
     if(addHdnSeries == false){
-        //addArrowSeries();
+        addArrowSeries();
         addHdnSeries = addHiddenSeries();
     }
     
