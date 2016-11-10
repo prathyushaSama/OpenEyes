@@ -51,7 +51,7 @@ $(document).ready(function(){
 		$('button.addEvent[data-attr-subspecialty-id="'+OE_subspecialty_id+'"]').click();
 	}
 
-    $('button.displayPreviousModifications.enabled').click(function(e) {
+    $('a.displayPreviousModifications.enabled').click(function(e) {
     	e.preventDefault();
     	var btn = $(e.target);
     	var section = btn.closest( "section" );

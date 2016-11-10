@@ -18,6 +18,25 @@
  */
 ?>
 
+<style>
+  .open-eyes button.event-action:hover, .open-eyes button.event-action:active, .open-eyes a.event-action:hover, .open-eyes a.event-action:active {
+    background-color: #207c24;
+    text-shadow: none; }
+  .open-eyes button.event-action .oe-btn-icon.audit, .open-eyes a.event-action .oe-btn-icon.audit {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    height: 38px;
+    width: 36px;
+    text-indent: 500px;
+    background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>") left center no-repeat; }
+    .open-eyes button.event-action .oe-btn-icon.audit.hide, .open-eyes a.event-action .oe-btn-icon.audit.hide {
+      background-position: right center; }
+    
+    
+    
+</style>
+
 
 <?php
 
@@ -40,6 +59,7 @@
         } else {
             $modifiers = 'nobody';
         }
+             
     }
 ?>
 
@@ -54,14 +74,14 @@
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
 			<?php if ( count($versions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
-
-			    <button 
+             <a class="event-action small button right displayPreviousModifications enabled"><span class="oe-btn-icon audit">Audit</span></a>
+			    <!--button 
 			        type="button"
 			        id="show-previous-modifications"
 			        class="button tiny right secondary active displayPreviousModifications enabled"
 			        title="Show previous modifications"
-			    >History (<?php echo count($versions) ?>)</button>
-
+			    >History (<?php echo count($versions) ?>)</button-->
+            <img src="<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>" />
          <?php } ?>
 		</header>
 	<?php } ?>
