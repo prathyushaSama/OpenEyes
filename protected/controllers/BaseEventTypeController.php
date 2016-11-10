@@ -2029,6 +2029,8 @@ class BaseEventTypeController extends BaseModuleController
             $element -> setVersionID($version_id);
 
             $prevVersionElement = $element -> getPreviousVersion();
+            $this->patient = $prevVersionElement->event->episode->patient;
+
             $data = array('displayHistoryEnabled' => false);
             $this->renderElement($prevVersionElement,'view',null,$data);
         }
