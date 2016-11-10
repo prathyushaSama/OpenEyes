@@ -138,7 +138,7 @@ $(document).ready(function() {
         },
         xAxis:{
             labels:{
-                enabled: true
+                enabled: true,
             },
             crosshair: {
                 snap: false,
@@ -154,7 +154,7 @@ $(document).ready(function() {
             labels:{
                 align: 'left',
                 x: -20,
-                y: -2
+                y: -2,
             }
         },
         credits: {
@@ -185,14 +185,57 @@ $(document).ready(function() {
         url: '/OphCiExamination/OEScapeData/GetMedications/'+patientId,
         type: "GET",
         dataType: "json",
-        success: function(data) {
+        success: function(jsonData) {
            
-           //data.forEach(AddMedication, MedChart);
             var seriesObj = [];
             var lineHeight = 0.9;
+            var xRow = 1;
+            var maxValueOfMedChart = 0;
             
+            for (var i = 0; i < jsonData.length; i++){
+                var obj = jsonData[i];
+                for (var key in obj){
+                    maxValueOfMedChart++;
+                    for(var j = 0; j < obj[key].length; j++){
+                        if(obj[key][j][2] == 1){
+                            color = '#ccff99';
+                        }else{
+                            color = '#ff3333';
+                        }
+                        
+                        seriesObj.push({ 
+                            name: key,
+                            color: color,
+                            side: obj[key][j][2],
+                            data: [{ 
+                                x : xRow,
+                               // y: obj[key][j][1],
+                                low:obj[key][j][0],
+                                high:obj[key][j][1],
+                               // data: [ obj[key][j][0], obj[key][j][1] ],
+                            }],
+                            dataLabels:{
+                                color:'#000',
+                                formatter: function(){
+                                    return this.series.name;
+                                },
+                                style: {
+                                    "color": "contrast", 
+                                    "fontSize": "11px", 
+                                    "fontWeight": "normal", 
+                                    "textShadow": "none" 
+                                }
+                            }  
+                        });
+                    }
+                    
+                    xRow++;
+                }
+            }
+            
+            /*
             for(var i = 0; i< data.length; i++){
-
+                
                 if(data[i][2] == 1){
                     color = '#ccff99';
                 }else{
@@ -226,16 +269,16 @@ $(document).ready(function() {
                 
                 var lineHeight = lineHeight + 0.9;
             }
-            
+            */
             /*
             var yMinVals = data.map(function(obj) {
                 return obj[0];
             });
             var minValueOfY = Math.min.apply(null, yMinVals);
             */
+          
            
-            var maxValueOfMedChart = Math.round(lineHeight);
-            var heightOfMedChart = (maxValueOfMedChart + 0.9 ) * currentMedY ;
+            var heightOfMedChart = (maxValueOfMedChart + xRow) * 20;
             
             // create the Medication chart
             MedChart = new Highcharts.chart({
@@ -298,6 +341,7 @@ $(document).ready(function() {
                 },
                 plotOptions: {
                     columnrange: {
+                        grouping: false,
                         dataLabels: {
                             enabled: true,
                             inside: true,
@@ -305,11 +349,11 @@ $(document).ready(function() {
                         }, 
                     }, 
                     series: {
-                        pointRange: 1,
-                        pointWidth: 15,
-                        pointInterval: 1,
+                        //pointRange: 1,
+                        //pointWidth: 30,
+                        //pointInterval: 1,
                         pointPadding: 0,
-                        groupPadding: 0,
+                        groupPadding: 0.1,
                         borderWidth: 0,
                         shadow: false
                     }
@@ -634,9 +678,10 @@ $(document).ajaxStop(function() {
     
    
     if(addHdnSeries == false){
+        addArrowSeries();
         addHdnSeries = addHiddenSeries();
     }
-
+    
 });
 
 function addHiddenSeries(){
@@ -654,8 +699,6 @@ function addHiddenSeries(){
     var minX = Math.min.apply(null, xMinVals);
     var maxX = Math.min.apply(null, xMaxVals);
     
-   // var minX = IOPchart.xAxis[0].min;
-    //var maxX = IOPchart.xAxis[0].max;
     var chartsBreakpoint = incrementTimestamp( minX , maxX );
 
     IOPchart.addSeries({
@@ -707,6 +750,22 @@ function addHiddenSeries(){
     }); 
     
     return true;
+}
+
+function addArrowSeries(){
+    IOPchart.addSeries({
+        name: 'Needling',
+        type : 'flags',
+        data: [[1322611200000,0],[1468454400000,42]],
+        title : 'Needling',
+        //shape : 'flag',
+        shape: "url(https://www.kicktraq.com/images/arrow-down-s.png)",
+        marker: {
+            enabled: false,
+        },
+        
+       
+    });
 }
 
 function incrementTimestamp( startDate , endDate ){

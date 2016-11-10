@@ -210,21 +210,73 @@ class OEScapeDataController extends \BaseController
         $lastVAdate = $this->queryDataVALastDate( $id , 1 );
        
         $medications = array_merge($patient->get_previous_medications(), $patient->get_medications());
-
-        usort($medications, function ($a, $b){ 
-            return strtotime($a['start_date']) - strtotime($b['start_date']); 
-        });
         
         //$medications = $this->sortMedications($medications);
         $output = array();
         foreach($medications as $medication){
-            if($medication->end_date == NULL){
-                $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($lastVAdate[0]['event_date']. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
-            } else {
+            if((int)$medication->option_id != 3){
                 $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($medication->end_date. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+                /*
+                if($medication->end_date == NULL){
+                    $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($lastVAdate[0]['event_date']. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+                } else {
+                    $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($medication->end_date. ' UTC')*1000, (int)$medication->option_id, explode(' ',$medication->getDrugLabel())[0]);
+                }
+                 * *
+                 */
+            } else {
+                //If both eye, we have to separate to right and left eye
+                $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($lastVAdate[0]['event_date']. ' UTC')*1000, 2, explode(' ',$medication->getDrugLabel())[0]);
+                $output[] = array((int)strtotime($medication->start_date. ' UTC')*1000, (int)strtotime($lastVAdate[0]['event_date']. ' UTC')*1000, 1, explode(' ',$medication->getDrugLabel())[0]);
             }
         }
-        echo json_encode($output);
+        
+        usort($output, function ($a, $b){ 
+            switch($a[2]){
+                //Left eye
+                case 1:
+                    return 1;
+                break;
+                //Right eye
+                case 2:
+                    return 0;
+                break;
+                //Both
+                case 3:
+                    return 2;
+                break;
+            }         
+        });
+        
+        //Grouping by eye side and drug name
+        $rightEye = array();
+        $leftEye = array();
+        
+        foreach($output as $key => $val){
+            $name = $val[3];
+            $side = $val[2];
+            
+            switch($side){
+                case 2:
+                    if (isset($rightEye[$name])) {
+                        $rightEye[$name][] = $val;
+                    } else {
+                        $rightEye[$name] = array($val);
+                    }
+                break;
+                case 1:
+                   if (isset($leftEye[$name])) {
+                        $leftEye[$name][] = $val;
+                    } else {
+                        $leftEye[$name] = array($val);
+                    }
+               break;
+            }
+        }
+        
+        $result[] = array_merge_recursive($rightEye, $leftEye);
+        
+        echo json_encode($result);
     }
 
     public function actionLoadImage($id, $eventDate, $side, $eventType, $mediaType)
