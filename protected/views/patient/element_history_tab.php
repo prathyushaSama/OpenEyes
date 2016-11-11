@@ -93,8 +93,10 @@
 
 <div id="historyTabs">
   <ul>
-    <?php foreach($diffVersions as $version_id => $oneVersion) { ?>
-        <li><a href="#tabs-<?php echo $version_id; ?>"><?php echo $new_versions[$version_id]['first_name'].' '.$new_versions[$version_id]['last_name'].' '.date('H:i:s',strtotime($oneVersion->last_modified_date)); ?></a></li>
+    <?php foreach($diffVersions as $version_id => $oneVersion) {
+        $user = User::model()->findByPk($oneVersion->last_modified_user_id);
+        ?>
+        <li><a href="#tabs-<?php echo $version_id; ?>"><?php echo $user->first_name.' '.$user->last_name.' '.date('H:i:s',strtotime($oneVersion->last_modified_date)); ?></a></li>
     <?php }  ?>
   </ul>
   
