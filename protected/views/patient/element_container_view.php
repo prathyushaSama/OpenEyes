@@ -19,49 +19,73 @@
 ?>
 
 <style>
-  .highlighted_red{
-    color: red;  
-  }
-  .open-eyes button.event-action:hover, .open-eyes button.event-action:active, .open-eyes a.event-action:hover, .open-eyes a.event-action:active {
+    .highlighted_red{
+        color: red;  
+    }
+  
+    .open-eyes button.event-action, .open-eyes a.event-action {
+        margin-left: 0;
+        padding-top: 0;
+        border-radius: 0;
+        letter-spacing: 0;
+        text-shadow: none;
+        box-shadow: none;
+        border: none;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-weight: 400;
+        font-size: 12px;
+        font-size: 0.75rem; 
+    }
+    
+    .open-eyes button.event-action:hover, .open-eyes button.event-action:active, .open-eyes a.event-action:hover, .open-eyes a.event-action:active {
     background-color: #207c24;
-    text-shadow: none; }
-  .open-eyes button.event-action .oe-btn-icon.audit, .open-eyes a.event-action .oe-btn-icon.audit {
+    text-shadow: none; 
+    }
+  .open-eyes button.event-action .oe-btn-icon.history, .open-eyes a.event-action .oe-btn-icon.history {
     display: inline-block;
-    padding: 0;
-    margin: 0;
-    height: 18px;
+    padding: 0px !important;
+    margin: 0px !important;
+    height: 20px !important;
     width: 36px;
     background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>") left center no-repeat; 
+
   }
-  .open-eyes button.event-action .oe-btn-icon.audit.hide, .open-eyes a.event-action .oe-btn-icon.audit.hide {
+  .open-eyes button.event-action .oe-btn-icon.history.hide, .open-eyes a.event-action .oe-btn-icon.history.hide {
       background-position: right center; 
   }
-    
+
     
     
 </style>
 
 
 <?php
-    $versions = array();
+    $diffVersions = array();
     if( $data['displayHistoryEnabled'] !== false ){
-        $eventId = $element -> event -> id;
-        $versions = $element -> getPreviousModificationsHeader($eventId);
-        $modifiers = '';
-    
-        if(is_array($versions) && !empty($versions)){
-            foreach($versions as $key => $oneVersion){
-                $modifiers .= 
-                    $oneVersion['first_name'].' '.
-                    $oneVersion['last_name'].' '. 
-                    Helper::convertMySQL2NHS($oneVersion['last_modified_date']).
-                    ' at '.date('H:i', strtotime($oneVersion['last_modified_date'])).
-                    '<br>';
+        $event_id = $element -> event -> id;
+
+        $versions = $element -> getPreviousModificationsHeader($event_id);
+        $versions[]['version_id'] = -1; // active version +1 !
+        $versionCount = count($versions)-1; 
+            
+        for($i = $versionCount; $i > 0 ; $i--)
+        {
+            if( $i==$versionCount ){
+                $version1 = $element;
+            } else {
+                $version1 = $element -> getVersion($versions[$i]['version_id']);
             }
-        } else {
-            $modifiers = 'nobody';
+            
+            $version2 = $element -> getVersion($versions[$i-1]['version_id']);
+            $hasDiff = $element -> hasDiffVersions($version1,$version2);
+            
+            if($hasDiff)
+            {
+                $diffVersions[$versions[$i-1]['version_id']] = $version2;
+            } 
         }
-             
     }
 ?>
 
@@ -75,22 +99,13 @@
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
-			<?php if ( count($versions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
+			<?php if ( count($diffVersions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
              <a 
                 class="event-action small button right displayPreviousModifications enabled"
                 title="Show previous modifications"
              >
-                <span class="oe-btn-icon audit"></span>
+                <div class="oe-btn-icon history text-right"><?php echo count($diffVersions) ?></div>
              </a>
-			    
-			    
-			    <!--button 
-			        type="button"
-			        id="show-previous-modifications"
-			        class="button tiny right secondary active displayPreviousModifications enabled"
-			        title="Show previous modifications"
-			    >History (<?php echo count($versions) ?>)</button-->
-            
          <?php } ?>
 		</header>
 	<?php } ?>

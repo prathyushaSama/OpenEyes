@@ -65,7 +65,7 @@
 
 
 <?php
-    
+    $diffVersions = array();
     $versions = $element -> getPreviousModificationsHeader($event_id);
     $versions[]['version_id'] = -1; // active version +1 !
     $versionCount = count($versions)-1; 
@@ -85,7 +85,6 @@
         {
             $diffVersions[$versions[$i-1]['version_id']] = $version2;
         } 
-        
     }
 ?>
 
