@@ -1989,7 +1989,8 @@ class BaseEventTypeController extends BaseModuleController
     }
     
     
-    public function actionDisplayPreviousModificationsTabs(){
+    public function actionDisplayPreviousModificationsTabs()
+    {
         $request = Yii::app()->getRequest();
 
         $element_type_id = $request->getQuery('element_type_id');
@@ -2011,8 +2012,11 @@ class BaseEventTypeController extends BaseModuleController
         
         $this->renderPartial('//patient/element_history_tab', $data, false, true);
     }
+
+
     
-    public function actionDisplayPreviousModifications(){
+    public function actionDisplayPreviousModifications()
+    {
       
         if ( $this->assetPath && Yii::app()->getRequest()->getIsAjaxRequest() && !empty($_GET)) {
             
@@ -2027,12 +2031,24 @@ class BaseEventTypeController extends BaseModuleController
                   
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
             $element -> setVersionID($version_id);
+            $this->patient = $element->event->episode->patient;
+            
+            $currentVersion  = $element -> getVersion();
+            $previousVersion = $element -> getPreviousVersion();
+            
+            if($previousVersion==null){
+                $previousVersion = $element;
+            } 
 
-            $prevVersionElement = $element -> getPreviousVersion();
-            $this->patient = $prevVersionElement->event->episode->patient;
-
+            $diffVersion = $element -> versionsDiff($currentVersion,$previousVersion);
+            
+            if($diffVersion===false)
+            {
+                $currentVersion = null; //$diffVersion;
+            }
+            
             $data = array('displayHistoryEnabled' => false);
-            $this->renderElement($prevVersionElement,'view',null,$data);
+            $this->renderElement($currentVersion,'view',null,$data);
         }
         
     }    

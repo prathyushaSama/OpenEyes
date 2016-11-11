@@ -83,23 +83,6 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         return parent::getTableSchema();
     }
 
-    public function getPreviousVersion()
-    {
-        $condition = 'id = :id';
-        $params = array(':id' => $this->id);
-
-        if ($this->version_id) {
-            $condition .= ' and version_id = :version_id';
-            $params[':version_id'] = $this->version_id;
-        }
-
-        return $this->model()->fromVersion()->find(array(
-            'condition' => $condition,
-            'params' => $params,
-            'order' => 'version_id desc',
-        ));
-    }
-
     public function getEventDataFromElement()
     {
         $condition = 'id = :id';
@@ -110,7 +93,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         ));
     }
 
-    public function getPreviousUsersFromEventIdByVersions($event_id = null)
+    public function getPreviousModificationsHeader($event_id = null)
     {
         $condition = 'v.event_id = :id';
         $params[':id'] = $event_id;
@@ -140,24 +123,6 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             ->join('user u', 'u.id=v.last_modified_user_id')
             ->where($condition,$params)
             ->order('v.version_id DESC')->queryAll();
-    }
-
-    /* Return all previous versions ordered by most recent */
-    public function getPreviousVersions()
-    {
-        $condition = 'id = :id';
-        $params = array(':id' => $this->id);
-  
-        if ($this->version_id) {
-            $condition .= ' and version_id = :version_id';
-            $params[':version_id'] < $this->version_id;
-        }
-       
-        return $this->model()->fromVersion()->findAll(array(
-            'condition' => $condition,
-            'params' => $params,
-            'order' => 'version_id desc',
-        ));
     }
 
     public function getVersionTableSchema()
@@ -269,5 +234,128 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
                 $this->getVersionTableSchema(), $this->getTableSchema(), $criteria
             )->execute();
         }
+    }
+    
+    public function getVersion($versionID=null)
+    {
+        $this->version_id = $versionID == null ? $this->version_id : $versionID;
+        $condition = 'id = :id';
+        $params = array(':id' => $this->id);
+        $condition .= ' and version_id = :version_id';
+        $params[':version_id'] = $this->version_id;
+
+        $version = $this->model()->fromVersion()->find(array(
+            'condition' => $condition,
+            'params' => $params,
+            'order' => 'version_id desc',
+        ));
+        
+        $version -> setAttribute('version_id', $this->version_id );
+        return $version;
+    }
+
+    public function getLastVersion()
+    {
+        $condition = 'id = :id';
+        $params = array(':id' => $this->id);
+
+        $version = $this->model()->fromVersion()->find(array(
+            'condition' => $condition,
+            'params' => $params,
+            'order' => 'version_id desc',
+            'limit' => '1',
+        ));
+
+        return $version;        
+    }
+
+    /* Return all previous versions ordered by most recent */
+    public function getPreviousVersions()
+    {
+        $condition = 'id = :id';
+        $params = array(':id' => $this->id);
+        
+
+        if ($this->version_id) {
+            $condition .= ' and version_id < :version_id';
+            $params[':version_id'] = $this->version_id;
+        }
+       
+        $versions = $this->model()->fromVersion()->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+            'order' => 'version_id desc',
+        ));
+        
+        return $versions;
+    }
+
+    public function getPreviousVersion()
+    {
+        $condition = 'id = :id';
+        $params = array(':id' => $this->id);
+        $condition .= ' and version_id < :version_id';
+        $params[':version_id'] = $this->version_id;
+
+        $version = $this->model()->fromVersion()->find(array(
+            'condition' => $condition,
+            'params' => $params,
+            'order' => 'version_id desc',
+            'limit' => '1',
+        ));
+        
+        //$version -> version_id = $this->version_id;
+        return $version;
+    }
+    
+    private function addStyleToModifiedValue($value)
+    {
+        return sprintf("|span class=[highlighted_red]|%s|span|", $value);
+    }    
+
+    public function versionsDiff($version1,$version2)
+    {
+        if($version2==null){ return array(); }
+        $diff = array();
+        $diffCount = 0;
+        
+        foreach($version1->getAttributes() as $key => $oneAttrib){
+            if( in_array($key,array('last_modified_date')) )
+            { 
+                continue; 
+            }
+            
+            $prevAttrib = $version2->getAttributes()[$key];
+            
+            if( $oneAttrib != $prevAttrib )
+            {
+                $diffCount++;
+                if($prevAttrib!='' && $oneAttrib=='')
+                {
+                    $oneAttrib = '*DELETED*';
+                }
+                $version1->setAttribute($key,$this->addStyleToModifiedValue($oneAttrib));
+            }
+        }
+        return $diffCount == 0 ? false : $version1;
+    }    
+ 
+    public function hasDiffVersions($version1,$version2){
+        if($version2==null){ return array(); }
+        
+        foreach($version1->getAttributes() as $key => $oneAttrib){
+            if( in_array($key,array('last_modified_date')) )
+            { 
+                continue; 
+            }
+            
+            $prevAttrib = $version2->getAttributes()[$key];
+            
+            if( $oneAttrib != $prevAttrib )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

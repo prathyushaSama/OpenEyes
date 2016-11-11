@@ -19,6 +19,9 @@
 ?>
 
 <style>
+  .highlighted_red{
+    color: red;  
+  }
   .open-eyes button.event-action:hover, .open-eyes button.event-action:active, .open-eyes a.event-action:hover, .open-eyes a.event-action:active {
     background-color: #207c24;
     text-shadow: none; }
@@ -26,12 +29,13 @@
     display: inline-block;
     padding: 0;
     margin: 0;
-    height: 38px;
+    height: 18px;
     width: 36px;
-    text-indent: 500px;
-    background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>") left center no-repeat; }
-    .open-eyes button.event-action .oe-btn-icon.audit.hide, .open-eyes a.event-action .oe-btn-icon.audit.hide {
-      background-position: right center; }
+    background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>") left center no-repeat; 
+  }
+  .open-eyes button.event-action .oe-btn-icon.audit.hide, .open-eyes a.event-action .oe-btn-icon.audit.hide {
+      background-position: right center; 
+  }
     
     
     
@@ -39,12 +43,10 @@
 
 
 <?php
-
-//../img/ajax-loader.gif
     $versions = array();
     if( $data['displayHistoryEnabled'] !== false ){
         $eventId = $element -> event -> id;
-        $versions = $element -> getPreviousUsersFromEventIdByVersions($eventId);
+        $versions = $element -> getPreviousModificationsHeader($eventId);
         $modifiers = '';
     
         if(is_array($versions) && !empty($versions)){
@@ -74,14 +76,21 @@
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
 			<?php if ( count($versions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
-             <a class="event-action small button right displayPreviousModifications enabled"><span class="oe-btn-icon audit">Audit</span></a>
+             <a 
+                class="event-action small button right displayPreviousModifications enabled"
+                title="Show previous modifications"
+             >
+                <span class="oe-btn-icon audit"></span>
+             </a>
+			    
+			    
 			    <!--button 
 			        type="button"
 			        id="show-previous-modifications"
 			        class="button tiny right secondary active displayPreviousModifications enabled"
 			        title="Show previous modifications"
 			    >History (<?php echo count($versions) ?>)</button-->
-            <img src="<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>" />
+            
          <?php } ?>
 		</header>
 	<?php } ?>
