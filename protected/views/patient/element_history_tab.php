@@ -66,12 +66,15 @@
 
 <?php
     $diffVersions = array();
+    $new_versions = array();
+    
     $versions = $element -> getPreviousModificationsHeader($event_id);
     $versions[]['version_id'] = -1; // active version +1 !
     $versionCount = count($versions)-1; 
         
     for($i = $versionCount; $i > 0 ; $i--)
     {
+        $new_versions[$versions[$i]['version_id']] = $versions[$i];
         if( $i==$versionCount ){
             $version1 = $element;
         } else {
@@ -91,7 +94,7 @@
 <div id="historyTabs">
   <ul>
     <?php foreach($diffVersions as $version_id => $oneVersion) { ?>
-        <li><a href="#tabs-<?php echo $version_id; ?>"><?php echo date('H:i:s',strtotime($oneVersion->last_modified_date)); ?></a></li>
+        <li><a href="#tabs-<?php echo $version_id; ?>"><?php echo $new_versions[$version_id]['first_name'].' '.$new_versions[$version_id]['last_name'].' '.date('H:i:s',strtotime($oneVersion->last_modified_date)); ?></a></li>
     <?php }  ?>
   </ul>
   
