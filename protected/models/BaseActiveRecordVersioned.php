@@ -250,7 +250,6 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             'order' => 'version_id desc',
         ));
         
-        $version -> setAttribute('version_id', $this->version_id );
         return $version;
     }
 
