@@ -18,7 +18,7 @@
  */
 ?>
 
-<style>
+<!--style>
     .highlighted_red{
         color: red;  
     }
@@ -55,13 +55,60 @@
   .open-eyes button.event-action .oe-btn-icon.history.hide, .open-eyes a.event-action .oe-btn-icon.history.hide {
       background-position: right center; 
   }
+</style-->
 
+<style>
+    .highlighted_red{
+      color: red;  
+    }
+    .event-content .oe-prev-mods-icon {
+      display: inline-block;
+      margin: 8px 5px 0 0;
+      font-size: 11px;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-align: right;
+      width: 35px;
+      height: 16px;
+      line-height: 16px;
+      color: #666;
+      background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail-element.png')?>") left top no-repeat; 
+    }
     
+    .event-content .oe-prev-mods-icon:hover {
+      
+      background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail-element.png')?>") left bottom no-repeat; 
+      font-size: 11px;
+      font-size: 0.6875rem;
+      color: #0a62d3; 
+    }
     
+    .open-eyes button.event-action .oe-btn-icon.audit, .open-eyes a.event-action .oe-btn-icon.audit {
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+      height: 38px;
+      width: 36px;
+      font-size: 11px;
+      font-size: 0.6875rem;
+      text-indent: 500px;
+      background: transparent url("url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail-element.png')?>")") left center no-repeat; 
+    }
+    
+    .open-eyes button.event-action .oe-btn-icon.audit.hide, .open-eyes a.event-action .oe-btn-icon.audit.hide {
+      background-position: right center; 
+    }
 </style>
 
 
 <?php
+    /* SPECIAL VIEWS
+    1. Visual acuity
+    2. Past ophthalmic history
+    3. Ophthalmic medications
+    4. Allergies
+    */
+    
     $diffVersions = array();
     if( $data['displayHistoryEnabled'] !== false ){
         $event_id = $element -> event -> id;
@@ -88,7 +135,6 @@
         }
     }
 ?>
-
 <section
 	class="<?php if (@$child) {?>sub-<?php }?>element <?php echo CHtml::modelName($element->elementType->class_name)?>"
 	data-element-type-id="<?php echo $element->elementType->id?>"
@@ -100,12 +146,11 @@
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
 			<?php if ( count($diffVersions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
-             <a 
-                class="event-action small button right displayPreviousModifications enabled"
-                title="Show previous modifications"
-             >
-                <div class="oe-btn-icon history text-right"><?php echo count($diffVersions) ?></div>
-             </a>
+			    <a
+			        class="oe-prev-mods-icon displayPreviousModifications enabled right"
+			        title="Show previous modifications"
+			    ><?php echo count($diffVersions) ?>
+			    </a>   
          <?php } ?>
 		</header>
 	<?php } ?>
