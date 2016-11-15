@@ -71,6 +71,10 @@ class Element_OphCiExamination_VisualAcuity extends \SplitEventTypeElement
         return parent::model($className);
     }
 
+    public function getVersionDataWithQuery(){
+        return 'SELECT * ... ;';
+    }
+
     /**
      * @return string the associated database table name
      */

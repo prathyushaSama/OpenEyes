@@ -1995,8 +1995,6 @@ class BaseEventTypeController extends BaseModuleController
 
         $element_type_id = $request->getQuery('element_type_id');
         $event_id = $request->getQuery('event_id');
-        
-        //print_r($_GET); die;
             
         $element_type = ElementType::model()->findByPk($element_type_id);
         $model_name = $element_type->class_name;
@@ -2017,7 +2015,6 @@ class BaseEventTypeController extends BaseModuleController
     
     public function actionDisplayPreviousModifications()
     {
-      
         if ( $this->assetPath && Yii::app()->getRequest()->getIsAjaxRequest() && !empty($_GET)) {
             
             $request = Yii::app()->getRequest();
@@ -2044,12 +2041,19 @@ class BaseEventTypeController extends BaseModuleController
             
             if($diffVersion===false)
             {
-                $currentVersion = null; //$diffVersion;
+                $currentVersion = null;
             }
             
             $data = array('displayHistoryEnabled' => false);
-            $this->renderElement($currentVersion,'view',null,$data);
+            
+            if(in_array($element->elementType->name,$element->specialElements)){
+                $this->renderElement($currentVersion,'history',null,$data);    
+            } else {
+                $this->renderElement($currentVersion,'view',null,$data);    
+            }
         }
         
     }    
 }
+
+

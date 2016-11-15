@@ -17,46 +17,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-
-<!--style>
-    .highlighted_red{
-        color: red;  
-    }
-  
-    .open-eyes button.event-action, .open-eyes a.event-action {
-        margin-left: 0;
-        padding-top: 0;
-        border-radius: 0;
-        letter-spacing: 0;
-        text-shadow: none;
-        box-shadow: none;
-        border: none;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        font-weight: 400;
-        font-size: 12px;
-        font-size: 0.75rem; 
-    }
-    
-    .open-eyes button.event-action:hover, .open-eyes button.event-action:active, .open-eyes a.event-action:hover, .open-eyes a.event-action:active {
-    background-color: #207c24;
-    text-shadow: none; 
-    }
-  .open-eyes button.event-action .oe-btn-icon.history, .open-eyes a.event-action .oe-btn-icon.history {
-    display: inline-block;
-    padding: 0px !important;
-    margin: 0px !important;
-    height: 20px !important;
-    width: 36px;
-    background: transparent url("<?php echo Yii::app()->assetManager->createUrl('img/audit-trail.png')?>") left center no-repeat; 
-
-  }
-  .open-eyes button.event-action .oe-btn-icon.history.hide, .open-eyes a.event-action .oe-btn-icon.history.hide {
-      background-position: right center; 
-  }
-</style-->
-
 <style>
     .highlighted_red{
       color: red;  
@@ -102,15 +62,13 @@
 
 
 <?php
-    /* SPECIAL VIEWS
-    1. Visual acuity
-    2. Past ophthalmic history
-    3. Ophthalmic medications
-    4. Allergies
-    */
-    
+
     $diffVersions = array();
     if( $data['displayHistoryEnabled'] !== false ){
+        if(in_array($element->elementType->name,$element->specialElements)){
+
+        }        
+        
         $event_id = $element -> event -> id;
 
         $versions = $element -> getPreviousModificationsHeader($event_id);
@@ -133,6 +91,7 @@
                 $diffVersions[$versions[$i-1]['version_id']] = $version2;
             } 
         }
+        
     }
 ?>
 <section
@@ -145,7 +104,7 @@
 	<?php if (!preg_match('/\[\-(.*)\-\]/', $element->elementType->name)) { ?>
 		<header class="<?php if (@$child) { ?>sub-<?php } ?>element-header">
 			<h3 class="<?php if (@$child) { ?>sub-<?php } ?>element-title"><?php echo $element->elementType->name ?></h3>
-			<?php if ( count($diffVersions) > 0 && $data['displayHistoryEnabled'] !== false ) { ?>
+			<?php if (  $data['displayHistoryEnabled'] !== false ) { /* count($diffVersions) > 0 && */ ?>
 			    <a
 			        class="oe-prev-mods-icon displayPreviousModifications enabled right"
 			        title="Show previous modifications"

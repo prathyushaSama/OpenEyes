@@ -65,6 +65,14 @@
 
 
 <?php
+    /* SPECIAL VIEWS
+    1. Visual acuity
+    2. Past ophthalmic history
+    3. Ophthalmic medications
+    4. Allergies
+    */
+
+
     $diffVersions = array();
     $new_versions = array();
     
@@ -89,22 +97,23 @@
             $diffVersions[$versions[$i-1]['version_id']] = $version2;
         } 
     }
+
 ?>
 
 <div id="historyTabs">
-  <ul>
-    <?php foreach($diffVersions as $version_id => $oneVersion) {
+    <ul>
+        <?php foreach($diffVersions as $version_id => $oneVersion) {
         $user = User::model()->findByPk($oneVersion->last_modified_user_id);
         ?>
         <li><a href="#tabs-<?php echo $version_id; ?>"><?php echo $user->first_name.' '.$user->last_name.' '.date('H:i:s',strtotime($oneVersion->last_modified_date)); ?></a></li>
-    <?php }  ?>
-  </ul>
-  
-  <?php foreach($diffVersions as $version_id => $oneVersion) { ?>
+        <?php }  ?>
+    </ul>
+    
+    <?php foreach($diffVersions as $version_id => $oneVersion) { ?>
     <div id="tabs-<?php echo $version_id; ?>">
         <script>
             loadTabsContents("<?php echo $version_id; ?>");
         </script>
     </div>
-  <?php }  ?>
+<?php }  ?>
 </div>

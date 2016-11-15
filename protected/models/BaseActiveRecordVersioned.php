@@ -21,7 +21,15 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     private $enable_version = true;
     private $fetch_from_version = false;
     private $version_id = null;
-
+    
+    /**
+    *    Getting data from the special sql command. 
+    */
+    public $specialElements = array(
+        'Visual Acuity'
+    );
+    
+    
     public function getFromVersion(){
         return $this->fetch_from_version;
     }
@@ -238,6 +246,21 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     
     public function getVersion($versionID=null)
     {
+        if(in_array($this->elementType->name,$this->specialElements)){
+            $event_id = $this -> event -> id;
+            $condition = 'v.event_id = :id';
+            $params[':id'] = $event_id;
+    
+            $sql = Yii::app()->db->createCommand()
+                ->select('*')
+                ->from($this->tableName().'_version v');
+                /*
+                ->join('user u', 'u.id=v.last_modified_user_id')
+                ->where($condition,$params)
+                ->order('v.last_modified_date DESC')->queryAll();
+                */
+        }
+        
         $this->version_id = $versionID == null ? $this->version_id : $versionID;
         $condition = 'id = :id';
         $params = array(':id' => $this->id);
