@@ -64,19 +64,21 @@
 <?php
 
     $diffVersions = array();
-    if( $data['displayHistoryEnabled'] !== false ){
-        if(in_array($element->elementType->name,$element->specialElements)){
-
-        }        
-        
+    if( false && $data['displayHistoryEnabled'] !== false ){
         $event_id = $element -> event -> id;
 
         $versions = $element -> getPreviousModificationsHeader($event_id);
         $versions[]['version_id'] = -1; // active version +1 !
         $versionCount = count($versions)-1; 
-            
+        
+        /*
         for($i = $versionCount; $i > 0 ; $i--)
         {
+            if(in_array($element->elementType->name,$element->specialElements))
+            {
+            }  
+        
+        
             if( $i==$versionCount ){
                 $version1 = $element;
             } else {
@@ -91,7 +93,7 @@
                 $diffVersions[$versions[$i-1]['version_id']] = $version2;
             } 
         }
-        
+        */
     }
 ?>
 <section

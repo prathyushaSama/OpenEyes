@@ -72,7 +72,23 @@ class Element_OphCiExamination_VisualAcuity extends \SplitEventTypeElement
     }
 
     public function getVersionDataWithQuery(){
-        return 'SELECT * ... ;';
+        $condition = 'eov.event_id = :id';
+        $params[':id'] = $this->event->id;
+        
+        $sqlCommand = Yii::app()->db->createCommand()
+            ->select('eov.*')
+            ->from($this->tableName().'_version eov')
+            ->join('event ev','ev.id = eov.event_id')
+            ->join('event_type et','et.id = ev.event_type_id')
+            ->join('eye e','e.id = eov.eye_id')
+            ->join('user u1','u1.id = eov.created_user_id')
+            ->join('user u2','u2.id = eov.last_modified_user_id')
+            ->join('ophciexamination_visual_acuity_unit ovau','ovau.id = eov.unit_id AND ovau.is_near = 0')
+            ->join('ophciexamination_visual_acuity_unit_value ovauv','ovauv.unit_id = eov.unit_id')
+            ->where($condition,$params)
+            ->order('eov.last_modified_date DESC')->queryAll();
+
+        return $sqlCommand;
     }
 
     /**

@@ -29,6 +29,9 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         'Visual Acuity'
     );
     
+    public function getVersionDataWithQuery(){
+        return true;
+    }
     
     public function getFromVersion(){
         return $this->fetch_from_version;
@@ -101,8 +104,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         ));
     }
 
-    public function getPreviousModificationsHeader($event_id = null)
-    {
+    public function getPreviousModificationsHeaderData($event_id){
         $condition = 'v.event_id = :id';
         $params[':id'] = $event_id;
 
@@ -111,7 +113,17 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             ->from($this->tableName().'_version v')
             ->join('user u', 'u.id=v.last_modified_user_id')
             ->where($condition,$params)
-            ->order('v.last_modified_date DESC')->queryAll();
+            ->order('v.last_modified_date DESC')->queryAll();        
+    }
+    
+    public function getPreviousModificationsHeader($event_id = null)
+    {
+        if(in_array($this->elementType->name,$this->specialElements)){
+            return $this->getVersionDataWithQuery();
+        } else {
+            return $this->getPreviousModificationsHeaderData($event_id);
+        }
+
     }
 
     /* Return all previous modifier users by versions ordered by most recent */
