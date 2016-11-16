@@ -64,36 +64,42 @@
 <?php
 
     $diffVersions = array();
-    if( false && $data['displayHistoryEnabled'] !== false ){
+    
+    if( $data['displayHistoryEnabled'] !== false ){
         $event_id = $element -> event -> id;
 
         $versions = $element -> getPreviousModificationsHeader($event_id);
-        $versions[]['version_id'] = -1; // active version +1 !
-        $versionCount = count($versions)-1; 
-        
-        /*
-        for($i = $versionCount; $i > 0 ; $i--)
-        {
-            if(in_array($element->elementType->name,$element->specialElements))
-            {
-            }  
-        
-        
-            if( $i==$versionCount ){
-                $version1 = $element;
-            } else {
-                $version1 = $element -> getVersion($versions[$i]['version_id']);
+
+        if(in_array($element->elementType->name,$element->specialElements)) {
+            foreach($versions as $oneVersion){
+               $diffVersions[$oneVersion['version_id']] = $oneVersion;
             }
-            
-            $version2 = $element -> getVersion($versions[$i-1]['version_id']);
-            $hasDiff = $element -> hasDiffVersions($version1,$version2);
-            
-            if($hasDiff)
+            $versionCount = count($diffVersions)-1;
+        }  else {
+            $versions[]['version_id'] = -1; // active version +1 !
+            $versionCount = count($versions)-1; 
+           
+            for($i = $versionCount; $i > 0 ; $i--)
             {
-                $diffVersions[$versions[$i-1]['version_id']] = $version2;
-            } 
+                if(in_array($element->elementType->name,$element->specialElements))
+                {
+                }  
+            
+                if( $i==$versionCount ){
+                    $version1 = $element;
+                } else {
+                    $version1 = $element -> getVersion($versions[$i]['version_id']);
+                }
+                
+                $version2 = $element -> getVersion($versions[$i-1]['version_id']);
+                $hasDiff = $element -> hasDiffVersions($version1,$version2);
+                
+                if($hasDiff)
+                {
+                    $diffVersions[$versions[$i-1]['version_id']] = $version2;
+                } 
+            }
         }
-        */
     }
 ?>
 <section

@@ -23,7 +23,7 @@
         echo $cvi_api->renderAlertForVA($this->patient, $element, true);
     }
 ?>
-
+wqerweq
 <?php echo CHtml::hiddenField('element_id', $element->id, array('class' => 'element_id')); ?>
 
 <div class="element-data element-eyes row">

@@ -2028,27 +2028,28 @@ class BaseEventTypeController extends BaseModuleController
                   
             $element = $model_name::model()->findByAttributes(array('event_id'=>$event_id));
             $element -> setVersionID($version_id);
+            
             $this->patient = $element->event->episode->patient;
-            
-            $currentVersion  = $element -> getVersion();
-            $previousVersion = $element -> getPreviousVersion();
-            
-            if($previousVersion==null){
-                $previousVersion = $element;
-            } 
-
-            $diffVersion = $element -> versionsDiff($currentVersion,$previousVersion);
-            
-            if($diffVersion===false)
-            {
-                $currentVersion = null;
-            }
             
             $data = array('displayHistoryEnabled' => false);
             
             if(in_array($element->elementType->name,$element->specialElements)){
-                $this->renderElement($currentVersion,'history',null,$data);    
+                $this->renderElement($element,'history',null,$data);    
+                
             } else {
+                $currentVersion  = $element -> getVersion();
+                $previousVersion = $element -> getPreviousVersion();
+                
+                if($previousVersion==null){
+                    $previousVersion = $element;
+                } 
+    
+                $diffVersion = $element -> versionsDiff($currentVersion,$previousVersion);
+                
+                if($diffVersion===false)
+                {
+                    $currentVersion = null;
+                }                
                 $this->renderElement($currentVersion,'view',null,$data);    
             }
         }

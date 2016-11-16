@@ -104,28 +104,6 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         ));
     }
 
-    public function getPreviousModificationsHeaderData($event_id){
-        $condition = 'v.event_id = :id';
-        $params[':id'] = $event_id;
-
-        return Yii::app()->db->createCommand()
-            ->select('u.first_name, u.last_name, TIME(v.last_modified_date) as last_modified_date, v.version_id')
-            ->from($this->tableName().'_version v')
-            ->join('user u', 'u.id=v.last_modified_user_id')
-            ->where($condition,$params)
-            ->order('v.last_modified_date DESC')->queryAll();        
-    }
-    
-    public function getPreviousModificationsHeader($event_id = null)
-    {
-        if(in_array($this->elementType->name,$this->specialElements)){
-            return $this->getVersionDataWithQuery();
-        } else {
-            return $this->getPreviousModificationsHeaderData($event_id);
-        }
-
-    }
-
     /* Return all previous modifier users by versions ordered by most recent */
     public function getPreviousUsersByVersions()
     {
@@ -391,5 +369,27 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             }
         }
         return false;
+    }
+    
+    public function getPreviousModificationsHeaderData($event_id){
+        $condition = 'v.event_id = :id';
+        $params[':id'] = $event_id;
+
+        return Yii::app()->db->createCommand()
+            ->select('u.first_name, u.last_name, TIME(v.last_modified_date) as last_modified_date, v.version_id')
+            ->from($this->tableName().'_version v')
+            ->join('user u', 'u.id=v.last_modified_user_id')
+            ->where($condition,$params)
+            ->order('v.last_modified_date DESC')->queryAll();        
+    }
+    
+    public function getPreviousModificationsHeader($event_id = null)
+    {
+        if(in_array($this->elementType->name,$this->specialElements)){
+            return $this->getVersionDataWithQuery();
+        } else {
+            return $this->getPreviousModificationsHeaderData($event_id);
+        }
+
     }
 }
