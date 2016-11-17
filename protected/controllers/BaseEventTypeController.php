@@ -2034,7 +2034,8 @@ class BaseEventTypeController extends BaseModuleController
             $data = array('displayHistoryEnabled' => false);
             
             if(in_array($element->elementType->name,$element->specialElements)){
-                $this->renderElement($element,'history',null,$data);    
+                //$diffVersion = $element -> versionsDiff($currentVersion,$previousVersion);
+                $this->renderElement($element,'history',null,$data);
                 
             } else {
                 $currentVersion  = $element -> getVersion();

@@ -116,7 +116,7 @@ class Element_OphCiExamination_VisualAcuity extends \SplitEventTypeElement
         $params[':version_id'] = $this->getVersionID();
 
         $result = Yii::app()->db->createCommand()
-            ->select('eov.*,side, ovm.name as method_name, ovau.name as unit_name, ovauv.value as value')
+            ->select('eov.*,eov.version_id, eov.event_id,side, eov.last_modified_user_id, eov.last_modified_date, ovm.name as method_name, ovau.name as unit_name, ovauv.value as value')
             ->from('et_ophciexamination_visualacuity_version eov')
             ->join('ophciexamination_visual_acuity_unit ovau','eov.unit_id=ovau.id' )
             ->join('ophciexamination_visualacuity_reading_version ovr','ovr.element_id=eov.id' )

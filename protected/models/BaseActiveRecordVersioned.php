@@ -347,33 +347,49 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             $compare_data = $version2->getAttributes();
         }
         
-        foreach($base_data as $key => $oneAttrib){
-            if( in_array($key,array('last_modified_date')) )
-            { 
-                continue; 
-            }
-            
-            $prevAttrib = $compare_data[$key];
-            
-            if( $oneAttrib != $prevAttrib )
-            {
-                $diffCount++;
-                if($prevAttrib!='' && $oneAttrib=='')
+        foreach($base_data as $key => $oneData){
+            if(is_array($oneData)){
+
+                foreach($oneData as $y => $prevAttrib){ 
+                    
+                    if( in_array($y,array('last_modified_date','version_id', 'event_id', 'last_modified_user_id', 'last_modified_date'))){ continue; }
+                    $prevAttrib = $compare_data[$key][$y];
+                    
+                    if( $oneData != $prevAttrib )
+                    {
+                        $diffCount++;
+                        if($prevAttrib!='' && $oneData=='')
+                        {
+                            $oneData = '*DELETED*';
+                        }
+                        if(is_object($version1)){
+                            $version1->setAttribute($key,$this->addStyleToModifiedValue($oneData));
+                        }
+                    }                    
+                }
+            } else {
+                if( in_array($key,array('last_modified_date','version_id', 'event_id', 'last_modified_user_id', 'last_modified_date'))){ continue; }
+                
+                $prevAttrib = $compare_data[$key];
+                
+                if( $oneData != $prevAttrib )
                 {
-                    $oneAttrib = '*DELETED*';
+                    $diffCount++;
+                    if($prevAttrib!='' && $oneData=='')
+                    {
+                        $oneData = '*DELETED*';
+                    }
+                    if(is_object($version1)){
+                        $version1->setAttribute($key,$this->addStyleToModifiedValue($oneData));
+                    }
                 }
-                if(is_object($version1)){
-                    $version1->setAttribute($key,$this->addStyleToModifiedValue($oneAttrib));
-                }
-            }
-        }
+            }    
+        }                   
         return $diffCount == 0 ? false : $version1;
     }    
  
     public function hasDiffVersions($version1,$version2){
         if($version2==null){ return array(); }
-
-        //print '<pre>'; print_r($version1); print '<hr>';  print_r($version2);
 
         if(is_array($version1))
         {
@@ -391,17 +407,24 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
             $compare_data = $version2->getAttributes();
         }
 
-        foreach($base_data as $key => $oneAttrib){
-            if( in_array($key,array('last_modified_date')) )
-            { 
-                continue; 
-            }
-            
-            $prevAttrib = $compare_data[$key];
-            
-            if( $oneAttrib != $prevAttrib )
-            {
-                return true;
+        foreach($base_data as $key => $oneData){
+            if(is_array($oneData)){
+                foreach($oneData as $y => $prevAttrib){
+                    $prevAttrib = $compare_data[$key][$y];
+                    if( $oneData != $prevAttrib )
+                    {
+                        return true;
+                    }
+                }
+            } else {
+                if( in_array($key,array('last_modified_date','version_id', 'event_id', 'last_modified_user_id', 'last_modified_date'))){ continue; }
+                
+                $prevAttrib = $compare_data[$key];
+                
+                if( $oneData != $prevAttrib )
+                {
+                    return true;
+                }
             }
         }
         return false;

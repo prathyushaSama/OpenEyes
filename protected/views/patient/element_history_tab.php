@@ -82,8 +82,7 @@
         $currentActiveVersion = $element->getCurrentDataWithQuery();
         $currentActiveVersion[0]['version_id'] = -1;
         $versions[] = $currentActiveVersion[0];
-        
-        //print '<pre>';print_r($versions); die;
+
         $versionCount = count($versions)-2;
         for($i = $versionCount; $i > 0 ; $i--)
         {
@@ -103,7 +102,6 @@
             $version2 = $element -> getVersionDataWithQuery($event_id);
             
             $hasDiff = $element -> hasDiffVersions($version1,$version2);
-            
             if($hasDiff)
             {
                 $diffVersions[$versions[$i-1]['version_id']] = $version2;
