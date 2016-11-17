@@ -24,6 +24,62 @@ class Element_OphCiExamination_Allergy extends \BaseEventTypeElement
     // Custom attribute to determine the allergy validation
     public $allergy_group;
 
+    public function getCurrentDataWithQuery(){
+        
+        $condition = 'paa.patient_id = :id';
+        
+        $params[':id'] = $this->event->episode->patient->id;
+        
+        $result = \Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('et_ophciexamination_allergy_version av')
+            ->join('patient_allergy_assignment paa','paa.last_modified_date = av.version_date')
+            ->join('allergy a','a.id = paa.allergy_id')
+            ->where($condition,$params)
+            ->queryAll();
+        return $result;
+    }
+
+    public function getAllVersionDataWithQuery(){
+        $condition = 'av.event_id = :id 
+                      and paa.patient_id = :paid';
+                      
+        $params[':id'] = $this->event->id;      
+        $params[':paid'] = $this->event->episode->patient->id;    
+        $result = \Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('et_ophciexamination_allergy_version av')
+            ->join('patient_allergy_assignment paa','paa.last_modified_date = av.version_date')
+            ->join('allergy a','a.id = paa.allergy_id')
+            ->where($condition,$params)
+            ->order('av.last_modified_date DESC')
+            ->queryAll();
+        return $result;
+    }
+
+    public function getVersionDataWithQuery($event_id=null){
+        $condition = 'av.event_id = :id 
+                      and paa.patient_id = :paid
+                      and av.version_id = :version_id';
+        $params[':paid'] = $this->event->episode->patient->id;    
+        if($event_id != null){
+            $params[':id'] = $event_id;
+        } else {
+            $params[':id'] = $this->event->id;
+        }
+        $params[':version_id'] = $this->getVersionID();
+
+        $result = \Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('et_ophciexamination_allergy_version av')
+            ->join('patient_allergy_assignment paa','paa.last_modified_date = av.version_date')
+            ->join('allergy a','a.id = paa.allergy_id')
+            ->where($condition,$params)
+            ->queryAll();
+
+        return $result;
+    }
+
     public function tableName()
     {
         return 'et_ophciexamination_allergy';

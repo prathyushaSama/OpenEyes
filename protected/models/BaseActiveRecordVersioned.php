@@ -26,7 +26,8 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     *    Getting data from the special sql command. 
     */
     public $specialElements = array(
-        'Visual Acuity'
+        'Visual Acuity',
+        'Allergies',
     );
     
     public function getVersionDataWithQuery(){
@@ -431,6 +432,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     }
     
     public function getPreviousModificationsHeaderData($event_id){
+        
         $condition = 'v.event_id = :id';
         $params[':id'] = $event_id;
 
@@ -446,10 +448,13 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     {
         $uniqueData = array();
         if(in_array($this->elementType->name,$this->specialElements)){
+            
             $data = $this->getAllVersionDataWithQuery();
-            foreach($data as $oneRow){
-                $uniqueData[ $oneRow['version_id'] ]= $oneRow;
-            }
+            if(is_array($data)&&!empty($data)){
+                foreach($data as $oneRow){
+                    $uniqueData[ $oneRow['version_id'] ]= $oneRow;
+                }
+            }            
             return array_values($uniqueData);
         } else {
             return $this->getPreviousModificationsHeaderData($event_id);

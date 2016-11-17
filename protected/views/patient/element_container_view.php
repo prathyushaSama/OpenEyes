@@ -67,7 +67,6 @@
     
     if( $data['displayHistoryEnabled'] !== false ){
         $event_id = $element -> event -> id;
-
         $versions = $element -> getPreviousModificationsHeader($event_id);
 
         if(in_array($element->elementType->name,$element->specialElements)) {
@@ -127,6 +126,7 @@
             }
         }
     }
+    
 ?>
 <section
 	class="<?php if (@$child) {?>sub-<?php }?>element <?php echo CHtml::modelName($element->elementType->class_name)?>"
