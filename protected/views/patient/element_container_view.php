@@ -75,7 +75,7 @@
             $currentActiveVersion[0]['version_id'] = -1;
             $versions[] = $currentActiveVersion[0];
             
-            $versionCount = count($versions)-2;
+            $versionCount = count($versions)-1;
             for($i = $versionCount; $i > 0 ; $i--)
             {
                 

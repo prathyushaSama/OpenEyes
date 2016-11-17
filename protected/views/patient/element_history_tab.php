@@ -76,14 +76,15 @@
     $diffVersions = array();
     
     $versions = $element -> getPreviousModificationsHeader($event_id);
-    
     // IF SPECIAL VIEW...
     if(in_array($element->elementType->name,$element->specialElements)) {
         $currentActiveVersion = $element->getCurrentDataWithQuery();
         $currentActiveVersion[0]['version_id'] = -1;
         $versions[] = $currentActiveVersion[0];
+        
+        //print '<pre>';        print_r($versions);
 
-        $versionCount = count($versions)-2;
+        $versionCount = count($versions)-1;
         for($i = $versionCount; $i > 0 ; $i--)
         {
             

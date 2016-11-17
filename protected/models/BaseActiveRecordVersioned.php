@@ -444,6 +444,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     
     public function getPreviousModificationsHeader($event_id = null)
     {
+        $uniqueData = array();
         if(in_array($this->elementType->name,$this->specialElements)){
             $data = $this->getAllVersionDataWithQuery();
             foreach($data as $oneRow){
