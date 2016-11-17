@@ -330,14 +330,30 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
         if($version2==null){ return array(); }
         $diff = array();
         $diffCount = 0;
+
+        if(is_array($version1))
+        {
+            $base_data = $version1;
+        }else if(is_object($version1))
+        {
+            $base_data = $version1->getAttributes();
+        }
+
+        if(is_array($version2))
+        {
+            $compare_data = $version2;
+        }else if(is_object($version2))
+        {
+            $compare_data = $version2->getAttributes();
+        }
         
-        foreach($version1->getAttributes() as $key => $oneAttrib){
+        foreach($base_data as $key => $oneAttrib){
             if( in_array($key,array('last_modified_date')) )
             { 
                 continue; 
             }
             
-            $prevAttrib = $version2->getAttributes()[$key];
+            $prevAttrib = $compare_data[$key];
             
             if( $oneAttrib != $prevAttrib )
             {
@@ -346,7 +362,9 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
                 {
                     $oneAttrib = '*DELETED*';
                 }
-                $version1->setAttribute($key,$this->addStyleToModifiedValue($oneAttrib));
+                if(is_object($version1)){
+                    $version1->setAttribute($key,$this->addStyleToModifiedValue($oneAttrib));
+                }
             }
         }
         return $diffCount == 0 ? false : $version1;
@@ -354,14 +372,30 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
  
     public function hasDiffVersions($version1,$version2){
         if($version2==null){ return array(); }
-        
-        foreach($version1->getAttributes() as $key => $oneAttrib){
+
+        if(is_array($version1))
+        {
+            $base_data = $version1;
+        }else if(is_object($version1))
+        {
+            $base_data = $version1->getAttributes();
+        }
+
+        if(is_array($version2))
+        {
+            $compare_data = $version2;
+        }else if(is_object($version2))
+        {
+            $compare_data = $version2->getAttributes();
+        }
+
+        foreach($base_data as $key => $oneAttrib){
             if( in_array($key,array('last_modified_date')) )
             { 
                 continue; 
             }
             
-            $prevAttrib = $version2->getAttributes()[$key];
+            $prevAttrib = $compare_data[$key];
             
             if( $oneAttrib != $prevAttrib )
             {
