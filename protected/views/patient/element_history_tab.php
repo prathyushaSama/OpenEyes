@@ -74,24 +74,48 @@
 
 
     $diffVersions = array();
-    $new_versions = array();
-
+    
     $versions = $element -> getPreviousModificationsHeader($event_id);
     
     // IF SPECIAL VIEW...
     if(in_array($element->elementType->name,$element->specialElements)) {
-        foreach($versions as $oneVersion){
-           $diffVersions[$oneVersion['version_id']] = $oneVersion;
+        $currentActiveVersion = $element->getCurrentDataWithQuery();
+        $currentActiveVersion[0]['version_id'] = -1;
+        $versions[] = $currentActiveVersion[0];
+        
+        //print '<pre>';print_r($versions); die;
+        $versionCount = count($versions)-2;
+        for($i = $versionCount; $i > 0 ; $i--)
+        {
+            
+            if( $i==$versionCount ){
+                // This is the current active version (not versioned)
+                $version1 = $currentActiveVersion;
+                $event_id = $version1[0]['event_id'];
+            } else {
+                $event_id = $versions[$i]['event_id'];
+                $element->setVersionID($versions[$i]['version_id']);
+                $version1 = $element->getVersionDataWithQuery($event_id);
+            }
+            
+                
+            $element -> setVersionID($versions[$i-1]['version_id']);
+            $version2 = $element -> getVersionDataWithQuery($event_id);
+            
+            $hasDiff = $element -> hasDiffVersions($version1,$version2);
+            
+            if($hasDiff)
+            {
+                $diffVersions[$versions[$i-1]['version_id']] = $version2;
+            } 
         }
-        $versionCount = count($diffVersions)-1;
-
+        
     }  else {
-        $versions[]['version_id'] = -1; // active version +1 !
+        $versions[]['version_id'] = -1; // active version +1 !    
         $versionCount = count($versions)-1; 
         
         for($i = $versionCount; $i > 0 ; $i--)
         {
-            $new_versions[$versions[$i]['version_id']] = $versions[$i];
             if( $i==$versionCount ){
                 $version1 = $element;
             } else {
@@ -107,14 +131,13 @@
             } 
         }
     }
-
 ?>
 
 <div id="historyTabs">
     <ul>
         <?php foreach($diffVersions as $version_id => $oneVersion) {
             if(in_array($element->elementType->name,$element->specialElements)) {
-                $user = User::model()->findByPk($oneVersion['last_modified_user_id']);
+                $user = User::model()->findByPk($oneVersion[0]['last_modified_user_id']);
             } else {
                 $user = User::model()->findByPk($oneVersion->last_modified_user_id);
             }
@@ -125,7 +148,7 @@
                     echo $user->first_name.' '.
                     $user->last_name.' ';
                     if(in_array($element->elementType->name,$element->specialElements)) {
-                        echo date('H:i:s',strtotime($oneVersion['last_modified_date'])); 
+                        echo date('H:i:s',strtotime($oneVersion[0]['last_modified_date'])); 
                     } else {
                         echo date('H:i:s',strtotime($oneVersion->last_modified_date)); 
                     }

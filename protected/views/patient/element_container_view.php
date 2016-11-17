@@ -71,10 +71,37 @@
         $versions = $element -> getPreviousModificationsHeader($event_id);
 
         if(in_array($element->elementType->name,$element->specialElements)) {
-            foreach($versions as $oneVersion){
-               $diffVersions[$oneVersion['version_id']] = $oneVersion;
+            $currentActiveVersion = $element->getCurrentDataWithQuery();
+            $currentActiveVersion[0]['version_id'] = -1;
+            $versions[] = $currentActiveVersion[0];
+            
+            //print '<pre>';print_r($versions); die;
+            $versionCount = count($versions)-2;
+            for($i = $versionCount; $i > 0 ; $i--)
+            {
+                
+                if( $i==$versionCount ){
+                    // This is the current active version (not versioned)
+                    $version1 = $currentActiveVersion;
+                    $event_id = $version1[0]['event_id'];
+                } else {
+                    $event_id = $versions[$i]['event_id'];
+                    $element->setVersionID($versions[$i]['version_id']);
+                    $version1 = $element->getVersionDataWithQuery($event_id);
+                }
+                
+                    
+                $element -> setVersionID($versions[$i-1]['version_id']);
+                $version2 = $element -> getVersionDataWithQuery($event_id);
+                
+                $hasDiff = $element -> hasDiffVersions($version1,$version2);
+                
+                if($hasDiff)
+                {
+                    $diffVersions[$versions[$i-1]['version_id']] = $version2;
+                } 
             }
-            $versionCount = count($diffVersions)-1;
+            
         }  else {
             $versions[]['version_id'] = -1; // active version +1 !
             $versionCount = count($versions)-1; 

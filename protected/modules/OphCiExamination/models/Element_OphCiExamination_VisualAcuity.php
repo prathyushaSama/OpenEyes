@@ -71,7 +71,25 @@ class Element_OphCiExamination_VisualAcuity extends \SplitEventTypeElement
         return parent::model($className);
     }
 
+    public function getCurrentDataWithQuery(){
+        $condition = 'eov.event_id = :id';
+        $params[':id'] = $this->event->id;      
+        
+        $result = Yii::app()->db->createCommand()
+            ->select('eov.*')
+            ->from('et_ophciexamination_visualacuity eov')
+            ->join('ophciexamination_visual_acuity_unit ovau','eov.unit_id=ovau.id' )
+            ->join('ophciexamination_visualacuity_reading ovr','ovr.element_id=eov.id' )
+            ->join('ophciexamination_visual_acuity_unit_value ovauv','(ovr.value = ovauv.base_value and ovauv.unit_id= eov.unit_id)' )
+            ->join('ophciexamination_visualacuity_method ovm','ovr.method_id = ovm.id' )
+            ->where($condition,$params)
+            ->queryAll();
+        return $result;
+    }
+
     public function getAllVersionDataWithQuery(){
+        $condition = 'eov.event_id = :id';
+        $params[':id'] = $this->event->id;      
         $result = Yii::app()->db->createCommand()
             ->select('eov.*')
             ->from('et_ophciexamination_visualacuity_version eov')
@@ -79,22 +97,26 @@ class Element_OphCiExamination_VisualAcuity extends \SplitEventTypeElement
             ->join('ophciexamination_visualacuity_reading ovr','ovr.element_id=eov.id' )
             ->join('ophciexamination_visual_acuity_unit_value ovauv','(ovr.value = ovauv.base_value and ovauv.unit_id= eov.unit_id)' )
             ->join('ophciexamination_visualacuity_method ovm','ovr.method_id = ovm.id' )
+            ->where($condition,$params)
             ->order('eov.last_modified_date DESC')
             ->queryAll();
-
         return $result;
     }
 
-    public function getVersionDataWithQuery(){
+    public function getVersionDataWithQuery($event_id=null){
         $condition = 'eov.event_id = :id
                       and eov.version_id = :version_id
                       and eov.version_date=ovr.version_date';
 
-        $params[':id'] = $this->event->id;
+        if($event_id != null){
+            $params[':id'] = $event_id;
+        } else {
+            $params[':id'] = $this->event->id;
+        }
         $params[':version_id'] = $this->getVersionID();
 
         $result = Yii::app()->db->createCommand()
-            ->select('side, ovm.name as method_name, ovau.name as unit_name, ovauv.value as value')
+            ->select('eov.*,side, ovm.name as method_name, ovau.name as unit_name, ovauv.value as value')
             ->from('et_ophciexamination_visualacuity_version eov')
             ->join('ophciexamination_visual_acuity_unit ovau','eov.unit_id=ovau.id' )
             ->join('ophciexamination_visualacuity_reading_version ovr','ovr.element_id=eov.id' )

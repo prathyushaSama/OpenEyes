@@ -373,6 +373,8 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     public function hasDiffVersions($version1,$version2){
         if($version2==null){ return array(); }
 
+        //print '<pre>'; print_r($version1); print '<hr>';  print_r($version2);
+
         if(is_array($version1))
         {
             $base_data = $version1;
@@ -420,7 +422,11 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     public function getPreviousModificationsHeader($event_id = null)
     {
         if(in_array($this->elementType->name,$this->specialElements)){
-            return $this->getAllVersionDataWithQuery();
+            $data = $this->getAllVersionDataWithQuery();
+            foreach($data as $oneRow){
+                $uniqueData[ $oneRow['version_id'] ]= $oneRow;
+            }
+            return array_values($uniqueData);
         } else {
             return $this->getPreviousModificationsHeaderData($event_id);
         }
