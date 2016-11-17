@@ -260,7 +260,7 @@ class BaseEventTypeElement extends BaseElement
         return end($kls);
     }
 
-    public function getHistoty_view(){
+    public function getHistory_view(){
         return 'history_'.$this->getDefaultView();
     }
 
