@@ -18,29 +18,60 @@
  */
 ?>
 <?php
-    $cvi_api = Yii::app()->moduleAPI->get('OphCoCvi');
-    if ($cvi_api) {
-        echo $cvi_api->renderAlertForVA($this->patient, $element, true);
+    function collectSideData($data, $side)
+    {
+        $side_data = array();
+        foreach($data as $data_key=>$record)
+        {
+            foreach($record as $key=>$val)
+            {
+                if($key=='side')
+                {
+                    if($val == $side)
+                    {
+                        $side_data[] = $data[$data_key];
+                    }
+                }
+            }
+        }
+        return $side_data;
     }
+
+    function processSideData($data)
+    {
+        $proc_data = array();
+        $proc_data["measurements"] = "";
+        foreach($data as $data_key => $dat)
+        {
+            $proc_data["unit_name"] = $dat["unit_name"];
+            $proc_data["measurements"] .= $dat["value"]." ".$dat["method_name"].", ";
+        }
+        return $proc_data;
+    }
+
+    $history_data = $element->getVersionDataWithQuery();
+    $left_data = processSideData(collectSideData($history_data, 1));
+    $right_data = processSideData(collectSideData($history_data, 0));
+
+    //var_dump($left_data);
 ?>
-wqerweq
+
 <?php echo CHtml::hiddenField('element_id', $element->id, array('class' => 'element_id')); ?>
 
 <div class="element-data element-eyes row">
-    HISTORY VERSION    
     <div class="element-eye right-eye column">
         <?php if ($element->hasRight()) {
             ?>
-            <?php if ($element->getCombined('right')) {
+            <?php if ($right_data["measurements"]) {
                 ?>
                 <div class="data-row">
                     <div class="data-value">
-                        <?php echo $element->unit->name ?>
+                        <?php echo $right_data['unit_name'] ?>
                     </div>
                 </div>
                 <div class="data-row">
                     <div class="data-value">
-                        <?php echo $element->getCombined('right') ?>
+                        <?php echo $right_data["measurements"] ?>
                     </div>
                 </div>
                 <?php
@@ -81,16 +112,16 @@ wqerweq
     <div class="element-eye left-eye column">
         <?php if ($element->hasLeft()) {
             ?>
-            <?php if ($element->getCombined('left')) {
+            <?php if ($left_data["measurements"]) {
                 ?>
                 <div class="data-row">
                     <div class="data-value">
-                        <?php echo $element->unit->name ?>
+                        <?php echo $left_data['unit_name']  ?>
                     </div>
                 </div>
                 <div class="data-row">
                     <div class="data-value">
-                        <?php echo $element->getCombined('left') ?>
+                        <?php echo $left_data["measurements"] ?>
                     </div>
                 </div>
                 <?php

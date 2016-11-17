@@ -21,7 +21,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     private $enable_version = true;
     private $fetch_from_version = false;
     private $version_id = null;
-    
+
     /**
     *    Getting data from the special sql command. 
     */
@@ -30,7 +30,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     );
     
     public function getVersionDataWithQuery(){
-        return true;
+        return array();
     }
     
     public function getFromVersion(){
@@ -386,7 +386,7 @@ class BaseActiveRecordVersioned extends BaseActiveRecord
     public function getPreviousModificationsHeader($event_id = null)
     {
         if(in_array($this->elementType->name,$this->specialElements)){
-            return $this->getVersionDataWithQuery();
+            return $this->getAllVersionDataWithQuery();
         } else {
             return $this->getPreviousModificationsHeaderData($event_id);
         }
