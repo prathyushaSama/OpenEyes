@@ -17,6 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
+
 <?php $history_data = $element->getVersionDataWithQuery(); ?>
 <div class="field-row row">
     <div class="large-12 column">
@@ -31,16 +32,15 @@
             </thead>
             <tbody id="OphCiExamination_allergy">
             <?php
-            foreach ($this->patient->allergyAssignments as $aa) {
+            foreach($history_data as $oneData) {
                     ?>
                     <script type="text/javascript">
-                        removeAllergyFromSelect(<?= $aa->allergy->id?>, '<?= $aa->allergy->name ?>');
+                        removeAllergyFromSelect(<?= $oneData['allergy_id']?>, "<?= $oneData['allergy_name'] ?>");
                     </script>
-                    <tr data-assignment-id="<?= $aa->id ?>" data-allergy-id="<?= $aa->allergy->id ?>"
-                        data-allergy-name="<?= $aa->allergy->name ?>">
-                        <td><?= CHtml::encode($aa->name) ?>
-                        </td>
-                        <td><?= CHtml::encode($aa->comments) ?></td>
+                    <tr data-assignment-id="<?= $oneData['assigment_id'] ?>" data-allergy-id="<?= $oneData['allergy_id']?>"
+                        data-allergy-name="<?= $oneData['allergy_name'] ?>">
+                        <td><?= CHtml::encode( $oneData['allergy_name']) ?></td>
+                        <td><?= CHtml::encode( $oneData['comments'] ) ?></td>
                     </tr>
                     <?php
                 }

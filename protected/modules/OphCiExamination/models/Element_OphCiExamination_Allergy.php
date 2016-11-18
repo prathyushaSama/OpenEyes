@@ -70,7 +70,7 @@ class Element_OphCiExamination_Allergy extends \BaseEventTypeElement
         $params[':version_id'] = $this->getVersionID();
 
         $result = \Yii::app()->db->createCommand()
-            ->select('*')
+            ->select('av.*,a.id as allergy_id, a.name as allergy_name, paa.id as assigment_id, paa.comments')
             ->from('et_ophciexamination_allergy_version av')
             ->join('patient_allergy_assignment paa','paa.last_modified_date = av.version_date')
             ->join('allergy a','a.id = paa.allergy_id')
