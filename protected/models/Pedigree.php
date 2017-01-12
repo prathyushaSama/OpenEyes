@@ -175,7 +175,7 @@ class Pedigree extends BaseActiveRecord
     public function validateTranscript()
     {
         if ($this->gene_transcript) {
-            $binFolder = realpath(join(DIRECTORY_SEPARATOR, array(
+            $binFolder = realpath(implode(DIRECTORY_SEPARATOR, array(
                 Yii::app()->basePath,
                 '..',
                 'bin'
