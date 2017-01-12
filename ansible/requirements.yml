@@ -13,3 +13,4 @@
 - src: geerlingguy.nodejs
   version: 3.3.0
 - src: zealot128.wkhtmltox
+- src: futurice.pip

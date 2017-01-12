@@ -22,21 +22,21 @@
  *
  * The followings are the available columns in table 'issue':
  *
- * @property int $id
- * @property int $inheritance_id
- * @property string $comments
- * @property int $consanguinity
- * @property int $gene_id
- * @property string $base_change
- * @property string $amino_acid_change
- * @property int $disorder_id
- * @property int $members
- * @property int $affecteds
+ * @property int                 $id
+ * @property int                 $inheritance_id
+ * @property string              $comments
+ * @property int                 $consanguinity
+ * @property int                 $gene_id
+ * @property string              $base_change
+ * @property string              $amino_acid_change
+ * @property int                 $disorder_id
+ * @property int                 $members
+ * @property int                 $affecteds
  *
  * The followings are the available model relations:
  * @property PedigreeInheritance $inheritance
- * @property PedigreeGene $gene
- * @property Disorder $disorder
+ * @property PedigreeGene        $gene
+ * @property Disorder            $disorder
  */
 class Pedigree extends BaseActiveRecord
 {
@@ -73,8 +73,9 @@ class Pedigree extends BaseActiveRecord
             array(
                 'inheritance_id, comments, consanguinity, gene_id, base_change, amino_acid_change,' .
                 'base_change_id, amino_acid_change_id, genomic_coordinate, genome_version, gene_transcript',
-                'safe'
+                'safe',
             ),
+            array('gene_transcript', 'validateTranscript'),
             array('consanguinity', 'required'),
         );
     }
@@ -88,7 +89,7 @@ class Pedigree extends BaseActiveRecord
             'inheritance' => array(self::BELONGS_TO, 'PedigreeInheritance', 'inheritance_id'),
             'gene' => array(self::BELONGS_TO, 'PedigreeGene', 'gene_id'),
             'disorder' => array(self::BELONGS_TO, 'Disorder', 'disorder_id'),
-            'subjects' =>  array(
+            'subjects' => array(
                 self::MANY_MANY,
                 'GeneticsPatient',
                 'genetics_patient_pedigree(patient_id, pedigree_id)',
@@ -145,7 +146,7 @@ class Pedigree extends BaseActiveRecord
         $query = $this->getDbConnection()->createCommand($sql);
         $diagnosis = $query->queryRow();
 
-        if($diagnosis){
+        if ($diagnosis) {
             $this->disorder_id = $diagnosis['id'];
         } else {
             $this->disorder_id = null;
@@ -164,5 +165,26 @@ class Pedigree extends BaseActiveRecord
                 JOIN pedigree_gene on pedigree_gene.id = pedigree.gene_id";
 
         return $this->getDbConnection()->createCommand($sql)->queryAll();
+    }
+
+    /**
+     * Validate the transcript using a python script
+     *
+     * This is not for production, this usage of exex is very insecure. This is just a demo.
+     */
+    public function validateTranscript()
+    {
+        if ($this->gene_transcript) {
+            $binFolder = realpath(join(DIRECTORY_SEPARATOR, array(
+                Yii::app()->basePath,
+                '..',
+                'bin'
+            )));
+            //@todo delete this. It's dangerous to use user input in an exec, dangerous just to use exec anyway, this needs to be refactored in to an API.
+            $validate = shell_exec('python ' . $binFolder . DIRECTORY_SEPARATOR . 'hgvs_checker.py ' . $this->gene_transcript);
+            if(!$validate) {
+                $this->addError($this->gene_transcript, 'The Gene Transcript is not valid.');
+            }
+        }
     }
 }

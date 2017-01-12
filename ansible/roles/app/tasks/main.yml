@@ -106,3 +106,6 @@
 
 - name: Migrate Modules using YIIC of openeyes DB
   command: php /var/www/openeyes/protected/yiic.php generatesessions --interactive=0
+
+- name: Install pyparsing
+  command: pip install pyparsing
