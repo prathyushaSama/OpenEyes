@@ -14,17 +14,6 @@
   become_method: sudo
   file: path=//var/www/openeyes/vendor state=absent
 
-- name: Git clone OE Vendor dependencies
-  become: true
-  become_user: vagrant
-  git:
-    repo=https://github.com/{{ item }}.git
-    dest=/var/www/openeyes/vendor
-    update=yes
-    force=yes
-  with_items:
-    - "{{ openeyes.vendor_repo }}"
-
 # TODO: Remove dependency directories?
 # Install project dependencies using composer (http://docs.ansible.com/ansible/composer_module.html)
 - name: Install / Update composer dependencies
