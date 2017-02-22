@@ -3,7 +3,7 @@
 ?>
 
 <div class="container content">
-	<h1 class="badge">Please login</h1>
+	<h1 class="badge">Please login, or <a href="<?php echo Yii::app()->createUrl('/site/register') ?>">register</a></h1>
 	<div class="row">
 		<div class="large-11 large-centered column">
 

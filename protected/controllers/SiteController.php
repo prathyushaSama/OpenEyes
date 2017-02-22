@@ -23,7 +23,7 @@ class SiteController extends BaseController
         return array(
             // Allow unauthenticated users to view certain pages
             array('allow',
-                'actions' => array('error', 'login', 'debuginfo'),
+                'actions' => array('error', 'login', 'debuginfo', 'register'),
             ),
             array('allow',
                 'actions' => array('index', 'changeSiteAndFirm', 'search', 'logout'),
@@ -230,5 +230,10 @@ class SiteController extends BaseController
     public function actionDebuginfo()
     {
         $this->renderPartial('/site/debuginfo', array());
+    }
+
+    public function actionRegister()
+    {
+        $this->render('/site/register', array());
     }
 }
