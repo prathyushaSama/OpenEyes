@@ -7,21 +7,11 @@ if (isset($model->errors) && $model->errors) { ?>
 				<div class="row">
 					<div class="large-12 column">
 						<div class="alert-box patient with-icon">
-							<?php /*foreach ($warnings as $warn) {?>
-								<strong><?php echo $warn[0]; ?></strong>
-							<?php } */?>
 							<?php echo CHtml::errorSummary($model); ?>
-							<?php /* echo CHtml::errorSummary($address, ''); */ ?>
 						</div>
 					</div>
 				</div>
 			<?php }?>
-			<?php
-	               /* $form = $this->beginWidget('FormLayout', array(
-	                    'id' => 'contact-form',
-	                    'enableAjaxValidation' => false,
-	                ))*/?>
-
 
 			<div class="row data-row">
 				<div class="large-4 column">
@@ -29,7 +19,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeDropDownList($model, "[{$index}]address_type_id", CHtml::listData(AddressType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -39,7 +28,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, "[{$index}]address1")?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -49,7 +37,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, "[{$index}]address2")?>
-					<?php /*echo CHtml::error($contact, 'last_name');*/ ?>
 				</div>
 			</div>
 
@@ -59,7 +46,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, "[{$index}]city")?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -69,7 +55,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, "[{$index}]postcode")?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -79,7 +64,6 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, "[{$index}]county")?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -88,9 +72,7 @@ if (isset($model->errors) && $model->errors) { ?>
 					<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[$index}]country_id"); ?></div>
 				</div>
 				<div class="large-8 column">
-					<?php /*echo CHtml::activeTextField($model, 'country')*/?>
 					<?php echo CHtml::activeDropDownList($model, "[{$index}]country_id", CHtml::listData(Country::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -100,17 +82,13 @@ if (isset($model->errors) && $model->errors) { ?>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeEmailField($model, "[{$index}]email")?>
-					<?php /*echo CHtml::error($address, 'email');*/ ?>
 				</div>
 			</div>
-
-			<?php /* $this->endWidget() */?>
 
 			<div class="row" style="width:100px;float: left;">
 	        	<br/>
 		        <?php echo CHtml::link('Delete', '#', array('onclick' => 'deleteAddress(this, ' . $index . '); return false;')); ?>
 		    </div>
-
 		</div>
 	</div>
 </div>

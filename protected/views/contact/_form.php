@@ -11,20 +11,13 @@
 					</div>
 				</div>
 			<?php }?>
-			<?php
-	               /* $form = $this->beginWidget('FormLayout', array(
-	                    'id' => 'contact-form',
-	                    'enableAjaxValidation' => false,
-	                ))*/?>
-
 
 			<div class="row data-row">
 				<div class="large-4 column">
-					<div class="data-label"><?php echo "<h1>Address</h1>"; var_dump($model); echo CHtml::activeLabelEx($model, 'first_name'); ?></div>
+					<div class="data-label"><?php echo CHtml::activeLabelEx($model, 'first_name'); ?></div>
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, 'first_name')?>
-					<?php /*echo CHtml::error($contact, 'first_name');*/ ?>
 				</div>
 			</div>
 
@@ -34,12 +27,8 @@
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($model, 'last_name')?>
-					<?php /*echo CHtml::error($contact, 'last_name');*/ ?>
 				</div>
 			</div>
-
-			<?php /* $this->endWidget() */?>
-
 		</div>
 	</div>
 </div>

@@ -16,15 +16,8 @@
  * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-
-
-var_dump($this->patient);
 ?>
 <section class="box patient-info js-toggle-container">
-<header class="event-header">
-		<?php $this->renderPartial('//patient/event_tabs'); ?>
-		<?php $this->renderPartial('//patient/event_actions'); ?>
-	</header>
 	<h3 class="box-title">Personal Details:</h3>
 	<a href="#" class="toggle-trigger toggle-hide js-toggle">
 		<span class="icon-showhide">
@@ -32,247 +25,103 @@ var_dump($this->patient);
 		</span>
 	</a>
 	<div class="js-toggle-body">
-
-		<?php /*if ($this->checkAccess('OprnEditPatientInfo')) { ?>
-
-			<?php
-	                $form = $this->beginWidget('FormLayout', array(
-	                    'id' => 'edit-patient',
-	                    'enableAjaxValidation' => true,
-	                    //'htmlOptions' => array('class' => 'form add-data'),
-	                    //'action' => array('patient/addAllergy'),
-	                    /*'layoutColumns' => array(
-	                        'label' => 3,
-	                        'field' => 9,
-	                    ),* /
-	                ))?>
-
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">First name(s):</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact, 'first_name')?>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">First name(s):</div>
+			</div>
+			<div class="large-8 column">
+				<div class="data-value"><?php echo $this->patient->first_name?></div>
+			</div>
+		</div>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Last name:</div>
+			</div>
+			<div class="large-8 column">
+				<div class="data-value"><?php echo $this->patient->last_name?></div>
+			</div>
+		</div>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Address:</div>
+			</div>
+			<div class="large-8 column">
+				<div class="data-value">
+					<?php echo $this->patient->getSummaryAddress()?>
 				</div>
 			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Last name(s):</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact, 'last_name')?>
+		</div>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Date of Birth:</div>
+			</div>
+			<div class="large-8 column">
+				<div class="data-value">
+					<?php echo ($this->patient->dob) ? $this->patient->NHSDate('dob') : 'Unknown' ?>
 				</div>
 			</div>
+		</div>
 
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Address:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact->address, 'address1')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact->address, 'address2')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">City:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact->address, 'city')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Postcode:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact->address, 'postcode')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">County:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient->contact->address, 'county')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Country:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient->contact->address, 'country_id', CHtml::listData(Country::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Email:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeEmailField($this->patient->contact->address, 'email')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Date of Birth:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDateField($this->patient, 'dob')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Date of Death:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDateField($this->patient, 'date_of_death')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Gender:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient, 'gender', CHtml::listData(Gender::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-				</div>
-			</div>
-
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Ethnic Group:</div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient, 'ethnic_group_id', CHtml::listData(EthnicGroup::model()->findAll(array('order' => 'display_order')), 'id', 'name'), array('empty' => '')); ?>
-				</div>
-			</div>
-
-			<div class="row buttons">
-				<?php echo CHtml::submitButton($this->patient->isNewRecord ? 'Create' : 'Save'); ?>
-			</div>
-
-			<?php $this->endWidget()?>
-
-		<?php } else { */?>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">First name(s):</div>
-				</div>
-				<div class="large-8 column">
-					<div class="data-value"><?php echo $this->patient->first_name?></div>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Last name:</div>
-				</div>
-				<div class="large-8 column">
-					<div class="data-value"><?php echo $this->patient->last_name?></div>
-				</div>
-			</div>
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Address:</div>
-				</div>
-				<div class="large-8 column">
-					<div class="data-value">
-						<?php echo $this->patient->getSummaryAddress()?>
-					</div>
-				</div>
-			</div>
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Date of Birth:</div>
-				</div>
-				<div class="large-8 column">
-					<div class="data-value">
-						<?php echo ($this->patient->dob) ? $this->patient->NHSDate('dob') : 'Unknown' ?>
-					</div>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<?php if ($this->patient->isDeceased()):?>
-					<div class="large-4 column">
-						<div class="data-label">Deceased:</div>
-					</div>
-					<div class="large-8 column">
-						<div class="data-value">
-							Yes
-						</div>
-					</div>
-				<?php else: ?>
-					<div class="large-4 column">
-						<div class="data-label">Age:</div>
-					</div>
-					<div class="large-8 column">
-						<div class="data-value">
-							<?php echo $this->patient->getAge()?>
-						</div>
-					</div>
-				<?php endif; ?>
-			</div>
+		<div class="row data-row">
 			<?php if ($this->patient->isDeceased()):?>
-			<div class="row data-row">
 				<div class="large-4 column">
-					<div class="data-label">Date of Death:</div>
+					<div class="data-label">Deceased:</div>
 				</div>
-				<?php if ($this->patient->date_of_death): ?>
-					<div class="large-8 column">
-						<div class="data-value">
-							<?php echo $this->patient->NHSDate('date_of_death').' (Age '.$this->patient->getAge().')' ?>
-						</div>
+				<div class="large-8 column">
+					<div class="data-value">
+						Yes
 					</div>
-				<?php else: ?>
-					<div class="large-8 column">
-						<div class="data-value">
-							Date of Patient's death unknown.
-						</div>
+				</div>
+			<?php else: ?>
+				<div class="large-4 column">
+					<div class="data-label">Age:</div>
+				</div>
+				<div class="large-8 column">
+					<div class="data-value">
+						<?php echo $this->patient->getAge()?>
 					</div>
-				<?php endif;?>
-			</div>
+				</div>
 			<?php endif; ?>
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Gender:</div>
-				</div>
+		</div>
+		<?php if ($this->patient->isDeceased()):?>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Date of Death:</div>
+			</div>
+			<?php if ($this->patient->date_of_death): ?>
 				<div class="large-8 column">
 					<div class="data-value">
-						<?php echo $this->patient->getGenderString() ?>
+						<?php echo $this->patient->NHSDate('date_of_death').' (Age '.$this->patient->getAge().')' ?>
 					</div>
 				</div>
-			</div>
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label">Ethnic Group:</div>
-				</div>
+			<?php else: ?>
 				<div class="large-8 column">
 					<div class="data-value">
-						<?php echo $this->patient->getEthnicGroupString() ?>
+						Date of Patient's death unknown.
 					</div>
 				</div>
+			<?php endif;?>
+		</div>
+		<?php endif; ?>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Gender:</div>
 			</div>
-		<?php /*}*/?>
+			<div class="large-8 column">
+				<div class="data-value">
+					<?php echo $this->patient->getGenderString() ?>
+				</div>
+			</div>
+		</div>
+		<div class="row data-row">
+			<div class="large-4 column">
+				<div class="data-label">Ethnic Group:</div>
+			</div>
+			<div class="large-8 column">
+				<div class="data-value">
+					<?php echo $this->patient->getEthnicGroupString() ?>
+				</div>
+			</div>
+		</div>
 	</div>
 </section>

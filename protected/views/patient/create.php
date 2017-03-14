@@ -18,154 +18,61 @@
  */
 ?>
 
-<?php
-//$clinical = $clinical = $this->checkAccess('OprnViewClinical');
-
-//$warnings = $this->patient->getWarnings($clinical);
-//$warnings = array_merge($this->patient->errors, $contact->errors, $address->errors);
-//var_dump($this->patient->errors);
-$warnings = null;
-?>
-
 <div class="box patient-info">
 	<div class="row">
 		<div class="large-6 column">
-
-			<?php /*if ($this->checkAccess('OprnEditPatientInfo')) {*/ ?>
 
 			<?php if ($this->patient->errors || $this->patient->contact->errors) { ?>
 				<div class="row">
 					<div class="large-12 column">
 						<div class="alert-box patient with-icon">
-							<?php /*foreach ($warnings as $warn) {?>
-								<strong><?php echo $warn[0]; ?></strong>
-							<?php } */?>
 							<?php echo CHtml::errorSummary($this->patient); ?>
 							<?php echo CHtml::errorSummary($this->patient->contact, ''); ?>
-							<?php /* echo CHtml::errorSummary($address, ''); */ ?>
+							<?php foreach($this->patient->contact->addresses as $index => $address): ?>
+								<?php echo CHtml::errorSummary($address, ''); ?>
+							<?php endforeach; ?>
 						</div>
 					</div>
 				</div>
-			<?php }?>
-			<?php /*echo CHtml::errorSummary($this->patient);*/ ?>
+			<?php } ?>
 			<?php
-	                $form = $this->beginWidget('FormLayout', array(
-	                    'id' => 'create-patient',
-	                    'enableAjaxValidation' => false,
-	                    //'htmlOptions' => array('class' => 'form add-data'),
-	                    //'action' => array('patient/addAllergy'),
-	                    /*'layoutColumns' => array(
-	                        'label' => 3,
-	                        'field' => 9,
-	                    ),*/
-	                ))?>
+				$form = $this->beginWidget('FormLayout', array(
+					'id' => 'create-patient',
+					'enableAjaxValidation' => false,
+			))?>
 
-<div id="contact">
-	<?php
-	$this->renderPartial('../contact/_form', array(
-		'model' => $this->patient->contact
-	));
-	?>
-</div>
-
-
- <?php
-    echo CHtml::link('Add Address', '#', array('id' => 'loadAddressByAjax'));
-   ?>
-
-<div id=addresses>
-	<?php
-	$addressIndex = 0;
-	foreach($this->patient->contact->addresses as $id => $address):
-		$this->renderPartial('../address/_form', array(
-			'model' => $address,//$this->patient->contact->address
-			'index' => $id,
-			'display' => 'block',
-		));
-	++$addressIndex;
-	endforeach;
-	?>
-</div>
-
-<?php /*?>
-<div id="address">
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'address1'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($address, 'address1')?>
-					<?php /*echo CHtml::error($address, 'address1');* / ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($address, 'address2')?>
-					<?php /*echo CHtml::error($address, 'address2');* / ?>
-				</div>
+			<div id="contact">
+				<?php
+				$this->renderPartial('../contact/_form', array(
+					'model' => $this->patient->contact
+				));
+				?>
 			</div>
 
 
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'city'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($address, 'city')?>
-					<?php /*echo CHtml::error($address, 'city');* / ?>
-				</div>
+			<?php
+			    echo CHtml::link('Add Address', '#', array('id' => 'loadAddressByAjax'));
+			?>
+
+			<div id=addresses>
+				<?php
+				$addressIndex = 0;
+				foreach($this->patient->contact->addresses as $id => $address):
+					$this->renderPartial('../address/_form', array(
+						'model' => $address,
+						'index' => $id,
+						'display' => 'block',
+					));
+				++$addressIndex;
+				endforeach;
+				?>
 			</div>
 
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'postcode'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($address, 'postcode')?>
-					<?php /*echo CHtml::error($address, 'postcode');* / ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'county'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($address, 'county')?>
-					<?php /*echo CHtml::error($address, 'county');* / ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'country'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($address, 'country_id', CHtml::listData(Country::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-					<?php /*echo CHtml::error($address, 'country_id');* / ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($address, 'email'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeEmailField($address, 'email')?>
-					<?php /*echo CHtml::error($address, 'email');* / ?>
-				</div>
-			</div>
-</div> */ ?>
 			<div class="row data-row">
 				<div class="large-4 column">
 					<div class="data-label"><?php echo $form->labelEx($this->patient, 'dob'); ?></div>
 				</div>
 				<div class="large-8 column">
-					<?php /*echo CHtml::activeDateField($this->patient, 'dob')*/?>
 					<?php
 						$this->widget('zii.widgets.jui.CJuiDatePicker', array(
 						    'model' => $this->patient,
@@ -185,7 +92,6 @@ $warnings = null;
 					<div class="data-label"><?php echo $form->labelEx($this->patient, 'date_of_death'); ?></div>
 				</div>
 				<div class="large-8 column">
-					<?php /*echo CHtml::activeDateField($this->patient, 'date_of_death')*/?>
 					<?php
 						$this->widget('zii.widgets.jui.CJuiDatePicker', array(
 						    'model' => $this->patient,
@@ -196,7 +102,6 @@ $warnings = null;
 						    ),
 						));
 						?>
-					<?php /*echo CHtml::error($this->patient, 'date_iof_death');*/ ?>
 				</div>
 			</div>
 
@@ -215,7 +120,6 @@ $warnings = null;
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeDropDownList($this->patient, 'ethnic_group_id', CHtml::listData(EthnicGroup::model()->findAll(array('order' => 'display_order')), 'id', 'name'), array('empty' => '')); ?>
-					<?php /*echo CHtml::error($this->patient, 'ethnic_group_id');*/ ?>
 				</div>
 			</div>
 
@@ -225,7 +129,6 @@ $warnings = null;
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($this->patient, 'hos_num')?>
-					<?php /* echo CHtml::error($this->patient, 'hos_num'); */ ?>
 				</div>
 			</div>
 
@@ -235,7 +138,6 @@ $warnings = null;
 				</div>
 				<div class="large-8 column">
 					<?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
-					<?php /* echo CHtml::error($this->patient, 'nhs_num'); */ ?>
 				</div>
 			</div>
 
