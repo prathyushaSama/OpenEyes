@@ -43,6 +43,10 @@ class PatientController extends BaseController
                 'actions' => array('search', 'ajaxSearch', 'view'),
                 'users' => array('@'),
             ),
+        	array('allow',
+        		'actions' => array('create', 'loadAddressByAjax'),
+        		'roles' => array('OprnEditPatientInfo'),
+        	),
             array('allow',
                 'actions' => array('episode', 'episodes', 'hideepisode', 'showepisode'),
                 'roles' => array('OprnViewClinical'),
@@ -108,6 +112,194 @@ class PatientController extends BaseController
         }
 
         return parent::beforeAction($action);
+    }
+
+    public function actionCreate()
+    {
+    	$this->patient = new Patient();
+    	$this->patient->contact = new Contact();
+    	//$this->patient->contact->addresses = array();
+		//$this->patient->contact->address = new Address();
+		//$this->patient->contact->addresses[] = new Address();
+		$this->patient->contact->addresses = array(new Address(), new Address());
+
+		//var_dump($this->patient->contact->address);
+
+    	//$contact = new Contact();
+    	//$this->patient->contact_id = $contact->id;
+    	//$patient->contact = $contact;
+
+    	//$address = new Address();
+    	//$address->contact_id = $contact->id;
+
+    	#$patient->contact = $contact;
+    	#$patient->address = $address;
+
+    	if (isset($_POST['Patient']))
+    	{
+    		//var_dump($patient);
+    		echo '<h1>POST</h1>';
+    		var_dump($_POST);
+    		$this->patient->attributes = $_POST['Patient'];
+    		//$this->patient->address = $_POST['Address'];
+
+
+    		echo "Date of Birth: " . $this->patient->dob;
+    		if($dobtime = date_parse_from_format('d/m/Y', $this->patient->dob))
+    		{
+    			$this->patient->dob = date('Y-m-d', mktime(0, 0, 0, $dobtime['month'], $dobtime['day'], $dobtime['year']));
+    			echo "Date of Birth: " . $this->patient->dob;
+    			echo "Date of bith: " . mktime(0, 0, 0, $dobtime['month'], $dobtime['day'], $dobtime['year']);
+    		}
+    		else {
+    			echo "The date strign is in an invalid format";
+    		}
+
+    		if($date_of_death_time = date_parse_from_format('d/m/Y', $this->patient->date_of_death))
+    		{
+    			$this->patient->date_of_death = date('Y-m-d', mktime(0, 0, 0, $date_of_death_time['month'], $date_of_death_time['day'], $date_of_death_time['year']));
+    		}
+    		else {
+    			echo "The date strign is in an invalid format";
+    		}
+
+    		echo '<h1>Patient</h1>';
+    		var_dump($this->patient);
+
+    		//$this->patient->address = new Address;
+    		//$this->patient->address->attributes = $_POST['Address'];
+
+    		/*$address = new Address;
+    		$address->attributes = $_POST['Address'];
+    		$address->contact_id = $contact->id;
+    		//$address->contact = $contact;
+
+
+    		echo '<h1>Address</h1>';
+    		var_dump($address);
+*/
+    		//$contact = new Contact;
+    		//$contact->attributes = $_POST['Contact'];
+    		//$this->patient->contact_id = $contact->id;
+    		$contact = new Contact();
+    		$contact->attributes = $_POST['Contact'];
+
+
+    		//$this->patient->contact->attributes = $_POST['Contact'];
+
+    		$this->patient->contact = $contact;
+    		echo '<h1>Contact</h1>';
+    		var_dump($this->patient->contact);
+
+
+    		//$address = new Address();
+    		//$address->attributes = $_POST['Address'];
+    		//$contact->addresses = $_POST['Address'];
+
+    		$patient_valid = $this->patient->validate();
+    		//$address_valid = $address->validate();
+    		$address_valid = true;
+    		/*foreach ($contact->addresses as $id => $address)
+    		{
+    			var_dump($address);
+    			if(!$address->validate())
+    			{
+    				$address_valid = false;
+    			}
+    		}*/
+			$addresses = array();
+			if(isset($_POST['Address']))
+			{
+	    		foreach($_POST['Address'] as $index => $address)
+	    		{
+	    			$a = new Address();
+	    			$a->attributes = $address;
+					$a->validate();
+	    			$addresses[] = $a;
+	    			echo "<h1>Address {$index}</h1>";
+	    			var_dump($a);
+	    		}
+			}
+    		//$this->patient->contact->addresses = array($_POST['Address']);
+			$this->patient->contact->addresses = $addresses;
+
+    		//$contact_valid = $this->patient->contact->validate();
+    		//$address_valid = $address->validate();
+			$valid = $patient_valid && $address_valid;// && $contact_valid;// && $address_valid;
+
+    		if ($valid)
+    		{
+    			echo '<h1>Woo, valid</h1>';
+    			//if($contact->save() && $this->patient->save())// && $address->save())
+    			//if($this->patient->saveWithRelated('contact'))
+    			//if($this->patient->save())
+    			//if($this->patient->contact->save() && $this->patient->save())
+    			//$contact->first_name = $this->patient->contact->first_name;
+    			//$contact->last_name = $this->patient->contact->last_name;
+
+				//$contact->address = $address;
+    			if($contact->save())
+    			//if($contact->saveWithRelated('addresses'))
+    			{
+    				//$address->contact_id = $contact->id;
+    				//$address->save();
+
+    				foreach($addresses as $index => $address)
+    				{
+    					$address->contact_id = $contact->id;//$this->patient->contact_id;
+    					$address->save();
+    				}
+
+    				$this->patient->contact_id = $contact->id;
+
+    				//$this->patient->contact->first_name = $contact->first_name;
+    				//$this->patient->contact->last_name = $contact->last_name;
+    				if($this->patient->save())
+    				{
+	    				//$this->redirect(array('view','id' => $this->patient->id));
+	    				echo "saved successfully with id {$this->patient->id}";
+	    				echo "<h1>Patient {$this->patient->id}</h1>";
+	    				var_dump(Patient::model()->findByPk($this->patient->id));
+	    				echo "<h1>Contact #1 {$this->patient->contact->id}</h1>";
+	    				var_dump(Contact::model()->findByPk($this->patient->contact->id));
+	    				echo "<h1>Contact #2 {$this->patient->contact_id}</h1>";
+	    				var_dump(Contact::model()->findByPk($this->patient->contact_id));
+	    				echo "<h1>Address #1 {$address->id}</h1>";
+	    				var_dump(Address::model()->findByPk($address->id));
+	    				echo "<h1>Address #2 {$this->patient->contact->address->id}</h1>";
+	    				var_dump(Address::model()->findByPk($this->patient->contact->address->id));
+	    				echo "<h1>Address #3</h1>";
+	    				var_dump($address);
+	    				return;
+    				}
+    			}
+    		}
+    		else {
+    			echo '<h1>Dang, not valid</h1>';
+    		}
+
+    		//$errors = array_merge($this->patient->errors, $contact->errors, $address->errors);
+    		var_dump($this->patient);
+    		//var_dump($contact->errors);
+    		//var_dump($address->errors);
+    	}
+
+    	$this->renderPatientPanel = false;
+
+    	$this->render('create', array(
+    		//'address' => $address,
+    		//'contact' => $contact,
+    	));
+    }
+
+    public function actionLoadAddressByAjax($index)
+    {
+    	$model = new Address();
+    	$this->renderPartial('../address/_form', array(
+    			'model' => $model,
+    			'index' => $index,
+    			//            'display' => 'block',
+    	), false, true);
     }
 
     /**

@@ -43,7 +43,7 @@ $warnings = $this->patient->getWarnings($clinical);
 		<?php }?>
 
 		<?php if ($this->patient->isDeceased()) {?>
-			<div clas="row">
+			<div class="row">
 				<div class="large-12 column">
 					<div id="deceased-notice" class="alert-box alert with-icon">
 						This patient is deceased (<?php echo $this->patient->NHSDate('date_of_death'); ?>)

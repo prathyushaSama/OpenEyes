@@ -79,6 +79,8 @@ class Patient extends BaseActiveRecordVersioned
             'ContactBehavior' => array(
                 'class' => 'application.behaviors.ContactBehavior',
             ),
+        	'ESaveRelatedBehavior' => array(
+    			'class' => 'application.components.ESaveRelatedBehavior')
         );
     }
 
@@ -111,10 +113,11 @@ class Patient extends BaseActiveRecordVersioned
     {
         return array(
             array('pas_key', 'length', 'max' => 10),
-            array('hos_num', 'required'),
+            array('hos_num, dob', 'required'),
             array('hos_num, nhs_num', 'length', 'max' => 40),
             array('gender', 'length', 'max' => 1),
-            array('dob, date_of_death, ethnic_group_id', 'safe'),
+        	array('dob, date_of_death', 'date', 'format' => 'yyyy-mm-dd'),
+            array('ethnic_group_id', 'safe'),
             array('deleted', 'safe'),
             array('dob, hos_num, nhs_num, date_of_death, deleted', 'safe', 'on' => 'search'),
         );
