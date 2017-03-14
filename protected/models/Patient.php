@@ -685,6 +685,16 @@ class Patient extends BaseActiveRecordVersioned
         }
     }
 
+    public static function getGenderArray()
+    {
+    	return array(
+    		'F' => 'Female',
+    		'M' => 'Male',
+    		'X' => 'Other',
+    		null => 'Unknown',
+    	);
+    }
+
     public function getSub()
     {
         if ($this->isChild()) {

@@ -205,8 +205,7 @@ $warnings = null;
 					<div class="data-label"><?php echo $form->labelEx($this->patient, 'gender'); ?></div>
 				</div>
 				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient, 'gender', CHtml::listData(Gender::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-					<?php /*echo CHtml::error($this->patient, 'gender'); */?>
+					<?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
 				</div>
 			</div>
 
