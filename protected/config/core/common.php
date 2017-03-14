@@ -252,6 +252,17 @@ return array(
         ),
         'widgetFactory' => array(
             'class' => 'WidgetFactory',
+        	'widgets' => array(
+        		'CJuiDatePicker' => array(
+        			'scriptFile' => 'jquery-ui.min.js',
+        			'language' => 'en',
+        			'options' => array(
+        				'dateFormat' => 'dd/mm/yy',
+        				'showAnim' => 'fold',
+        				'fontSize' => '0.85em',
+        			),
+        		),
+        	),
         ),
     ),
 

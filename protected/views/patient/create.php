@@ -173,7 +173,6 @@ $warnings = null;
 						    'htmlOptions' => array(
 						        'size' => '10',         // textField size
 						        'maxlength' => '10',    // textField maxlength
-						        //'dateFormat' => 'y-m-d',
 						    ),
 						));
 						?>
@@ -194,7 +193,6 @@ $warnings = null;
 						    'htmlOptions' => array(
 						        'size' => '10',         // textField size
 						        'maxlength' => '10',    // textField maxlength
-						        //'dateFormat' => 'yy-mm-dd',
 						    ),
 						));
 						?>
