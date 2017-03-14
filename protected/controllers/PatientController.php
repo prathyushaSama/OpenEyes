@@ -122,13 +122,11 @@ class PatientController extends BaseController
 
     	if (isset($_POST['Patient']))
     	{
-    		var_dump($_POST);
     		$this->patient->attributes = $_POST['Patient'];
 
     		$contact = new Contact();
     		$contact->attributes = $_POST['Contact'];
-
-    		//$this->patient->contact = $contact;
+    		$this->patient->contact = $contact;
 
     		$valid = true;
     		if(!$this->patient->validate())
@@ -179,8 +177,9 @@ class PatientController extends BaseController
     		}
     	}
 
+    	// The patient panel contains details about the current patient when in any of th epatient views.
+    	// It can't be used here because the data it uses doesn't exist yet.
     	$this->renderPatientPanel = false;
-
     	$this->render('create', array());
     }
 
