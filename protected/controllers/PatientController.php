@@ -118,40 +118,22 @@ class PatientController extends BaseController
     {
     	$this->patient = new Patient();
     	$this->patient->contact = new Contact();
-    	//$this->patient->contact->addresses = array();
-		//$this->patient->contact->address = new Address();
-		//$this->patient->contact->addresses[] = new Address();
 		$this->patient->contact->addresses = array(new Address(), new Address());
-
-		//var_dump($this->patient->contact->address);
-
-    	//$contact = new Contact();
-    	//$this->patient->contact_id = $contact->id;
-    	//$patient->contact = $contact;
-
-    	//$address = new Address();
-    	//$address->contact_id = $contact->id;
-
-    	#$patient->contact = $contact;
-    	#$patient->address = $address;
 
     	if (isset($_POST['Patient']))
     	{
-    		//var_dump($patient);
-    		echo '<h1>POST</h1>';
     		var_dump($_POST);
     		$this->patient->attributes = $_POST['Patient'];
-    		//$this->patient->address = $_POST['Address'];
 
+    		echo '<h1>Patient</h1>';
+    		var_dump($this->patient);
 
-    		echo "Date of Birth: " . $this->patient->dob;
-    		if($dobtime = date_parse_from_format('d/m/Y', $this->patient->dob))
+    		/*if($dobtime = date_parse_from_format('d/m/Y', $this->patient->dob))
     		{
     			$this->patient->dob = date('Y-m-d', mktime(0, 0, 0, $dobtime['month'], $dobtime['day'], $dobtime['year']));
-    			echo "Date of Birth: " . $this->patient->dob;
-    			echo "Date of bith: " . mktime(0, 0, 0, $dobtime['month'], $dobtime['day'], $dobtime['year']);
     		}
-    		else {
+    		else
+    		{
     			echo "The date strign is in an invalid format";
     		}
 
@@ -159,54 +141,27 @@ class PatientController extends BaseController
     		{
     			$this->patient->date_of_death = date('Y-m-d', mktime(0, 0, 0, $date_of_death_time['month'], $date_of_death_time['day'], $date_of_death_time['year']));
     		}
-    		else {
+    		else
+    		{
     			echo "The date strign is in an invalid format";
-    		}
+    		}*/
 
-    		echo '<h1>Patient</h1>';
-    		var_dump($this->patient);
-
-    		//$this->patient->address = new Address;
-    		//$this->patient->address->attributes = $_POST['Address'];
-
-    		/*$address = new Address;
-    		$address->attributes = $_POST['Address'];
-    		$address->contact_id = $contact->id;
-    		//$address->contact = $contact;
+    		//echo "Middle-date: " . Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->patient->dob, 'MM/dd/yyyy'));
+    		//$this->patient->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->patient->dob, 'MM/dd/yyyy'));
 
 
-    		echo '<h1>Address</h1>';
-    		var_dump($address);
-*/
-    		//$contact = new Contact;
-    		//$contact->attributes = $_POST['Contact'];
-    		//$this->patient->contact_id = $contact->id;
     		$contact = new Contact();
     		$contact->attributes = $_POST['Contact'];
-
-
-    		//$this->patient->contact->attributes = $_POST['Contact'];
 
     		$this->patient->contact = $contact;
     		echo '<h1>Contact</h1>';
     		var_dump($this->patient->contact);
 
 
-    		//$address = new Address();
-    		//$address->attributes = $_POST['Address'];
-    		//$contact->addresses = $_POST['Address'];
-
     		$patient_valid = $this->patient->validate();
-    		//$address_valid = $address->validate();
+
     		$address_valid = true;
-    		/*foreach ($contact->addresses as $id => $address)
-    		{
-    			var_dump($address);
-    			if(!$address->validate())
-    			{
-    				$address_valid = false;
-    			}
-    		}*/
+
 			$addresses = array();
 			if(isset($_POST['Address']))
 			{
@@ -214,18 +169,20 @@ class PatientController extends BaseController
 	    		{
 	    			$a = new Address();
 	    			$a->attributes = $address;
-					$a->validate();
+					if (!$a->validate())
+					{
+						$address_valid = false;
+					}
+
 	    			$addresses[] = $a;
 	    			echo "<h1>Address {$index}</h1>";
 	    			var_dump($a);
 	    		}
 			}
-    		//$this->patient->contact->addresses = array($_POST['Address']);
-			$this->patient->contact->addresses = $addresses;
 
-    		//$contact_valid = $this->patient->contact->validate();
-    		//$address_valid = $address->validate();
-			$valid = $patient_valid && $address_valid;// && $contact_valid;// && $address_valid;
+			//$this->patient->contact->addresses = $addresses;
+
+			$valid = $patient_valid && $address_valid;
 
     		if ($valid)
     		{
@@ -264,12 +221,12 @@ class PatientController extends BaseController
 	    				var_dump(Contact::model()->findByPk($this->patient->contact->id));
 	    				echo "<h1>Contact #2 {$this->patient->contact_id}</h1>";
 	    				var_dump(Contact::model()->findByPk($this->patient->contact_id));
-	    				echo "<h1>Address #1 {$address->id}</h1>";
-	    				var_dump(Address::model()->findByPk($address->id));
-	    				echo "<h1>Address #2 {$this->patient->contact->address->id}</h1>";
-	    				var_dump(Address::model()->findByPk($this->patient->contact->address->id));
-	    				echo "<h1>Address #3</h1>";
-	    				var_dump($address);
+	    				//echo "<h1>Address #1 {$address->id}</h1>";
+	    				//var_dump(Address::model()->findByPk($address->id));
+	    				//echo "<h1>Address #2 {$this->patient->contact->address->id}</h1>";
+	    				//var_dump(Address::model()->findByPk($this->patient->contact->address->id));
+	    				//echo "<h1>Address #3</h1>";
+	    				//var_dump($address);
 	    				return;
     				}
     			}

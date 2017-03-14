@@ -116,7 +116,7 @@ class Patient extends BaseActiveRecordVersioned
             array('hos_num, dob', 'required'),
             array('hos_num, nhs_num', 'length', 'max' => 40),
             array('gender', 'length', 'max' => 1),
-        	array('dob, date_of_death', 'date', 'format' => 'yyyy-mm-dd'),
+        	array('dob, date_of_death', 'date', 'format' => 'dd/mm/yyyy'),
             array('ethnic_group_id', 'safe'),
             array('deleted', 'safe'),
             array('dob, hos_num, nhs_num, date_of_death, deleted', 'safe', 'on' => 'search'),
@@ -253,6 +253,9 @@ class Patient extends BaseActiveRecordVersioned
                 $this->$property = $randomised;
             }
         }
+
+        $this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'MM/dd/yyyy'));
+        $this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'MM/dd/yyyy'));
 
         return parent::beforeSave();
     }
@@ -667,7 +670,7 @@ class Patient extends BaseActiveRecordVersioned
 
         return $info;
     }
-    
+
     public function getGenderString()
     {
         switch ($this->gender) {
@@ -1024,7 +1027,7 @@ class Patient extends BaseActiveRecordVersioned
 
     /**
      * Check if the patient has a given risk.
-     * 
+     *
      * @param $riskCompare
      *
      * @return bool
