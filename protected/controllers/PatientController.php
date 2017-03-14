@@ -180,7 +180,7 @@ class PatientController extends BaseController
 	    		}
 			}
 
-			//$this->patient->contact->addresses = $addresses;
+			$this->patient->contact->addresses = $addresses;
 
 			$valid = $patient_valid && $address_valid;
 
