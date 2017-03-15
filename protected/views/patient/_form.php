@@ -112,6 +112,15 @@
 	</div>
 </div>
 
+<div class="row data-row">
+	<div class="large-4 column">
+		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'primary_phone'); ?></div>
+	</div>
+	<div class="large-8 column">
+		<?php echo CHtml::activeTextField($this->patient, 'primary_phone')?>
+	</div>
+</div>
+
 <?php
 Yii::app()->clientScript->registerCoreScript('jquery');
 Yii::app()->clientScript->registerScript('loadAddress', '
