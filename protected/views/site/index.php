@@ -43,6 +43,7 @@
                 <strong>NHS Number</strong>,
                 <strong>Firstname Surname</strong> or
                 <strong>Surname, Firstname</strong>.
+                Or you can <?php echo CHtml::link('Create a New Patient', $this->createUrl('/patient/create'))?>
             </div>
             <div class="large-9 column">
                 <?php echo CHtml::textField('query', '', array('autocomplete' => Yii::app()->params['html_autocomplete'], 'class' => 'large', 'placeholder' => 'Enter search...')); ?>
