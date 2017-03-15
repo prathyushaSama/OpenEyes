@@ -118,7 +118,9 @@ class PatientController extends BaseController
     {
     	$this->patient = new Patient();
     	$this->patient->contact = new Contact();
-		$this->patient->contact->addresses = array(new Address());
+    	$address = new Address();
+    	$address->address_type_id = AddressType::HOME;
+		$this->patient->contact->addresses = array($address);
 
     	if (isset($_POST['Patient']))
     	{

@@ -18,7 +18,7 @@
 */
 ?>
 
-<?php //var_dump($model);
+<?php
 	if (isset($model->errors) && $model->errors) { ?>
 	<div class="row">
 		<div class="large-12 column">
@@ -29,14 +29,7 @@
 	</div>
 <?php }?>
 
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[{$index}]address_type_id"); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeDropDownList($model, "[{$index}]address_type_id", CHtml::listData(AddressType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
-	</div>
-</div>
+<?php echo CHtml::activeHiddenField($model, "[{$index}]address_type_id"); ?>
 
 <div class="row data-row">
 	<div class="large-4 column">
@@ -101,11 +94,6 @@
 	</div>
 </div>
 
-<div class="row" style="width:100px;float: left;">
-	<br/>
-	<?php echo CHtml::link('Delete', '#', array('onclick' => 'deleteAddress(this, ' . $index . '); return false;')); ?>
-</div>
-
 <?php
 Yii::app()->clientScript->registerScript('deleteAddress', "
 function deleteAddress(elm, index)
@@ -123,3 +111,4 @@ function deleteAddress(elm, index)
         $(element).remove();
     });
 }", CClientScript::POS_END);
+?>

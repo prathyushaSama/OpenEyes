@@ -26,10 +26,6 @@
 	?>
 </div>
 
-<?php
-    echo CHtml::link('Add Address', '#', array('id' => 'loadAddressByAjax'));
-?>
-
 <div id=addresses>
 	<?php
 	$addressIndex = 0;
