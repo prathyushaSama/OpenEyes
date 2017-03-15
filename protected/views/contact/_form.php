@@ -35,3 +35,12 @@
 		<?php echo CHtml::activeTextField($model, 'last_name')?>
 	</div>
 </div>
+
+<div class="row data-row">
+	<div class="large-4 column">
+		<div class="data-label"><?php echo CHtml::activeLabelEx($model, 'primary_phone'); ?></div>
+	</div>
+	<div class="large-8 column">
+		<?php echo CHtml::activeTextField($model, 'primary_phone')?>
+	</div>
+</div>
