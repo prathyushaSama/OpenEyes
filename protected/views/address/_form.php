@@ -18,6 +18,8 @@
 */
 ?>
 
+<?php echo CHtml::activeHiddenField($model, "[{$index}]id")?>
+
 <?php
 	if (isset($model->errors) && $model->errors) { ?>
 	<div class="row">

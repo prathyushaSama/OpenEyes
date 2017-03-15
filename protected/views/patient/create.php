@@ -18,41 +18,44 @@
  */
 ?>
 
-<div class="box patient-info">
-	<div class="row">
-		<div class="large-6 column">
+<section class="box patient-info js-toggle-container">
+	<h3 class="box-title">Patient Details:</h3>
+	<div class="js-toggle-body">
+		<div class="row">
+			<div class="large-6 column">
 
-			<?php if ($this->patient->errors || $this->patient->contact->errors) { ?>
-				<div class="row">
-					<div class="large-12 column">
-						<div class="alert-box patient with-icon">
-							<?php echo CHtml::errorSummary($this->patient); ?>
-							<?php echo CHtml::errorSummary($this->patient->contact, ''); ?>
-							<?php foreach($this->patient->contact->addresses as $index => $address): ?>
-								<?php echo CHtml::errorSummary($address, ''); ?>
-							<?php endforeach; ?>
+				<?php if ($this->patient->errors || $this->patient->contact->errors) { ?>
+					<div class="row">
+						<div class="large-12 column">
+							<div class="alert-box patient with-icon">
+								<?php echo CHtml::errorSummary($this->patient); ?>
+								<?php echo CHtml::errorSummary($this->patient->contact, ''); ?>
+								<?php foreach($this->patient->contact->addresses as $index => $address): ?>
+									<?php echo CHtml::errorSummary($address, ''); ?>
+								<?php endforeach; ?>
+							</div>
 						</div>
 					</div>
+				<?php } ?>
+				<?php
+					$form = $this->beginWidget('FormLayout', array(
+						'id' => 'create-patient',
+						'enableAjaxValidation' => false,
+				))?>
+
+				<?php
+				$this->renderPartial('../patient/_form', array(
+					'model' => $this->patient
+				));
+				?>
+
+				<div style="clear:both;"></div>
+				<div class="row buttons">
+					<?php echo CHtml::submitButton($this->patient->isNewRecord ? 'Create' : 'Save'); ?>
 				</div>
-			<?php } ?>
-			<?php
-				$form = $this->beginWidget('FormLayout', array(
-					'id' => 'create-patient',
-					'enableAjaxValidation' => false,
-			))?>
 
-			<?php
-			$this->renderPartial('../patient/_form', array(
-				'model' => $this->patient
-			));
-			?>
-
-			<div style="clear:both;"></div>
-			<div class="row buttons">
-				<?php echo CHtml::submitButton($this->patient->isNewRecord ? 'Create' : 'Save'); ?>
+				<?php $this->endWidget()?>
 			</div>
-
-			<?php $this->endWidget()?>
 		</div>
 	</div>
-</div>
+</section>

@@ -44,7 +44,7 @@ class PatientController extends BaseController
                 'users' => array('@'),
             ),
         	array('allow',
-        		'actions' => array('create', 'loadAddressByAjax'),
+        		'actions' => array('create', 'update', 'loadAddressByAjax'),
         		'roles' => array('OprnEditPatientInfo'),
         	),
             array('allow',
@@ -183,6 +183,70 @@ class PatientController extends BaseController
     	// It can't be used here because the data it uses doesn't exist yet.
     	$this->renderPatientPanel = false;
     	$this->render('create', array());
+    }
+
+    public function actionUpdate($id)
+    {
+    	var_dump($_POST);
+    	$this->patient = $this->loadMOdel($id);
+
+    	$this->patient->dob = Yii::app()->dateFormatter->format('dd/MM/yyyy', CDateTimeParser::parse($this->patient->dob, 'yyyy-MM-dd'));
+    	$this->patient->date_of_death = Yii::app()->dateFormatter->format('dd/MM/yyyy', CDateTimeParser::parse($this->patient->date_of_death, 'yyyy-MM-dd'));
+
+    	if (isset($_POST['Patient']))
+    	{
+    		$this->patient->attributes = $_POST['Patient'];
+			$this->patient->id = $_POST['Patient']['id'];
+
+    		$valid = true;
+    		if(!$this->patient->validate())
+    		{
+    			$valid = false;
+    			echo 'Patient is not valid';
+    		}
+
+    		$this->patient->contact->attributes = $_POST['Contact'];
+
+    		if(!$this->patient->contact->validate())
+    		{
+    			$valid = false;
+    			echo 'Contact is not valid';
+    		}
+
+    		foreach($this->patient->contact->addresses as $id => $address)
+    		{
+    			foreach($_POST['Address'] as $index => $post_address)
+    			{
+					if($address->id == $post_address['id'])
+					{
+						$address->attributes = $post_address;
+						$address->validate();
+					}
+    			}
+
+    		}
+
+
+    		if ($valid)
+    		{
+    			if($this->patient->contact->save())
+    			{
+    				foreach($this->patient->contact->addresses as $index => $address)
+    				{
+    					$address->save();
+    				}
+
+    				if($this->patient->save())
+    				{
+    					$this->redirect(array('view','id' => $this->patient->id));
+    					return;
+    				}
+    			}
+    		}
+    	}
+
+    	$this->renderPatientPanel = false;
+    	return $this->render('create', array());
     }
 
     public function actionLoadAddressByAjax($index)

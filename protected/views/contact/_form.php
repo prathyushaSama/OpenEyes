@@ -18,6 +18,8 @@
 */
 ?>
 
+<?php echo CHtml::activeHiddenField($model, 'id')?>
+
 <div class="row data-row">
 	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($model, 'first_name'); ?></div>

@@ -18,6 +18,8 @@
 */
 ?>
 
+<?php echo CHtml::activeHiddenField($this->patient, 'id')?>
+
 <div id="contact">
 	<?php
 	$this->renderPartial('../contact/_form', array(

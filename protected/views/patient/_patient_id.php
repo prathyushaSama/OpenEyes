@@ -59,6 +59,8 @@
 				<?php echo $this->patient->getGenderString() ?>
 			</span>
 
+			<?php echo CHtml::link('Edit Patient', array('/patient/update/'.$this->patient->id)); ?>
+
 			<?php
             $widgets = Yii::app()->params['patient_summary_id_widgets'];
             if (is_array($widgets)) {
