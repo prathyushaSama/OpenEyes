@@ -254,8 +254,8 @@ class Patient extends BaseActiveRecordVersioned
             }
         }
 
-        $this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'MM/dd/yyyy'));
-        $this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'MM/dd/yyyy'));
+        $this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'dd/MM/yyyy'));
+        $this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'dd/MM/yyyy'));
 
         return parent::beforeSave();
     }
