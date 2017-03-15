@@ -41,105 +41,11 @@
 					'enableAjaxValidation' => false,
 			))?>
 
-			<div id="contact">
-				<?php
-				$this->renderPartial('../contact/_form', array(
-					'model' => $this->patient->contact
-				));
-				?>
-			</div>
-
-
 			<?php
-			    echo CHtml::link('Add Address', '#', array('id' => 'loadAddressByAjax'));
+			$this->renderPartial('../patient/_form', array(
+				'model' => $this->patient
+			));
 			?>
-
-			<div id=addresses>
-				<?php
-				$addressIndex = 0;
-				foreach($this->patient->contact->addresses as $id => $address):
-					$this->renderPartial('../address/_form', array(
-						'model' => $address,
-						'index' => $id,
-						'display' => 'block',
-					));
-				++$addressIndex;
-				endforeach;
-				?>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'dob'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php
-						$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-						    'model' => $this->patient,
-						    'attribute' => 'dob',
-						    'htmlOptions' => array(
-						        'size' => '10',         // textField size
-						        'maxlength' => '10',    // textField maxlength
-						    ),
-						));
-						?>
-					<?php /*echo CHtml::error($this->patient, 'dob');*/ ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'date_of_death'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php
-						$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-						    'model' => $this->patient,
-						    'attribute' => 'date_of_death',
-						    'htmlOptions' => array(
-						        'size' => '10',         // textField size
-						        'maxlength' => '10',    // textField maxlength
-						    ),
-						));
-						?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'gender'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'ethnic_group_id'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeDropDownList($this->patient, 'ethnic_group_id', CHtml::listData(EthnicGroup::model()->findAll(array('order' => 'display_order')), 'id', 'name'), array('empty' => '')); ?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'hos_num'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient, 'hos_num')?>
-				</div>
-			</div>
-
-			<div class="row data-row">
-				<div class="large-4 column">
-					<div class="data-label"><?php echo $form->labelEx($this->patient, 'nhs_num'); ?></div>
-				</div>
-				<div class="large-8 column">
-					<?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
-				</div>
-			</div>
 
 			<div style="clear:both;"></div>
 			<div class="row buttons">
@@ -147,31 +53,6 @@
 			</div>
 
 			<?php $this->endWidget()?>
-
 		</div>
 	</div>
 </div>
-
-
-<?php
-Yii::app()->clientScript->registerCoreScript('jquery');
-Yii::app()->clientScript->registerScript('loadAddress', '
-var _index = ' . $addressIndex . ';
-$("#loadAddressByAjax").click(function(e){
-    e.preventDefault();
-    var _url = "' . Yii::app()->controller->createUrl("loadAddressByAjax", array("load_for" => $this->action->id)) . '&index="+_index;
-    $.ajax({
-        url: _url,
-        success:function(response){
-            $("#addresses").append(response);
-            $("#addresses .crow").last().animate({
-                opacity : 1,
-                left: "+50",
-                height: "toggle"
-            });
-        }
-    });
-    _index++;
-});
-', CClientScript::POS_END);
-?>
