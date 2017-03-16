@@ -169,6 +169,8 @@ class PatientController extends BaseController
     					$address->save();
     				}
 
+    				// Set the NHS Number status to "valid"
+    				$this->patient->nhsNumberStatus = NhsNumberVerificationStatus::model()->find("code = :code", array('code' => '01'))->id;
     				$this->patient->contact_id = $contact->id;
     				if($this->patient->save())
     				{
@@ -223,9 +225,7 @@ class PatientController extends BaseController
 						$address->validate();
 					}
     			}
-
     		}
-
 
     		if ($valid)
     		{
