@@ -19,7 +19,6 @@
 ?>
 
 <section class="box patient-info js-toggle-container">
-	<h3 class="box-title">Patient Details:</h3>
 	<div class="js-toggle-body">
 		<div class="row">
 			<div class="large-6 column">

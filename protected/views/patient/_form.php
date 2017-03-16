@@ -20,26 +20,30 @@
 
 <?php echo CHtml::activeHiddenField($this->patient, 'id')?>
 
-<div id="contact">
-	<?php
-	$this->renderPartial('../contact/_form', array(
-		'model' => $this->patient->contact
-	));
-	?>
-</div>
 
-<div id=addresses>
-	<?php
-	$addressIndex = 0;
-	foreach($this->patient->contact->addresses as $id => $address):
-		$this->renderPartial('../address/_form', array(
-			'model' => $address,
-			'index' => $id,
-			'display' => 'block',
-		));
-	++$addressIndex;
-	endforeach;
-	?>
+<h3 class="box-title">Personal Details:</h3>
+
+<div id="contact">
+
+	<?php echo CHtml::activeHiddenField($this->patient->contact, 'id')?>
+
+	<div class="row data-row">
+		<div class="large-4 column">
+			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'first_name'); ?></div>
+		</div>
+		<div class="large-8 column">
+			<?php echo CHtml::activeTextField($this->patient->contact, 'first_name')?>
+		</div>
+	</div>
+
+	<div class="row data-row">
+		<div class="large-4 column">
+			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'last_name'); ?></div>
+		</div>
+		<div class="large-8 column">
+			<?php echo CHtml::activeTextField($this->patient->contact, 'last_name')?>
+		</div>
+	</div>
 </div>
 
 <div class="row data-row">
@@ -62,6 +66,54 @@
 
 <div class="row data-row">
 	<div class="large-4 column">
+		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'gender'); ?></div>
+	</div>
+	<div class="large-8 column">
+		<?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
+	</div>
+</div>
+
+<div id="contact">
+	<div class="row data-row">
+		<div class="large-4 column">
+			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'primary_phone'); ?></div>
+		</div>
+		<div class="large-8 column">
+			<?php echo CHtml::activeTextField($this->patient->contact, 'primary_phone')?>
+		</div>
+	</div>
+</div>
+
+<div class="row data-row">
+	<div class="large-4 column">
+		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'nhs_num'); ?></div>
+	</div>
+	<div class="large-8 column">
+		<?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
+	</div>
+</div>
+
+<h3 class="box-title">Home Address:</h3>
+
+<div id=addresses>
+	<?php
+	$addressIndex = 0;
+	foreach($this->patient->contact->addresses as $id => $address):
+		$this->renderPartial('../address/_form', array(
+			'model' => $address,
+			'index' => $id,
+			'display' => 'block',
+		));
+	++$addressIndex;
+	endforeach;
+	?>
+</div>
+
+
+<h3 class="box-title">Other Details:</h3>
+
+<div class="row data-row">
+	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'date_of_death'); ?></div>
 	</div>
 	<div class="large-8 column">
@@ -75,15 +127,6 @@
 			    ),
 			));
 			?>
-	</div>
-</div>
-
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'gender'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
 	</div>
 </div>
 
@@ -105,34 +148,4 @@
 	</div>
 </div>
 
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'nhs_num'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
-	</div>
-</div>
 
-<?php
-Yii::app()->clientScript->registerCoreScript('jquery');
-Yii::app()->clientScript->registerScript('loadAddress', '
-var _index = ' . $addressIndex . ';
-$("#loadAddressByAjax").click(function(e){
-    e.preventDefault();
-    var _url = "' . Yii::app()->controller->createUrl("loadAddressByAjax", array("load_for" => $this->action->id)) . '&index="+_index;
-    $.ajax({
-        url: _url,
-        success:function(response){
-            $("#addresses").append(response);
-            $("#addresses .crow").last().animate({
-                opacity : 1,
-                left: "+50",
-                height: "toggle"
-            });
-        }
-    });
-    _index++;
-});
-', CClientScript::POS_END);
-?>

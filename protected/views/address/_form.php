@@ -20,17 +20,6 @@
 
 <?php echo CHtml::activeHiddenField($model, "[{$index}]id")?>
 
-<?php
-	if (isset($model->errors) && $model->errors) { ?>
-	<div class="row">
-		<div class="large-12 column">
-			<div class="alert-box patient with-icon">
-				<?php echo CHtml::errorSummary($model); ?>
-			</div>
-		</div>
-	</div>
-<?php }?>
-
 <?php echo CHtml::activeHiddenField($model, "[{$index}]address_type_id"); ?>
 
 <div class="row data-row">
@@ -96,21 +85,3 @@
 	</div>
 </div>
 
-<?php
-Yii::app()->clientScript->registerScript('deleteAddress', "
-function deleteAddress(elm, index)
-{
-    element=$(elm).parent().parent();
-    /* animate div */
-    $(element).animate(
-    {
-        opacity: 0.25,
-        left: '+=50',
-        height: 'toggle'
-    }, 500,
-    function() {
-        /* remove div */
-        $(element).remove();
-    });
-}", CClientScript::POS_END);
-?>
