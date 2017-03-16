@@ -254,8 +254,25 @@ class Patient extends BaseActiveRecordVersioned
             }
         }
 
-        $this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'dd/MM/yyyy'));
-        $this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'dd/MM/yyyy'));
+
+
+        if($this->dob == '')
+        {
+        	$this->setAttribute('dob', null);
+        }
+        else
+        {
+        	$this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'dd/MM/yyyy'));
+        }
+
+        if($this->date_of_death == '')
+        {
+        	$this->setAttribute('date_of_death', null);
+        }
+        else
+        {
+        	$this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'dd/MM/yyyy'));
+        }
 
         return parent::beforeSave();
     }
@@ -269,6 +286,8 @@ class Patient extends BaseActiveRecordVersioned
         //If someone is marked as dead by date, set the boolean flag.
         if ($this->isAttributeDirty('date_of_death') && $this->date_of_death) {
             $this->is_deceased = 1;
+        } elseif ($this->is_deceased == 1) {
+        	$this->is_deceased = 0;
         }
 
         return true;
