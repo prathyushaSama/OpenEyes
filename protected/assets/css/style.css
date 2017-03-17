@@ -5381,7 +5381,7 @@ tfoot.pagination-container .pagination-view-all {
   font-size: 0.8125rem;
 }
 /* line 108, ../sass/openeyes/components/panels/_patient.scss */
-.panel.patient .hospital-number, .panel.patient .nhs-number {
+.panel.patient .hospital-number, .panel.patient .nhs-number, .panel.patient .medicare-number {
   font-size: 0.75rem;
 }
 /* line 111, ../sass/openeyes/components/panels/_patient.scss */
@@ -5438,18 +5438,28 @@ tfoot.pagination-container .pagination-view-all {
 }
 
 /* line 158, ../sass/openeyes/components/panels/_patient.scss */
-.nhs-number {
+.nhs-number, .medicare-number {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background-color: #107ebd;
-  background-image: url('../img/_elements/icons/nhs_tiny.png?1473759481');
   background-position: center left;
   background-repeat: no-repeat;
   color: white;
   display: inline-block;
   padding: 2px 3px 1px 33px;
 }
+
+.medicare-number {
+  background-image: url('../img/_elements/icons/medicare_tiny.png');
+  background-color: #007A45;
+  padding: 2px 3px 1px 60px;
+}
+
+.nhs-number {
+  background-image: url('../img/_elements/icons/nhs_tiny.png?1473759481');
+}
+
 @media print {
   /* line 158, ../sass/openeyes/components/panels/_patient.scss */
   .nhs-number {

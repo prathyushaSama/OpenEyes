@@ -44,7 +44,7 @@
 		<div class="large-8 column">
 
 			<!-- NHS number -->
-			<div class="nhs-number warning">
+			<div class="<?php echo Yii::t('css', 'nhs-number'); ?> warning">
 				<span class="hide-text print-only">
 					NHS number:
 				</span>
