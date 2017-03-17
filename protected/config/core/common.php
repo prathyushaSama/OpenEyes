@@ -23,6 +23,8 @@ return array(
     // Preloading 'log' component
     'preload' => array('log'),
 
+    'language' => 'en-AU',
+
     // Autoloading model and component classes
     'import' => array(
         'application.vendors.*',
@@ -252,17 +254,31 @@ return array(
         ),
         'widgetFactory' => array(
             'class' => 'WidgetFactory',
-        	'widgets' => array(
-        		'CJuiDatePicker' => array(
-        			'scriptFile' => 'jquery-ui.min.js',
-        			'language' => 'en',
-        			'options' => array(
-        				'dateFormat' => 'dd/mm/yy',
-        				'showAnim' => 'fold',
-        				'fontSize' => '0.85em',
-        			),
-        		),
-        	),
+            'widgets' => array(
+                'CJuiDatePicker' => array(
+                    'scriptFile' => 'jquery-ui.min.js',
+                    'language' => 'en',
+                    'options' => array(
+                        'dateFormat' => 'dd/mm/yy',
+                        'showAnim' => 'fold',
+                        'fontSize' => '0.85em',
+                    ),
+                ),
+            ),
+        ),
+
+        'i18n' => array(
+            'translations' => array(
+                'app' => array(
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    //'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-UK',
+                    'language' => 'en-AU',
+                    'fileMap' => array(
+                        'app' => 'app.php',
+                    ),
+                ),
+            ),
         ),
     ),
 
