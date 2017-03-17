@@ -183,7 +183,7 @@ class Patient extends BaseActiveRecordVersioned
             'gender' => 'Gender',
             'ethnic_group_id' => 'Ethnic Group',
             'hos_num' => 'Hospital Number',
-            'nhs_num' => 'NHS Number',
+            'nhs_num' => Yii::t('labels', 'NHS Number'),
             'deleted' => 'Is Deleted',
         );
     }

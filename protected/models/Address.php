@@ -91,11 +91,11 @@ class Address extends BaseActiveRecordVersioned
     {
         return array(
             'id' => 'ID',
-            'address1' => 'Address1',
-            'address2' => 'Address2',
+            'address1' => 'Street',
+            'address2' => 'Suburb',
             'city' => 'City',
             'postcode' => 'Postcode',
-            'county' => 'County',
+            'county' => Yii::t('labels', 'County'),
             'country_id' => 'Country',
             'email' => 'Email',
         );

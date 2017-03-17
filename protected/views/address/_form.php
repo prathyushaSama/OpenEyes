@@ -33,7 +33,7 @@
 
 <div class="row data-row">
 	<div class="large-4 column">
-		<div class="data-label"></div>
+		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[{$index}]address2"); ?></div>
 	</div>
 	<div class="large-8 column">
 		<?php echo CHtml::activeTextField($model, "[{$index}]address2")?>
