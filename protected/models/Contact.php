@@ -69,6 +69,7 @@ class Contact extends BaseActiveRecordVersioned
     {
         return array(
             array('nick_name', 'length', 'max' => 80),
+        	array('first_name, last_name, primary_phone', 'required'),
             array('title, primary_phone, first_name, last_name, nick_name, qualifications, contact_label_id', 'safe'),
             array('id, nick_name, primary_phone, title, first_name, last_name, qualifications', 'safe', 'on' => 'search'),
         );
