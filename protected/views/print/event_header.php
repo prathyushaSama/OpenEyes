@@ -46,7 +46,7 @@ $logoHelper = new LogoHelper();
 			<p>Service: <strong><?php echo $this->event->episode->firm->getSubspecialtyText() ?></strong></p>
 			<p>Hospital No: <strong><?php echo $this->patient->hos_num ?></strong>
 			<br />
-			NHS No: <strong><?php echo $this->patient->nhsnum ?></strong>
+			<?php echo Yiii:t('labels', 'NHS No'); ?>: <strong><?php echo $this->patient->nhsnum ?></strong>
 			<br />
 			DOB: <strong><?php echo Helper::convertDate2NHS($this->patient->dob) ?> (<?php echo $this->patient->getAge()?>)</strong>
 			</p>

@@ -316,7 +316,7 @@ class ElementLetter extends BaseEventTypeElement
             }
         }
 
-        return $re.', DOB: '.$patient->NHSDate('dob').', Hosp No: '.$patient->hos_num.', NHS No: '.$patient->nhsnum;
+        return $re.', DOB: '.$patient->NHSDate('dob').', Hosp No: '.$patient->hos_num.', '.Yii::t('labels', 'NHS No').': '.$patient->nhsnum;
     }
 
     public function setDefaultOptions()
@@ -341,7 +341,7 @@ class ElementLetter extends BaseEventTypeElement
                 }
             }
 
-            $this->re .= ', DOB: '.$patient->NHSDate('dob').', Hosp No: '.$patient->hos_num.', NHS No: '.$patient->nhsnum;
+            $this->re .= ', DOB: '.$patient->NHSDate('dob').', Hosp No: '.$patient->hos_num.', '.Yii::t('labels', 'NHS No').': '.$patient->nhsnum;
 
             $user = Yii::app()->session['user'];
             $firm = Firm::model()->with('serviceSubspecialtyAssignment')->findByPk(Yii::app()->session['selected_firm_id']);

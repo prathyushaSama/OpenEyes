@@ -25,7 +25,7 @@
             } ?>">
     </span>
     <section class="patient-details">
-        <span class="nhs-number">
+        <span class="<?php echo Yii::t('css', 'nhs-number'); ?>">
             <?php echo $this->patient->getNhsnum(); ?>
         </span>
         <span>Hospital No:

@@ -144,7 +144,7 @@ $logoHelper = new LogoHelper();
 					<table class="inner">
 						<tbody>
 							<tr>
-								<th>NHS No.</th>
+								<th><?php echo Yii::t('labels', 'NHS No.'); ?></th>
 								<td><?php echo $patient->nhs_num ?></td>
 							</tr>
 							<tr>

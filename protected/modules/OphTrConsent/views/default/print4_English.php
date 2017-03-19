@@ -42,7 +42,7 @@
 			<td><?php echo $this->patient->hos_num?></td>
 		</tr>
 		<tr>
-			<th>NHS number</th>
+			<th><?php echo Yii::t('labels', 'NHS number'); ?></th>
 			<td><?php echo $this->patient->nhs_num?></td>
 		</tr>
 		<tr>

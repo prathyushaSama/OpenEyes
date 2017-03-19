@@ -36,7 +36,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	<tr>
 		<th>Date of Birth</th>
 		<td><?php echo $this->patient->NHSDate('dob') ?> (<?php echo $this->patient->age ?>)</td>
-		<th>NHS Number</th>
+		<th><?php echo Yii::t('labels', 'NHS Number'); ?></th>
 		<td><?php echo $this->patient->getNhsnum() ?></td>
 	</tr>
 	<tr>
