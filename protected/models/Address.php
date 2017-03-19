@@ -91,8 +91,8 @@ class Address extends BaseActiveRecordVersioned
     {
         return array(
             'id' => 'ID',
-            'address1' => 'Street',
-            'address2' => 'Suburb',
+            'address1' => Yii::t('labels', 'Address1'),
+            'address2' => Yii::t('labels', 'Address2'),
             'city' => 'City',
             'postcode' => 'Postcode',
             'county' => Yii::t('labels', 'County'),
