@@ -30,7 +30,7 @@
 			(<?php if ($this->patient->isDeceased()) { ?>
 				Deceased
 			<?php } else {
-				echo $this->patient->getAge(); } 
+				echo $this->patient->getAge(); }
 			?>)
 		</span>
 	</div>
@@ -59,7 +59,9 @@
 				<?php echo $this->patient->getGenderString() ?>
 			</span>
 
-			<?php echo CHtml::link('Edit Patient', array('/patient/update/'.$this->patient->id)); ?>
+            <?php if(Yii::app()->user->checkAccess('OprnEditPatientInfo')):?>
+                <?php echo CHtml::link('Edit Patient', array('/patient/update/'.$this->patient->id)); ?>
+            <?php endif; ?>
 
 			<?php
             $widgets = Yii::app()->params['patient_summary_id_widgets'];
