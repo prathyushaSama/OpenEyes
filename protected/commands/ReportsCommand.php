@@ -405,7 +405,7 @@ class ReportsCommand extends CConsoleCommand
                 'data_type_id' => $rimt_string->id,
                 'name' => 'Hospital no',
                 'data_field' => 'hos_num',
-                'subtitle' => 'Patient hospital number',
+                'subtitle' => Yii::t('labels', 'Patient hospital number'),
                 'display_order' => 2,
                 'link' => '/patient/episodes/{patient_id}',
             ));
@@ -606,7 +606,7 @@ class ReportsCommand extends CConsoleCommand
                     'data_type_id' => $rimt_string->id,
                     'name' => 'Hospital no',
                     'data_field' => 'hos_num',
-                    'subtitle' => 'Patient hospital number',
+                    'subtitle' => Yii::t('labels', 'Patient hospital number'),
                     'display_order' => 2,
                     'link' => '/patient/episodes/{patient_id}',
                 ));

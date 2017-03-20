@@ -45,7 +45,7 @@
 		<table class="grid">
 			<thead>
 				<tr>
-					<th>Hos num</th>
+					<th><?php echo Yii::t('labels', 'Hos num'); ?></th>
 					<th>Title</th>
 					<th>First name</th>
 					<th>Last name</th>

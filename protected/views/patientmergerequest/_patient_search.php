@@ -14,8 +14,8 @@
     <div class="row">
         <div class="search-examples">
             Find a patient by
-            <strong>Hospital Number</strong>,
-            <strong><<?php echo Yii::t('labels', 'NHS Number'); ?></strong>,
+            <strong><?php echo Yii::t('labels', 'Hospital Number'); ?></strong>,
+            <strong><?php echo Yii::t('labels', 'NHS Number'); ?></strong>,
             <strong>Firstname Surname</strong> or
             <strong>Surname, Firstname</strong>.
         </div>

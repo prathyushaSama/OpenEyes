@@ -316,7 +316,7 @@ class ElementLetter extends BaseEventTypeElement
             }
         }
 
-        return $re.', DOB: '.$patient->NHSDate('dob').', Hosp No: '.$patient->hos_num.', '.Yii::t('labels', 'NHS No').': '.$patient->nhsnum;
+        return $re.', DOB: '.$patient->NHSDate('dob').', '.Yii::t('labels', 'Hosp No').': '.$patient->hos_num.', '.Yii::t('labels', 'NHS No').': '.$patient->nhsnum;
     }
 
     public function setDefaultOptions()

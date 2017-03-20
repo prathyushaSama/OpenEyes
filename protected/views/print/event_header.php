@@ -44,9 +44,9 @@ $logoHelper = new LogoHelper();
 			<p><strong><?php echo $consultant->contact->getFullName() ?></strong></p>
 			<?php }?>
 			<p>Service: <strong><?php echo $this->event->episode->firm->getSubspecialtyText() ?></strong></p>
-			<p>Hospital No: <strong><?php echo $this->patient->hos_num ?></strong>
+			<p><?php echo Yii::t('labels', 'Hospital No'); ?>: <strong><?php echo $this->patient->hos_num ?></strong>
 			<br />
-			<?php echo Yiii:t('labels', 'NHS No'); ?>: <strong><?php echo $this->patient->nhsnum ?></strong>
+			<?php echo Yii::t('labels', 'NHS No'); ?>: <strong><?php echo $this->patient->nhsnum ?></strong>
 			<br />
 			DOB: <strong><?php echo Helper::convertDate2NHS($this->patient->dob) ?> (<?php echo $this->patient->getAge()?>)</strong>
 			</p>

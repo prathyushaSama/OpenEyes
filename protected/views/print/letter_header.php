@@ -34,7 +34,7 @@ $event_type = $event->eventType->name;
             ))?>
 			<br />
 			<br />
-			Hospital No: <strong><?php echo $this->patient->hos_num ?></strong>
+			<?php echo Yii::t('labels', 'Hospital No'); ?>: <strong><?php echo $this->patient->hos_num ?></strong>
 			<br />
 			<?php echo Yii::t('labels', 'NHS No'); ?>: <strong><?php echo $this->patient->nhsnum ?></strong>
 			<br />

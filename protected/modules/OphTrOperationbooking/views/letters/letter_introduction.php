@@ -22,7 +22,7 @@
 	<?php if (@$patient_ref) {
     echo $patient->fullname.', ';
 }?>
-	<strong>Hospital Reference Number: <?php echo $patient->hos_num; ?>
+	<strong><?php echo Yii::t('labels', 'Hospital Reference Number'); ?>: <?php echo $patient->hos_num; ?>
 	<?php if ($patient->nhsnum) {?><br/> NHS Number: <?php echo $patient->nhsnum; }?>
 	<?php if (@$patient_ref) {?>
 	<br /><?php echo $patient->getLetterAddress(array('delimiter' => ', '))?>
