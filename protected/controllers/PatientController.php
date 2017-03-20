@@ -189,7 +189,6 @@ class PatientController extends BaseController
 
     public function actionUpdate($id)
     {
-    	var_dump($_POST);
     	$this->patient = $this->loadMOdel($id);
 
     	$this->patient->dob = Yii::app()->dateFormatter->format('dd/MM/yyyy', CDateTimeParser::parse($this->patient->dob, 'yyyy-MM-dd'));
