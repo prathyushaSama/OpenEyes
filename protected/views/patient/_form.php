@@ -114,24 +114,6 @@
 
 <div class="row data-row">
 	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'date_of_death'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php
-			$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-			    'model' => $this->patient,
-			    'attribute' => 'date_of_death',
-			    'htmlOptions' => array(
-			        'size' => '10',         // textField size
-			        'maxlength' => '10',    // textField maxlength
-			    ),
-			));
-			?>
-	</div>
-</div>
-
-<div class="row data-row">
-	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'ethnic_group_id'); ?></div>
 	</div>
 	<div class="large-8 column">
