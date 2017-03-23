@@ -116,8 +116,7 @@ class Patient extends BaseActiveRecordVersioned
             array('hos_num, dob, gender, nhs_num', 'required'),
             array('hos_num, nhs_num', 'length', 'max' => 40),
             array('gender', 'length', 'max' => 1),
-        	array('dob, date_of_death', 'date', 'format' => 'dd/mm/yyyy'),
-            array('ethnic_group_id', 'safe'),
+        	array('dob, date_of_death, ethnic_group_id', 'safe'),
             array('deleted', 'safe'),
             array('dob, hos_num, nhs_num, date_of_death, deleted', 'safe', 'on' => 'search'),
         );
@@ -254,24 +253,14 @@ class Patient extends BaseActiveRecordVersioned
             }
         }
 
-
-
-        if($this->dob == '')
-        {
-        	$this->setAttribute('dob', null);
-        }
-        else
-        {
-        	$this->dob = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->dob, 'dd/MM/yyyy'));
-        }
-
-        if($this->date_of_death == '')
-        {
-        	$this->setAttribute('date_of_death', null);
-        }
-        else
-        {
-        	$this->date_of_death = Yii::app()->dateFormatter->format('yyyy-MM-dd', CDateTimeParser::parse($this->date_of_death, 'dd/MM/yyyy'));
+        //FIXME : this shoud be done with application.behaviors.OeDateFormat
+        foreach (array('dob', 'date_of_death') as $date_column) {
+            $date = $this->{$date_column};
+            if (strtotime($date)) {
+                $this->{$date_column} = date('Y-m-d', strtotime($date));
+            } else {
+                $this->{$date_column} = null;
+            }
         }
 
         return parent::beforeSave();

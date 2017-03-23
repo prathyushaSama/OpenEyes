@@ -51,16 +51,18 @@
 		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'dob'); ?></div>
 	</div>
 	<div class="large-8 column">
-		<?php
-			$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-			    'model' => $this->patient,
-			    'attribute' => 'dob',
-			    'htmlOptions' => array(
-			        'size' => '10',         // textField size
-			        'maxlength' => '10',    // textField maxlength
-			    ),
-			));
-		?>
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                'name' => 'Patient[dob]',
+                'id' => 'patient_dob',
+                'options' => array(
+                    'showAnim' => 'fold',
+                    'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
+                ),
+                'value' => $this->patient->NHSDate('dob'),
+                'htmlOptions' => array(
+                    'class' => 'small fixed-width',
+                ),
+            )) ?>
 	</div>
 </div>
 
