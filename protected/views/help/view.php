@@ -3,13 +3,13 @@
 
 $helplinks = array(
 	0 => array('name' => 'Welcome to OpenEyes', 'view' => 'welcome_to_openeyes'),
-	1 => array('name' => 'Changes', 'view' => 'what_will_change'),
-	3 => array('name' => 'Cannot Do', 'view' => 'cannot_do'),
+	1 => array('name' => 'What Will Change?', 'view' => 'what_will_change'),
+	3 => array('name' => 'What OpenEyes Cannot Yet Do', 'view' => 'cannot_do'),
 	4 => array('name' => 'Which Patients Will Go Onto OpenEyes?', 'view' => 'which_patients'),
 	5 => array('name' => 'How Are Patients Added to OpenEyes?', 'view' => 'adding_patients'),
 	6 => array('name' => 'How Are Patient Details Maintained in OpenEyes?', 'view' => 'patient_details'),
-	7 => array('name' => 'Getting Started?', 'view' => 'getting_started'),
-	8 => array('name' => 'Create a New Patient', 'view' => 'patient_create'),
+	7 => array('name' => 'Getting Started', 'view' => 'getting_started'),
+	8 => array('name' => 'Creating a New Patient', 'view' => 'patient_create'),
 	9 => array('name' => 'Editing Patient Details', 'view' => 'edit_patient'),
 );
 ?>
