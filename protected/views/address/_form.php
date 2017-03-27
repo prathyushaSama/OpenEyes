@@ -44,7 +44,7 @@
 	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[{$index}]city"); ?></div>
 	</div>
-	<div class="large-8 column">
+	<div class="large-5 column left">
 		<?php echo CHtml::activeTextField($model, "[{$index}]city")?>
 	</div>
 </div>
@@ -53,7 +53,7 @@
 	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[{$index}]postcode"); ?></div>
 	</div>
-	<div class="large-8 column">
+	<div class="large-4 column left">
 		<?php echo CHtml::activeTextField($model, "[{$index}]postcode")?>
 	</div>
 </div>
@@ -62,7 +62,7 @@
 	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[{$index}]county"); ?></div>
 	</div>
-	<div class="large-8 column">
+	<div class="large-4 column left">
 		<?php echo CHtml::activeTextField($model, "[{$index}]county")?>
 	</div>
 </div>
@@ -71,7 +71,7 @@
 	<div class="large-4 column">
 		<div class="data-label"><?php echo CHtml::activeLabelEx($model, "[$index}]country_id"); ?></div>
 	</div>
-	<div class="large-8 column">
+	<div class="large-6 column left">
 		<?php echo CHtml::activeDropDownList($model, "[{$index}]country_id", CHtml::listData(Country::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '')); ?>
 	</div>
 </div>

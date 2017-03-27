@@ -20,116 +20,107 @@
 
 <?php echo CHtml::activeHiddenField($this->patient, 'id')?>
 
+<section class="box patient-info js-toggle-container">
+    <h3 class="box-title">Personal Details:</h3>
 
-<h3 class="box-title">Personal Details:</h3>
+    <div id="contact">
 
-<div id="contact">
+        <?php echo CHtml::activeHiddenField($this->patient->contact, 'id')?>
 
-	<?php echo CHtml::activeHiddenField($this->patient->contact, 'id')?>
+        <div class="row data-row">
+            <div class="large-4 column">
+                <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'first_name'); ?></div>
+            </div>
+            <div class="large-8 column">
+                <?php echo CHtml::activeTextField($this->patient->contact, 'first_name')?>
+            </div>
+        </div>
 
-	<div class="row data-row">
-		<div class="large-4 column">
-			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'first_name'); ?></div>
-		</div>
-		<div class="large-8 column">
-			<?php echo CHtml::activeTextField($this->patient->contact, 'first_name')?>
-		</div>
-	</div>
+        <div class="row data-row">
+            <div class="large-4 column">
+                <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'last_name'); ?></div>
+            </div>
+            <div class="large-8 column">
+                <?php echo CHtml::activeTextField($this->patient->contact, 'last_name')?>
+            </div>
+        </div>
+    </div>
 
-	<div class="row data-row">
-		<div class="large-4 column">
-			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'last_name'); ?></div>
-		</div>
-		<div class="large-8 column">
-			<?php echo CHtml::activeTextField($this->patient->contact, 'last_name')?>
-		</div>
-	</div>
-</div>
+    <div class="row data-row">
+        <div class="large-4 column">
+            <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'dob'); ?></div>
+        </div>
+        <div class="large-8 column">
+            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                    'name' => 'Patient[dob]',
+                    'id' => 'patient_dob',
+                    'options' => array(
+                        'showAnim' => 'fold',
+                        'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
+                    ),
+                    'value' => $this->patient->NHSDate('dob'),
+                    'htmlOptions' => array(
+                        'class' => 'small fixed-width',
+                    ),
+                )) ?>
+        </div>
+    </div>
 
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'dob'); ?></div>
-	</div>
-	<div class="large-8 column">
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                'name' => 'Patient[dob]',
-                'id' => 'patient_dob',
-                'options' => array(
-                    'showAnim' => 'fold',
-                    'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
-                ),
-                'value' => $this->patient->NHSDate('dob'),
-                'htmlOptions' => array(
-                    'class' => 'small fixed-width',
-                ),
-            )) ?>
-	</div>
-</div>
+    <div class="row data-row">
+        <div class="large-4 column">
+            <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'gender'); ?></div>
+        </div>
+        <div class="large-3 column left">
+            <?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
+        </div>
+    </div>
 
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'gender'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeDropDownList($this->patient, 'gender', Patient::getGenderArray(), array('empty' => '')); ?>
-	</div>
-</div>
+    <div id="contact">
+        <div class="row data-row">
+            <div class="large-4 column">
+                <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'primary_phone'); ?></div>
+            </div>
+            <div class="large-4 column left">
+                <?php echo CHtml::activeTextField($this->patient->contact, 'primary_phone')?>
+            </div>
+        </div>
+    </div>
 
-<div id="contact">
-	<div class="row data-row">
-		<div class="large-4 column">
-			<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient->contact, 'primary_phone'); ?></div>
-		</div>
-		<div class="large-8 column">
-			<?php echo CHtml::activeTextField($this->patient->contact, 'primary_phone')?>
-		</div>
-	</div>
-</div>
+    <div class="row data-row">
+        <div class="large-4 column">
+            <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'nhs_num'); ?></div>
+        </div>
+        <div class="large-4 column left">
+            <?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
+        </div>
+    </div>
+</section>
+<section class="box patient-info js-toggle-container">
+    <h3 class="box-title">Home Address:</h3>
 
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'nhs_num'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeTextField($this->patient, 'nhs_num')?>
-	</div>
-</div>
-
-<h3 class="box-title">Home Address:</h3>
-
-<div id=addresses>
-	<?php
-	$addressIndex = 0;
-	foreach($this->patient->contact->addresses as $id => $address):
-		$this->renderPartial('../address/_form', array(
-			'model' => $address,
-			'index' => $id,
-			'display' => 'block',
-		));
-	++$addressIndex;
-	endforeach;
-	?>
-</div>
-
-
-<h3 class="box-title">Other Details:</h3>
-
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'ethnic_group_id'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeDropDownList($this->patient, 'ethnic_group_id', CHtml::listData(EthnicGroup::model()->findAll(array('order' => 'display_order')), 'id', 'name'), array('empty' => '')); ?>
-	</div>
-</div>
-
-<div class="row data-row">
-	<div class="large-4 column">
-		<div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'hos_num'); ?></div>
-	</div>
-	<div class="large-8 column">
-		<?php echo CHtml::activeTextField($this->patient, 'hos_num')?>
-	</div>
-</div>
-
+    <div id=addresses>
+        <?php
+        $addressIndex = 0;
+        foreach($this->patient->contact->addresses as $id => $address):
+            $this->renderPartial('../address/_form', array(
+                'model' => $address,
+                'index' => $id,
+                'display' => 'block',
+            ));
+        ++$addressIndex;
+        endforeach;
+        ?>
+    </div>
+</section>
+<section class="box patient-info js-toggle-container">
+    <h3 class="box-title">Other Details:</h3>
+    <div class="row data-row">
+        <div class="large-4 column">
+            <div class="data-label"><?php echo CHtml::activeLabelEx($this->patient, 'hos_num'); ?></div>
+        </div>
+        <div class="large-8 column">
+            <?php echo CHtml::activeTextField($this->patient, 'hos_num')?>
+        </div>
+    </div>
+</section>
 

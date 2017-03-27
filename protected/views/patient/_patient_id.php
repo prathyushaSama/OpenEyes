@@ -60,6 +60,7 @@
 			</span>
 
             <?php if(Yii::app()->user->checkAccess('OprnEditPatientInfo')):?>
+                <br/>
                 <?php echo CHtml::link('Edit Patient', array('/patient/update/'.$this->patient->id)); ?>
             <?php endif; ?>
 

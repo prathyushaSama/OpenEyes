@@ -18,8 +18,6 @@
  */
 ?>
 
-<section class="box patient-info js-toggle-container">
-	<div class="js-toggle-body">
 		<div class="row">
 			<div class="large-6 column">
 
@@ -48,17 +46,16 @@
 				));
 				?>
 
-				<div style="clear:both;"></div>
-				<div class="row buttons">
-					<?php echo CHtml::submitButton($this->patient->isNewRecord ? 'Create' : 'Save'); ?>
-					<?php if(!$this->patient->isNewRecord): ?>
-						&nbsp;
-						<?php echo CHtml::link('Cancel', array('/patient/view/' . $this->patient->id)); ?>
-					<?php endif; ?>
-				</div>
-
+                <section class="box patient-info js-toggle-container">
+					<div style="clear:both;"></div>
+					<div class="row buttons">
+						<?php echo CHtml::submitButton($this->patient->isNewRecord ? 'Create' : 'Save'); ?>
+						<?php if(!$this->patient->isNewRecord): ?>
+							&nbsp;
+							<?php echo CHtml::link('Cancel', array('/patient/view/' . $this->patient->id)); ?>
+						<?php endif; ?>
+					</div>
+                </section>
 				<?php $this->endWidget()?>
 			</div>
 		</div>
-	</div>
-</section>
