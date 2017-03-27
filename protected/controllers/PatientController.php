@@ -191,9 +191,6 @@ class PatientController extends BaseController
     {
     	$this->patient = $this->loadMOdel($id);
 
-    	$this->patient->dob = Yii::app()->dateFormatter->format('dd/MM/yyyy', CDateTimeParser::parse($this->patient->dob, 'yyyy-MM-dd'));
-    	$this->patient->date_of_death = Yii::app()->dateFormatter->format('dd/MM/yyyy', CDateTimeParser::parse($this->patient->date_of_death, 'yyyy-MM-dd'));
-
     	if (isset($_POST['Patient']))
     	{
     		$this->patient->attributes = $_POST['Patient'];
