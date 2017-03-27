@@ -3,13 +3,13 @@
     <li>When you first open OpenEyes in your web browser, you will be
         presented with the login page, as below:
         <p>
-            <?php echo CHtml::image('../../assets/6f53f373/img/_help/logon.jpg'); ?>
+            <div class="bg_logon"></div>
         </p>
     </li>
     <li>Enter your username and password.</li>
     <li>Click the <b>Login</b> button. The following popup will open.
         <p>
-            <?php echo CHtml::image('../../assets/6f53f373/img/_help/logon1.jpg'); ?>
+            <div class="bg_logon1"></div>
         </p>
         <p>
             <span style="font-weight: bold; font-style: italic;">Note:</span>
@@ -25,7 +25,7 @@
         close the popup. The following screen will open. You can now
         search for an existing patient or create a new one.
         <p>
-            <?php echo CHtml::image('../../assets/6f53f373/img/_help/logon_search.jpg'); ?>
+            <div class="bg_logon_search"></div>
         </p>
     </li>
 </ol>

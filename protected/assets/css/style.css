@@ -7504,3 +7504,39 @@ div#docman_block #dm_table tr td.docman_delivery_method {
   min-width: 156px;
 }
 
+.patient_details {
+  background-image: url('../img/_help/patient_details.jpg');
+  width: 740px;
+  height: 924px;
+}
+
+.patient_details_edit {
+  background-image: url('../img/_help/patient_details_edit.jpg');
+  width: 335px;
+  height: 476px;
+}
+
+.patient_details_done {
+  background-image: url('../img/_help/patient_details_done.jpg');
+  width: 602px;
+  height: 765px;
+}
+
+.bg_logon {
+  background-image: url('../img/_help/logon.jpg');
+  width: 664px;
+  height: 486px;
+}
+
+.bg_logon1 {
+  background-image: url('../img/_help/logon1.jpg');
+  width: 457px;
+  height: 190px;
+}
+
+.bg_logon_search {
+  background-image: url('../img/_help/logon_search.jpg');
+  width: 881px;
+  height: 446px;
+}
+

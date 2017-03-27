@@ -5,7 +5,7 @@
         <span style="font-weight: bold;">Create a New Patient</span>
         link above the Search bar. The patient details screen will open.
         <p>
-            <?php echo CHtml::image('../../assets/6f53f373/img/_help/patient_details.jpg'); ?>
+            <div class="patient_details"></div>
         </p>
     </li>
     <li>Enter the patient's details.
@@ -15,7 +15,7 @@
     <li>Click the <span style="font-weight: bold;">Create</span>
         button. The Patient Details screen will display.
         <p>
-            <?php echo CHtml::image('../../assets/6f53f373/img/_help/patient_details_done.jpg'); ?>
+            <div class="patient_details_done"></div>
         </p>
     </li>
 </ol>
