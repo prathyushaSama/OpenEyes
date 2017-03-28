@@ -181,7 +181,7 @@ class Patient extends BaseActiveRecordVersioned
             'date_of_death' => 'Date of Death',
             'gender' => 'Gender',
             'ethnic_group_id' => 'Ethnic Group',
-            'hos_num' => 'Hospital Number',
+            'hos_num' => Yii::t('labels', 'Hospital Number'),
             'nhs_num' => Yii::t('labels', 'NHS Number'),
             'deleted' => 'Is Deleted',
         );

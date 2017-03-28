@@ -36,7 +36,7 @@
 	</div>
 	<div class="hospital-number">
 		<span>
-			Hospital No.
+			<?php echo Yii::t('labels', 'Hospital No.'); ?>
 		</span>
 		<?php echo $this->patient->hos_num?>
 	</div>
