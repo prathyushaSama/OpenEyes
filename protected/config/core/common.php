@@ -456,6 +456,6 @@ return array(
         'clinical_management_pcr' => true,
         'docman_generate_csv' => false,
 
-        'help_url' => 'https://github.com/FiviumAustralia/OpenEyesDocumentation/wiki/Getting-Started',
+        'help_url' => 'https://github.com/FiviumAustralia/OpenEyesDocumentation/wiki/Welcome-to-OpenEyes',
     ),
 );
