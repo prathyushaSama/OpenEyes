@@ -301,6 +301,11 @@ return array(
                 'uri' => '',
                 'position' => 1,
             ),
+            'casesearch' => array(
+                'title' => 'Case Search',
+                'uri' => 'OECaseSearch/caseSearch',
+                'position' => 4,
+            ),
             'admin' => array(
                 'title' => 'More',
                 'uri' => '#',
@@ -357,13 +362,6 @@ return array(
                         'position' => 9,
                         'restricted' => array('TaskAddPatient'),
                     ),
-                    'casesearch' => array(
-                        'title' => 'Case Search',
-                        'uri' => 'OECaseSearch/caseSearch',
-                        'position' => 10,
-                        'restricted' => array('admin'),
-                    ),
-
                 ),
             ),
 // temporarily disabled
