@@ -61,6 +61,7 @@ return array(
             'parameters' => array('PatientAge', 'PatientDiagnosis'),
             'providers' => array('mysql' => 'DBProvider')
         ),
+        'OETrial',
         'Genetics'
     ),
 
