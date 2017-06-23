@@ -1661,6 +1661,7 @@ class PatientController extends BaseController
 
         $patient = $this->loadModel($id);
         $referral = isset($patient->referral) ? $patient->referral : new PatientReferral();
+        $gpcontact = isset($patient->gp) ? $patient-> gp->contact : new Contact();
         
         //only local patient can be edited
         if($patient->is_local == 0){
@@ -1721,7 +1722,8 @@ class PatientController extends BaseController
                         'patient' => $patient,
                         'contact' => $contact,
                         'address' => $address,
-                        'referral' => $referral
+                        'referral' => $referral,
+                        'gpcontact' => $gpcontact
         ));
     }
     
