@@ -74,58 +74,66 @@ $ethnic_groups = CHtml::listData(EthnicGroup::model()->findAll(), 'id', 'name');
           <div>Number</div>
         </div>
 
-        <div class="large-5 column end">
-            <?php echo $form->textField($patient, 'nhs_num', array('size' => 40, 'maxlength' => 40, 'data-child_row' => '.nhs-num-status')); ?>
+        <div class="large-4 column end">
+          <?php echo $form->textField($patient, 'nhs_num', array('size' => 40, 'maxlength' => 40, 'data-child_row' => '.nhs-num-status')); ?>
         </div>
-          <?php echo $form->error($patient, 'nhs_num'); ?>
+        <?php echo $form->error($patient, 'nhs_num'); ?>
       </div>
       <div class="row field-row nhs-num-status <?php echo(!$patient->nhs_num ? 'hide' : ''); ?>">
-        <div class="large-4 column"><?php echo $form->labelEx($patient, 'nhs_num_status_id'); ?></div>
+        <div class="large-5 column"><?php echo $form->labelEx($patient, 'nhs_num_status_id'); ?></div>
         <div class="large-7 column end">
-            <?php echo $form->dropDownList($patient, 'nhs_num_status_id', $nhs_num_statuses, array('empty' => '-- select --')); ?>
-            <?php echo $form->error($patient, 'nhs_num_status_id'); ?>
+          <?php echo $form->dropDownList($patient, 'nhs_num_status_id', $nhs_num_statuses, array('empty' => '-- select --')); ?>
+          <?php echo $form->error($patient, 'nhs_num_status_id'); ?>
         </div>
       </div>
       <div class="row field-row">
         <div class="large-5 column"><?php echo $form->labelEx($contact, 'title'); ?></div>
-        <div class="large-5 column end">
-            <?php echo $form->textField($contact, 'title', array('size' => 40, 'maxlength' => 40)); ?>
-            <?php echo $form->error($contact, 'title'); ?>
+        <div class="large-4 column end">
+          <?php echo $form->textField($contact, 'title', array('size' => 40, 'maxlength' => 40)); ?>
+          <?php echo $form->error($contact, 'title'); ?>
         </div>
       </div>
       <div class="row field-row">
         <div class="large-5 column"><?php echo $form->labelEx($contact, 'first_name'); ?></div>
-        <div class="large-5 column end">
-            <?php echo $form->textField($contact, 'first_name', array('size' => 40, 'maxlength' => 40, 'id' => 'fname', 'onblur' => 'findDuplicates();')); ?>
-            <?php echo $form->error($contact, 'first_name'); ?>
+        <div class="large-4 column end">
+          <?php echo $form->textField($contact, 'first_name', array('size' => 40, 'maxlength' => 40, 'id' => 'fname', 'onblur' => 'findDuplicates();')); ?>
+          <?php echo $form->error($contact, 'first_name'); ?>
         </div>
       </div>
 
       <div class="row field-row">
         <div class="large-5 column"><?php echo $form->labelEx($contact, 'last_name'); ?></div>
-        <div class="large-5 column end">
-            <?php echo $form->textField($contact, 'last_name', array('size' => 40, 'maxlength' => 40, 'id' => 'surname', 'onblur' => 'findDuplicates();')); ?>
-            <?php echo $form->error($contact, 'last_name'); ?>
+        <div class="large-4 column end">
+          <?php echo $form->textField($contact, 'last_name', array('size' => 40, 'maxlength' => 40, 'id' => 'surname', 'onblur' => 'findDuplicates();')); ?>
+          <?php echo $form->error($contact, 'last_name'); ?>
         </div>
       </div>
       <div class="row field-row">
-        <div class="large-5 column"><?php echo $form->labelEx($patient, 'dob_with_example');?></div>
+        <div class="large-5 column">
+          <?php echo $form->labelEx(
+            $patient,
+            'dob',
+            array(
+              'label' => Patient::model()->attributeLabels()['dob'] . ' <i style="color:grey">(DD Mon YYYY)</i>'
+            )
+          ); ?>
+        </div>
         <div class="large-5 column end">
-            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                'name' => 'Patient[dob]',
-                'id' => 'patient_dob',
-                'options' => array(
-                    'showAnim' => 'fold',
-                    'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
-                ),
-                'value' => $patient->NHSDate('dob', $patient->dob),
-                'htmlOptions' => array(
-                    'class' => 'small fixed-width',
-                    'onchange' => 'findDuplicates()',
-                    'placeholder' => '01 Jan 1970'
-                ),
-            )) ?>
-            <?php echo $form->error($patient, 'dob'); ?>
+          <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'name' => 'Patient[dob]',
+            'id' => 'patient_dob',
+            'options' => array(
+              'showAnim' => 'fold',
+              'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
+            ),
+            'value' => $patient->NHSDate('dob', $patient->dob),
+            'htmlOptions' => array(
+              'class' => 'small fixed-width',
+              'onchange' => 'findDuplicates()',
+              'placeholder' => '01 Jan 1970',
+            ),
+          )) ?>
+          <?php echo $form->error($patient, 'dob'); ?>
         </div>
       </div>
     </div>
