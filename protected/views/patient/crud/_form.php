@@ -59,15 +59,15 @@ $ethnic_groups = CHtml::listData(EthnicGroup::model()->findAll(), 'id', 'name');
     <div id="contact" class="large-6 column">
       <div class="row field-row">
 
-        <div class="large-4 column"><?php echo $form->labelEx($patient, 'hos_num'); ?></div>
-        <div class="large-4 column end">
+        <div class="large-5 column"><?php echo $form->labelEx($patient, 'hos_num'); ?></div>
+        <div class="large-5 column end">
             <?php echo $form->textField($patient, 'hos_num', array('size' => 40, 'maxlength' => 40)); ?>
 
         </div>
           <?php echo $form->error($patient, 'hos_num'); ?>
       </div>
       <div class="row field-row">
-        <div class="large-4 column nhs-number-wrapper">
+        <div class="large-5 column nhs-number-wrapper">
           <div class="nhs-number warning">
             <span class="hide-text print-only">Medicare Number:</span>
           </div>
@@ -75,37 +75,37 @@ $ethnic_groups = CHtml::listData(EthnicGroup::model()->findAll(), 'id', 'name');
         </div>
 
         <div class="large-4 column end">
-            <?php echo $form->textField($patient, 'nhs_num', array('size' => 40, 'maxlength' => 40, 'data-child_row' => '.nhs-num-status')); ?>
+          <?php echo $form->textField($patient, 'nhs_num', array('size' => 40, 'maxlength' => 40, 'data-child_row' => '.nhs-num-status')); ?>
         </div>
-          <?php echo $form->error($patient, 'nhs_num'); ?>
+        <?php echo $form->error($patient, 'nhs_num'); ?>
       </div>
       <div class="row field-row nhs-num-status <?php echo(!$patient->nhs_num ? 'hide' : ''); ?>">
-        <div class="large-4 column"><?php echo $form->labelEx($patient, 'nhs_num_status_id'); ?></div>
+        <div class="large-5 column"><?php echo $form->labelEx($patient, 'nhs_num_status_id'); ?></div>
         <div class="large-7 column end">
-            <?php echo $form->dropDownList($patient, 'nhs_num_status_id', $nhs_num_statuses, array('empty' => '-- select --')); ?>
-            <?php echo $form->error($patient, 'nhs_num_status_id'); ?>
+          <?php echo $form->dropDownList($patient, 'nhs_num_status_id', $nhs_num_statuses, array('empty' => '-- select --')); ?>
+          <?php echo $form->error($patient, 'nhs_num_status_id'); ?>
         </div>
       </div>
       <div class="row field-row">
-        <div class="large-4 column"><?php echo $form->labelEx($contact, 'title'); ?></div>
+        <div class="large-5 column"><?php echo $form->labelEx($contact, 'title'); ?></div>
         <div class="large-4 column end">
-            <?php echo $form->textField($contact, 'title', array('size' => 40, 'maxlength' => 40)); ?>
-            <?php echo $form->error($contact, 'title'); ?>
+          <?php echo $form->textField($contact, 'title', array('size' => 40, 'maxlength' => 40)); ?>
+          <?php echo $form->error($contact, 'title'); ?>
         </div>
       </div>
       <div class="row field-row">
-        <div class="large-4 column"><?php echo $form->labelEx($contact, 'first_name'); ?></div>
+        <div class="large-5 column"><?php echo $form->labelEx($contact, 'first_name'); ?></div>
         <div class="large-4 column end">
-            <?php echo $form->textField($contact, 'first_name', array('size' => 40, 'maxlength' => 40, 'id' => 'fname', 'onblur' => 'findDuplicates();')); ?>
-            <?php echo $form->error($contact, 'first_name'); ?>
+          <?php echo $form->textField($contact, 'first_name', array('size' => 40, 'maxlength' => 40, 'id' => 'fname', 'onblur' => 'findDuplicates();')); ?>
+          <?php echo $form->error($contact, 'first_name'); ?>
         </div>
       </div>
 
       <div class="row field-row">
-        <div class="large-4 column"><?php echo $form->labelEx($contact, 'last_name'); ?></div>
+        <div class="large-5 column"><?php echo $form->labelEx($contact, 'last_name'); ?></div>
         <div class="large-4 column end">
-            <?php echo $form->textField($contact, 'last_name', array('size' => 40, 'maxlength' => 40, 'id' => 'surname', 'onblur' => 'findDuplicates();')); ?>
-            <?php echo $form->error($contact, 'last_name'); ?>
+          <?php echo $form->textField($contact, 'last_name', array('size' => 40, 'maxlength' => 40, 'id' => 'surname', 'onblur' => 'findDuplicates();')); ?>
+          <?php echo $form->error($contact, 'last_name'); ?>
         </div>
       </div>
       <div class="row field-row">

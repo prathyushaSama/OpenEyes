@@ -1,7 +1,11 @@
 <?php
 echo '<?php'; ?>
 
-class <?php echo $this->className; ?>Parameter extends CaseSearchParameter
+/**
+ * Class <?php echo $this->className; ?>Parameter
+ */
+class <?php echo $this->className; ?>Parameter extends CaseSearchParameter implements <?php echo str_replace(',', 'Interface, ', $this->searchProviders) . 'Interface'; ?>
+
 {
 <?php if (!empty($this->attributeList)):
   foreach (explode(',', $this->attributeList) as $attribute):?>
@@ -18,7 +22,7 @@ class <?php echo $this->className; ?>Parameter extends CaseSearchParameter
         $this->name = '<?php echo str_replace(' ', '_', strtolower($this->name)); ?>';
     }
 
-    public function getKey()
+    public function getLabel()
     {
         // This is a human-readable value, so feel free to change this as required.
         return '<?php echo $this->name; ?>';
@@ -58,10 +62,12 @@ foreach (explode(',', $this->attributeList) as $attribute):?>
 
     }
 
+<?php foreach(explode(',', $this->searchProviders) as $searchProvider):?>
+<?php if ($searchProvider === 'DBProvider'):?>
     /**
     * Generate a SQL fragment representing the subquery of a FROM condition.
-    * @param $searchProvider SearchProvider The search provider. This is used to determine whether or not the search provider is using SQL syntax.
-    * @return mixed The constructed query string.
+    * @param $searchProvider <?php echo $searchProvider; ?> The search provider. This is used to determine whether or not the search provider is using SQL syntax.
+    * @return string The constructed query string.
     */
     public function query($searchProvider)
     {
@@ -88,8 +94,8 @@ foreach (explode(',', $this->attributeList) as $attribute):?>
     * Generate a SQL fragment representing a JOIN condition to a subquery.
     * @param $joinAlias string The alias of the table being joined to.
     * @param $criteria array An array of join conditions. The ID for each element is the column name from the aliased table.
-    * @param $searchProvider SearchProvider The search provider. This is used for an internal query invocation for subqueries.
-    * @return mixed A SQL string representing a complete join condition. Join type is specified within the subclass definition.
+    * @param $searchProvider <?php echo $searchProvider; ?> The search provider. This is used for an internal query invocation for subqueries.
+    * @return string A SQL string representing a complete join condition. Join type is specified within the subclass definition.
     */
     public function join($joinAlias, $criteria, $searchProvider)
     {
@@ -105,4 +111,6 @@ foreach (explode(',', $this->attributeList) as $attribute):?>
     {
         return "<?php echo $this->alias; ?>_$this->id";
     }
+<?php endif;?>
+<?php endforeach;?>
 }
