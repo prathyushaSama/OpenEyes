@@ -130,6 +130,7 @@ class Patient extends BaseActiveRecordVersioned
             array('gp_id', 'required', 'on' => 'referral'),
             array('deleted', 'safe'),
             array('dob, hos_num, nhs_num, date_of_death, deleted,is_local, patient_source', 'safe', 'on' => 'search'),
+            array('dob','checkdate'),
         );
     }
 
@@ -588,7 +589,7 @@ class Patient extends BaseActiveRecordVersioned
     public function hasUnconfirmedDiagnoses()
     {
         foreach ($this->secondarydiagnoses as $diagnosis) {
-            if (!$diagnosis->is_confirmed === 0) {
+            if ($diagnosis->is_confirmed == 0) {
                 return true;
             }
         }
@@ -1381,6 +1382,10 @@ class Patient extends BaseActiveRecordVersioned
             $sd->eye_id = $eye_id;
             $sd->date = $date;
 
+            // If the patient came  from a referral or self registration, then the diagnosis is unconfirmed
+            $sd->is_confirmed = $this->patient_source == Patient::PATIENT_SOURCE_REFERRAL
+            || $this->patient_source == Patient::PATIENT_SOURCE_SELF_REGISTER ? 0 : null;
+
             if (!$sd->save()) {
                 throw new Exception('Unable to save secondary diagnosis: '.print_r($sd->getErrors(), true));
             }
@@ -2084,5 +2089,14 @@ class Patient extends BaseActiveRecordVersioned
         }
 
         return false;
+    }
+
+    public function checkdate($attribute,$params)
+    {
+        $currentdate = date("j M Y");
+        if($this->dob > $currentdate || $this->getAge() > 100) {
+            $this->addError($attribute,"Date of Birth is not in the reasonable date range");
+        }
+
     }
 }
