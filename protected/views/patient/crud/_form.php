@@ -109,31 +109,24 @@ $ethnic_groups = CHtml::listData(EthnicGroup::model()->findAll(), 'id', 'name');
         </div>
       </div>
       <div class="row field-row">
-        <div class="large-5 column">
-          <?php echo $form->labelEx(
-            $patient,
-            'dob',
-            array(
-              'label' => Patient::model()->attributeLabels()['dob'] . ' <i style="color:grey">(DD Mon YYYY)</i>'
-            )
-          ); ?>
-        </div>
-        <div class="large-5 column end">
-          <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'name' => 'Patient[dob]',
-            'id' => 'patient_dob',
-            'options' => array(
-              'showAnim' => 'fold',
-              'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
-            ),
-            'value' => $patient->NHSDate('dob', $patient->dob),
-            'htmlOptions' => array(
-              'class' => 'small fixed-width',
-              'onchange' => 'findDuplicates()',
-              'placeholder' => '01 Jan 1970',
-            ),
-          )) ?>
-          <?php echo $form->error($patient, 'dob'); ?>
+        <div class="large-4 column"><?php echo $form->labelEx($patient, 'dob'); ?></div>
+        <div class="large-4 column end">
+            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                'name' => 'Patient[dob]',
+                'id' => 'patient_dob',
+                'options' => array(
+                    'showAnim' => 'fold',
+                    'dateFormat' => Helper::NHS_DATE_FORMAT_JS,
+                    'minDate' => "-100Y",
+                    'maxDate' => "0D",
+                ),
+                'value' => $patient->NHSDate('dob', $patient->dob),
+                'htmlOptions' => array(
+                    'class' => 'small fixed-width',
+                    'onchange' => 'findDuplicates()'
+                ),
+            )) ?>
+            <?php echo $form->error($patient, 'dob'); ?>
         </div>
       </div>
     </div>
